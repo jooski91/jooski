@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --teal:#00000;--teal2:#e0f5ee;--teal3:#1aab80;
+  --teal:#b8dff0;--teal2:#e0f5ee;--teal3:#1aab80;
   --coral:#d85a30;--coral2:#faece7;
   --amber:#b07010;--amber2:#faeeda;
   --blue:#1560a0;--blue2:#e6f1fb;
@@ -189,7 +189,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 <!-- View toggle -->
 <div class="view-toggle">
   <div class="view-btn active" id="btn-list" onclick="setView('list')">📋 목록</div>
-  <div class="view-btn" id="btn-map" onclick="setView('map')">🗺 지도</div>
+  <div class="view-btn" id="btn-map" onclick="setView('map')">🗺️ 지도</div>
 </div>
 
 <!-- Content -->
@@ -1143,9 +1143,9 @@ function loadFromStorage(){
 
 // Export
 function exportTxt(){
-  let t='🌿 제주 여행 플래너\n'+'─'.repeat(28)+'\n\n';
+  let t='🍊 제주 여행 플래너\n'+'─'.repeat(28)+'\n\n';
   days.forEach(d=>{
-    t+=`📅 ${d.label}\n`;
+    t+=`${d.label}\n`;
     d.places.forEach((p,i)=>{
       t+=`  ${i+1}. [${p.cat}] ${p.name}`;
       if(p.time)t+=` (${p.time})`;
