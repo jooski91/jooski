@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -8,7 +10,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --teal:#0f7a61;--teal2:#e0f5ee;--teal3:#1aab80;
+  --teal:#8a6e4b;--teal2:#f0e8d8;--teal3:#a07850;
   --coral:#d85a30;--coral2:#faece7;
   --amber:#b07010;--amber2:#faeeda;
   --blue:#1560a0;--blue2:#e6f1fb;
@@ -36,11 +38,11 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 .day-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;flex-shrink:0;padding:0 4px;}
 .day-bar::-webkit-scrollbar{display:none;}
 .day-tab{padding:7px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:4px;flex-shrink:0;}
-.day-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.day-tab.active{font-weight:700;}
 .day-tab-x{font-size:13px;color:var(--text3);min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;margin-left:-2px;margin-right:-6px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
 .day-tab-x:active{color:#c0392b;}
 .day-add-btn{padding:5px 10px;font-size:17px;color:var(--text3);cursor:pointer;flex-shrink:0;border:none;background:none;font-family:inherit;}
-.day-add-btn:active{color:var(--teal);}
+.day-add-btn:active{color:#d4845a;}
 
 /* ── View toggle ── */
 .view-toggle{display:flex;background:var(--surface2);border-radius:10px;padding:3px;margin:10px 14px 0;flex-shrink:0;}
@@ -92,7 +94,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 .db-result-item:last-child{border-bottom:none;}
 .db-result-item:active{background:var(--surface2);}
 .db-result-name{font-weight:500;}
-.db-result-pin{font-size:11px;color:#fff;background:#B4B4B4;padding:1px 6px;border-radius:10px;}
+.db-result-pin{font-size:11px;color:#fff;background:#b09070;padding:1px 6px;border-radius:10px;}
 
 .connector{display:flex;align-items:center;gap:8px;padding:0 0 0 48px;margin:-1px 0;}
 .conn-line{width:1px;height:18px;background:var(--border2);}
@@ -103,7 +105,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 .empty-card p{font-size:13px;line-height:1.7;}
 
 /* ── FAB (add button) ── */
-.fab{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;width:52px;height:52px;border-radius:50%;background:#b4b4b4;color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(15,122,97,0.38);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;}
+.fab{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;width:52px;height:52px;border-radius:50%;background:#8a6e4b;color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(138,110,75,0.38);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;}
 .fab:active{transform:scale(0.92);}
 
 /* ── Bottom sheet ── */
@@ -123,7 +125,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 .sheet-row{display:flex;gap:8px;}
 .btn-sheet{flex:1;padding:13px;border-radius:11px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
 .btn-confirm{background:var(--teal);color:#fff;}
-.btn-confirm:active{background:#0d6652;}
+.btn-confirm:active{background:#6e5538;}
 .btn-cancel{background:var(--surface2);color:var(--text2);}
 .btn-cancel:active{background:var(--border2);}
 
@@ -350,27 +352,11 @@ function getCoord(name){
 // ══════════════════════════════════════════════
 const CAT_EMOJI={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
 let days=[
-  {id:1,label:'1일차',places:[
-    {id:1,name:'제주국제공항',cat:'숙소',time:'12:00',memo:'도착'},
-    {id:2,name:'동문시장',cat:'맛집',time:'13:30',memo:'점심 & 구경'},
-    {id:3,name:'만장굴',cat:'관광',time:'15:30',memo:'세계자연유산'},
-    {id:4,name:'월정리해변',cat:'관광',time:'17:30',memo:'일몰 감상'},
-  ]},
-  {id:2,label:'2일차',places:[
-    {id:5,name:'성산일출봉',cat:'관광',time:'07:00',memo:'일출 필수'},
-    {id:6,name:'우도',cat:'액티비티',time:'10:00',memo:'전기차 투어'},
-    {id:7,name:'섭지코지',cat:'관광',time:'14:00',memo:'드라마 촬영지'},
-    {id:8,name:'서귀포매일올레시장',cat:'맛집',time:'17:00',memo:'흑돼지'},
-  ]},
-  {id:3,label:'3일차',places:[
-    {id:9,name:'한라산',cat:'관광',time:'06:00',memo:'성판악 코스'},
-    {id:10,name:'천지연폭포',cat:'관광',time:'14:00',memo:''},
-    {id:11,name:'외돌개',cat:'관광',time:'16:00',memo:'산책'},
-  ]},
+  {id:1,label:'1일차',places:[]},
 ];
 let activeDayId=1;
-let nextId=20;
-let nextDayId=4;
+let nextId=1;
+let nextDayId=2;
 // _SAVED_STATE 복원 (PC에서 저장한 파일 다시 열 때)
 if(typeof _SAVED_STATE !== 'undefined' && _SAVED_STATE){
   days = _SAVED_STATE.days || days;
@@ -406,14 +392,32 @@ function updateSub(){
   document.getElementById('hdr-sub').textContent=`${days.length}일 일정 · 총 ${total}곳`;
 }
 
+const DAY_COLORS = [
+  '#d4845a', // 코랄 오렌지
+  '#5b8fd4', // 스카이 블루
+  '#7aba7a', // 세이지 그린
+  '#c47db8', // 라벤더
+  '#e0aa3e', // 골든 옐로
+  '#5bbcb8', // 틸 민트
+  '#e07090', // 로즈핑크
+  '#8b78d0', // 퍼플
+];
+
+function getDayColor(idx){ return DAY_COLORS[idx % DAY_COLORS.length]; }
+
 function renderDayBar(){
   const bar=document.getElementById('day-bar');
   bar.innerHTML='';
-  days.forEach(d=>{
+  days.forEach((d,idx)=>{
+    const color = getDayColor(idx);
     const t=document.createElement('div');
     t.className='day-tab'+(d.id===activeDayId?' active':'');
     t.innerHTML=`${d.label}<button class="day-tab-x" ontouchend="delDay(event,${d.id})" onclick="delDay(event,${d.id})">✕</button>`;
     t.onclick=e=>{if(e.target.closest('.day-tab-x'))return;activeDayId=d.id;renderAll();};
+    if(d.id===activeDayId){
+      t.style.color = color;
+      t.style.borderBottomColor = color;
+    }
     bar.appendChild(t);
   });
   const add=document.createElement('button');
@@ -423,6 +427,8 @@ function renderDayBar(){
   add.onclick=addDay;
   bar.appendChild(add);
 }
+
+const NUM_COLORS = ['#e07a5f','#3d85c8','#6aab6a','#c47db8','#e0aa3e','#5bbcb8','#e07090','#8b78d0'];
 
 function renderList(){
   const wrap=document.getElementById('list-wrap');
@@ -445,7 +451,7 @@ function renderList(){
     const el=document.createElement('div');
     el.className='place-card';
     el.innerHTML=`
-      <div class="place-num c${p.cat}">${i+1}</div>
+      <div class="place-num" style="background:${NUM_COLORS[i%NUM_COLORS.length]}">${i+1}</div>
       <div class="place-body">
         <div class="place-name">${p.name}</div>
         <div class="place-row">
@@ -473,6 +479,9 @@ const CAT_ICON={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'�
 function renderMap(){
   const svg=document.getElementById('map-svg');
   svg.innerHTML='';
+  // 핀치줌/팬용 루트 그룹
+  const mapRoot=document.createElementNS('http://www.w3.org/2000/svg','g');
+  mapRoot.id='map-root';
   const d=getActive();
   document.getElementById('map-empty').style.display=(!d||d.places.length===0)?'block':'none';
   if(!d||d.places.length===0) return;
@@ -513,7 +522,7 @@ function renderMap(){
   svg.appendChild(defs);
 
   // 바다 배경
-  svg.appendChild(mk('rect',{width:500,height:340,fill:'url(#seaGrad)'}));
+  mapRoot.appendChild(mk('rect',{width:500,height:340,fill:'url(#seaGrad)'}));
 
   // 바다 물결 텍스처 (가로 웨이브 라인들)
   for(let wy=30;wy<340;wy+=22){
@@ -521,7 +530,7 @@ function renderMap(){
       d:`M0,${wy} Q62,${wy-5} 125,${wy} Q187,${wy+5} 250,${wy} Q312,${wy-5} 375,${wy} Q437,${wy+5} 500,${wy}`,
       fill:'none',stroke:'rgba(255,255,255,0.28)','stroke-width':'1'
     });
-    svg.appendChild(wave);
+    mapRoot.appendChild(wave);
   }
 
   // ── 제주도 해안선 (더 정밀한 포인트 ~65개) ──
@@ -549,63 +558,63 @@ function renderMap(){
   }).join(' ')+'Z';
 
   // 섬 그림자
-  svg.appendChild(mk('path',{d:coastPath,fill:'rgba(0,0,0,0.12)',transform:'translate(4,6)',filter:'url(#dropshadow)'}));
+  mapRoot.appendChild(mk('path',{d:coastPath,fill:'rgba(0,0,0,0.12)',transform:'translate(4,6)',filter:'url(#dropshadow)'}));
   // 섬 본체
-  svg.appendChild(mk('path',{d:coastPath,fill:'url(#islandGrad)',stroke:'#8aaf5a','stroke-width':'1.8','stroke-linejoin':'round'}));
+  mapRoot.appendChild(mk('path',{d:coastPath,fill:'url(#islandGrad)',stroke:'#8aaf5a','stroke-width':'1.8','stroke-linejoin':'round'}));
 
   // 해안가 안쪽 테두리 (얕은 바다 효과)
-  svg.appendChild(mk('path',{d:coastPath,fill:'none',stroke:'rgba(140,200,120,0.4)','stroke-width':'4','stroke-linejoin':'round'}));
+  mapRoot.appendChild(mk('path',{d:coastPath,fill:'none',stroke:'rgba(140,200,120,0.4)','stroke-width':'4','stroke-linejoin':'round'}));
 
   // ── 내부 지형 디테일 ──
   // 한라산 — 겹쳐쌓인 산 모양
   const [hx,hy]=toSVG(126.529,33.362);
   // 산 그림자
-  svg.appendChild(mk('ellipse',{cx:hx+3,cy:hy+4,rx:28,ry:12,fill:'rgba(0,0,0,0.1)'}));
+  mapRoot.appendChild(mk('ellipse',{cx:hx+3,cy:hy+4,rx:28,ry:12,fill:'rgba(0,0,0,0.1)'}));
   // 산 레이어3 (가장 뒤)
-  svg.appendChild(mk('path',{d:`M${hx-32},${hy+8} Q${hx-10},${hy-28} ${hx+2},${hy-34} Q${hx+14},${hy-28} ${hx+36},${hy+8}Z`,fill:'#7ab850',opacity:'0.6'}));
+  mapRoot.appendChild(mk('path',{d:`M${hx-32},${hy+8} Q${hx-10},${hy-28} ${hx+2},${hy-34} Q${hx+14},${hy-28} ${hx+36},${hy+8}Z`,fill:'#7ab850',opacity:'0.6'}));
   // 산 레이어2
-  svg.appendChild(mk('path',{d:`M${hx-26},${hy+8} Q${hx-8},${hy-24} ${hx+1},${hy-32} Q${hx+12},${hy-24} ${hx+28},${hy+8}Z`,fill:'#5e9840'}));
+  mapRoot.appendChild(mk('path',{d:`M${hx-26},${hy+8} Q${hx-8},${hy-24} ${hx+1},${hy-32} Q${hx+12},${hy-24} ${hx+28},${hy+8}Z`,fill:'#5e9840'}));
   // 산 레이어1 (앞)
-  svg.appendChild(mk('path',{d:`M${hx-20},${hy+8} Q${hx-4},${hy-18} ${hx},${hy-28} Q${hx+6},${hy-18} ${hx+22},${hy+8}Z`,fill:'#4a8030'}));
+  mapRoot.appendChild(mk('path',{d:`M${hx-20},${hy+8} Q${hx-4},${hy-18} ${hx},${hy-28} Q${hx+6},${hy-18} ${hx+22},${hy+8}Z`,fill:'#4a8030'}));
   // 눈 덮인 봉우리
-  svg.appendChild(mk('path',{d:`M${hx-5},${hy-24} Q${hx},${hy-30} ${hx+5},${hy-24} Q${hx},${hy-22} ${hx-5},${hy-24}Z`,fill:'white',opacity:'0.85'}));
+  mapRoot.appendChild(mk('path',{d:`M${hx-5},${hy-24} Q${hx},${hy-30} ${hx+5},${hy-24} Q${hx},${hy-22} ${hx-5},${hy-24}Z`,fill:'white',opacity:'0.85'}));
   // 한라산 레이블
   const hLabel=mk('text',{x:hx,y:hy+20,'text-anchor':'middle','font-size':'9','font-weight':'700',fill:'#3a6020','letter-spacing':'-0.3'});
   hLabel.textContent='한라산 ▲1950m';
-  svg.appendChild(hLabel);
+  mapRoot.appendChild(hLabel);
 
   // 숲/녹지 힌트 (중산간)
   [[126.64,33.40],[126.72,33.47],[126.59,33.43],[126.80,33.48]].forEach(([lo,la])=>{
     const [tx,ty]=toSVG(lo,la);
     const tree=mk('text',{x:tx,y:ty,'text-anchor':'middle','font-size':'11',opacity:'0.45'});
     tree.textContent='🌲';
-    svg.appendChild(tree);
+    mapRoot.appendChild(tree);
   });
 
   // 바다 텍스트 장식
   const seaText=mk('text',{x:55,y:290,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
   seaText.textContent='제주 바다';
-  svg.appendChild(seaText);
+  mapRoot.appendChild(seaText);
   const seaText2=mk('text',{x:410,y:40,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
   seaText2.textContent='동쪽 바다';
-  svg.appendChild(seaText2);
+  mapRoot.appendChild(seaText2);
 
   // 제주시·서귀포 지명
   const [jjx,jjy]=toSVG(126.530,33.508);
   const jLabel=mk('text',{x:jjx,y:jjy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
   jLabel.textContent='제주시';
-  svg.appendChild(jLabel);
+  mapRoot.appendChild(jLabel);
   const [sgx,sgy]=toSVG(126.558,33.252);
   const sgLabel=mk('text',{x:sgx,y:sgy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
   sgLabel.textContent='서귀포시';
-  svg.appendChild(sgLabel);
+  mapRoot.appendChild(sgLabel);
 
   // 우도 소섬
   const [udx,udy]=toSVG(126.955,33.502);
-  svg.appendChild(mk('ellipse',{cx:udx,cy:udy,rx:9,ry:6,fill:'#c2d990',stroke:'#8aaf5a','stroke-width':'1'}));
+  mapRoot.appendChild(mk('ellipse',{cx:udx,cy:udy,rx:9,ry:6,fill:'#c2d990',stroke:'#8aaf5a','stroke-width':'1'}));
   const udL=mk('text',{x:udx,y:udy+1,'text-anchor':'middle','font-size':'6','font-weight':'600',fill:'#3a5a20'});
   udL.textContent='우도';
-  svg.appendChild(udL);
+  mapRoot.appendChild(udL);
 
   // ── 나침반 (여행 가이드 스타일) ──
   const compass=mk('g',{transform:'translate(470,26)'});
@@ -623,7 +632,7 @@ function renderMap(){
   compass.appendChild(mk('polygon',{points:'0,-12 -2.5,0 0,3 2.5,0',fill:'#c84030'}));
   compass.appendChild(mk('polygon',{points:'0,12 -2.5,0 0,-3 2.5,0',fill:'#8a9aaa'}));
   compass.appendChild(mk('circle',{cx:0,cy:0,r:2.5,fill:'#fff',stroke:'#999','stroke-width':'0.8'}));
-  svg.appendChild(compass);
+  mapRoot.appendChild(compass);
 
   // ── 일차 레이블 배지 ──
   const dayBadge=mk('g',{transform:'translate(14,14)'});
@@ -631,7 +640,7 @@ function renderMap(){
   const dayTxt=mk('text',{x:26,y:14,'text-anchor':'middle','font-size':'10','font-weight':'700',fill:'white'});
   dayTxt.textContent=`${d.label}`;
   dayBadge.appendChild(dayTxt);
-  svg.appendChild(dayBadge);
+  mapRoot.appendChild(dayBadge);
 
   // ── 경로 곡선 (손그림 느낌) ──
   const places=d.places;
@@ -642,12 +651,12 @@ function renderMap(){
     // 살짝 꺾이는 자연스러운 커브
     const cpx=(ax+bx)/2+((ay-by)*0.18), cpy=(ay+by)/2+((bx-ax)*0.18);
     // 경로 배경 (두꺼운 흰선)
-    svg.appendChild(mk('path',{
+    mapRoot.appendChild(mk('path',{
       d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
       fill:'none',stroke:'rgba(255,255,255,0.7)','stroke-width':'4','stroke-linecap':'round'
     }));
     // 경로 본선 (점선)
-    svg.appendChild(mk('path',{
+    mapRoot.appendChild(mk('path',{
       d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
       fill:'none',stroke:'#e07040','stroke-width':'2','stroke-dasharray':'6,4','stroke-linecap':'round',opacity:'0.85'
     }));
@@ -660,7 +669,7 @@ function renderMap(){
       points:'0,-3 6,0 0,3',fill:'#e07040',opacity:'0.85',
       transform:`translate(${qx},${qy}) rotate(${ang2})`
     });
-    svg.appendChild(arrow);
+    mapRoot.appendChild(arrow);
   }
 
   // ── 마커: 말풍선 스티커 스타일 ──
@@ -670,22 +679,22 @@ function renderMap(){
     const g=mk('g',{style:'cursor:pointer'});
 
     // 핀 그림자
-    g.appendChild(mk('ellipse',{cx:px+1,cy:py+3,rx:7,ry:3.5,fill:'rgba(0,0,0,0.2)'}));
+    g.appendChild(mk('ellipse',{cx:px+1,cy:py+2,rx:5,ry:2.5,fill:'rgba(0,0,0,0.2)'}));
 
     // 핀 몸체 — 여행 가이드 스타일 (동그란 머리 + 뾰족한 아래)
-    const pinPath=`M${px},${py} C${px-6},${py-4} ${px-10},${py-14} ${px-10},${py-22} A10,10 0 1,1 ${px+10},${py-22} C${px+10},${py-14} ${px+6},${py-4} ${px},${py}Z`;
+    const pinPath=`M${px},${py} C${px-4},${py-3} ${px-7},${py-10} ${px-7},${py-16} A7,7 0 1,1 ${px+7},${py-16} C${px+7},${py-10} ${px+4},${py-3} ${px},${py}Z`;
     g.appendChild(mk('path',{d:pinPath,fill:color,filter:'url(#glow)'}));
     // 핀 하이라이트
-    g.appendChild(mk('ellipse',{cx:px-3,cy:py-26,rx:3,ry:2,fill:'rgba(255,255,255,0.4)'}));
+    g.appendChild(mk('ellipse',{cx:px-2,cy:py-19,rx:2,ry:1.4,fill:'rgba(255,255,255,0.4)'}));
     // 번호 배지
-    g.appendChild(mk('circle',{cx:px,cy:py-22,r:8,fill:'white'}));
-    const numT=mk('text',{x:px,y:py-18.5,'text-anchor':'middle','font-size':'8.5','font-weight':'700',fill:color});
+    g.appendChild(mk('circle',{cx:px,cy:py-16,r:5.5,fill:'white'}));
+    const numT=mk('text',{x:px,y:py-13,'text-anchor':'middle','font-size':'6','font-weight':'700',fill:color});
     numT.textContent=i+1;
     g.appendChild(numT);
 
     g.addEventListener('click',()=>showInfo(p,i));
     g.addEventListener('touchstart',e=>{e.stopPropagation();showInfo(p,i);},{passive:true});
-    svg.appendChild(g);
+    mapRoot.appendChild(g);
   });
 
   // ── 장소 이름 말풍선 라벨 ──
@@ -694,7 +703,7 @@ function renderMap(){
     const name=p.name.length>7?p.name.slice(0,7)+'…':p.name;
     const w=name.length*7+16;
     // 말풍선 위치: 핀 위
-    const lx=px, ly=py-34;
+    const lx=px, ly=py-26;
     const g=mk('g',{});
     // 배경 말풍선
     g.appendChild(mk('rect',{x:lx-w/2,y:ly-11,width:w,height:15,rx:7,fill:'rgba(255,255,255,0.92)',stroke:'rgba(0,0,0,0.1)','stroke-width':'0.8'}));
@@ -703,8 +712,85 @@ function renderMap(){
     const lbl=mk('text',{x:lx,y:ly,'text-anchor':'middle','font-size':'7.5','font-weight':'600',fill:'#2a2a2a'});
     lbl.textContent=name;
     g.appendChild(lbl);
-    svg.appendChild(g);
+    mapRoot.appendChild(g);
   });
+
+  svg.appendChild(mapRoot);
+
+  // ── 핀치줌 & 드래그 팬 ──
+  let mapScale=1, mapTx=0, mapTy=0;
+  let isPanning=false, lastPanX=0, lastPanY=0;
+  let lastDist=0;
+
+  function applyTransform(){
+    mapRoot.setAttribute('transform',`translate(${mapTx},${mapTy}) scale(${mapScale})`);
+  }
+
+  // 터치: 핀치줌 + 단일손가락 팬
+  svg.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    } else if(e.touches.length===1){
+      isPanning=true;
+      lastPanX=e.touches[0].clientX;
+      lastPanY=e.touches[0].clientY;
+    }
+  },{passive:true});
+
+  svg.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      e.preventDefault();
+      const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      if(lastDist>0){
+        const ratio=dist/lastDist;
+        const newScale=Math.min(Math.max(mapScale*ratio,0.6),5);
+        // 두 손가락 중심점 기준 줌
+        const rect=svg.getBoundingClientRect();
+        const cx=((e.touches[0].clientX+e.touches[1].clientX)/2-rect.left)*(500/rect.width);
+        const cy=((e.touches[0].clientY+e.touches[1].clientY)/2-rect.top)*(340/rect.height);
+        mapTx=cx-(cx-mapTx)*(newScale/mapScale);
+        mapTy=cy-(cy-mapTy)*(newScale/mapScale);
+        mapScale=newScale;
+        applyTransform();
+      }
+      lastDist=dist;
+      isPanning=false;
+    } else if(e.touches.length===1 && isPanning){
+      const dx=(e.touches[0].clientX-lastPanX)*(500/svg.getBoundingClientRect().width);
+      const dy=(e.touches[0].clientY-lastPanY)*(340/svg.getBoundingClientRect().height);
+      mapTx+=dx; mapTy+=dy;
+      lastPanX=e.touches[0].clientX;
+      lastPanY=e.touches[0].clientY;
+      applyTransform();
+    }
+  },{passive:false});
+
+  svg.addEventListener('touchend',e=>{
+    if(e.touches.length===0) isPanning=false;
+    lastDist=0;
+  },{passive:true});
+
+  // 더블탭으로 리셋
+  let lastTap=0;
+  svg.addEventListener('touchend',e=>{
+    const now=Date.now();
+    if(now-lastTap<300){mapScale=1;mapTx=0;mapTy=0;applyTransform();}
+    lastTap=now;
+  },{passive:true});
+
+  // 마우스 휠 줌 (데스크탑)
+  svg.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const rect=svg.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(500/rect.width);
+    const cy=(e.clientY-rect.top)*(340/rect.height);
+    const ratio=e.deltaY<0?1.12:0.9;
+    const newScale=Math.min(Math.max(mapScale*ratio,0.6),5);
+    mapTx=cx-(cx-mapTx)*(newScale/mapScale);
+    mapTy=cy-(cy-mapTy)*(newScale/mapScale);
+    mapScale=newScale;
+    applyTransform();
+  },{passive:false});
 }
 
 // ══════════════════════════════════════════════
@@ -1047,7 +1133,7 @@ function showShareModal(url){
       <div style="display:flex;gap:8px;">
         <input id="share-url-input" readonly value="${url}"
           style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:11px;color:#444;background:#f8f8f8;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" />
-        <button onclick="copyShareURL()" style="padding:10px 14px;background:#0f7a61;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">복사</button>
+        <button onclick="copyShareURL()" style="padding:10px 14px;background:#8a6e4b;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">복사</button>
       </div>
       <button onclick="document.getElementById('share-modal').remove()"
         style="width:100%;margin-top:12px;padding:12px;background:#f0ece5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;">닫기</button>
