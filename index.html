@@ -209,8 +209,8 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
 
 <!-- FAB group -->
 <div class="fab-group">
-  <button class="fab-sub" onclick="openDBSheet()" title="장소 DB 보기">🗂</button>
-  <button class="fab" onclick="openSheet()">＋</button>
+  <button class="fab-sub" onclick="openDBSheet()" title="장소 DB 보기">🗂️</button>
+  <button class="fab" onclick="openSheet()">➕</button>
 </div>
 
 <!-- Sheet overlay -->
@@ -246,11 +246,11 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;col
   <div class="field-row">
     <div class="field-label">카테고리</div>
     <div class="cat-grid" id="cat-grid">
-      <div class="cat-opt sel" data-cat="관광" onclick="selCat(this)">🏔 관광</div>
+      <div class="cat-opt sel" data-cat="관광" onclick="selCat(this)">✈️ 관광</div>
       <div class="cat-opt" data-cat="맛집" onclick="selCat(this)">🍜 맛집</div>
       <div class="cat-opt" data-cat="카페" onclick="selCat(this)">☕ 카페</div>
       <div class="cat-opt" data-cat="숙소" onclick="selCat(this)">🏨 숙소</div>
-      <div class="cat-opt" data-cat="쇼핑" onclick="selCat(this)">🛍 쇼핑</div>
+      <div class="cat-opt" data-cat="쇼핑" onclick="selCat(this)">🛍️ 쇼핑</div>
       <div class="cat-opt" data-cat="액티비티" onclick="selCat(this)">🏄 액티비티</div>
     </div>
   </div>
@@ -348,7 +348,7 @@ function getCoord(name){
 // ══════════════════════════════════════════════
 // State  (초기값 - _SAVED_STATE가 있으면 덮어씀)
 // ══════════════════════════════════════════════
-const CAT_EMOJI={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
+const CAT_EMOJI={관광:'✈️',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍️',액티비티:'🏄'};
 let days=[
   {id:1,label:'1일차',places:[
     {id:1,name:'제주국제공항',cat:'숙소',time:'12:00',memo:'도착'},
@@ -468,7 +468,7 @@ function renderList(){
 // Map render — 여행 가이드 일러스트 스타일
 // ══════════════════════════════════════════════
 const CAT_COLOR={관광:'#2a9d6e',맛집:'#d85a30',카페:'#b07010',숙소:'#1560a0',쇼핑:'#6040c0',액티비티:'#b03060'};
-const CAT_ICON={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
+const CAT_ICON={관광:'✈️',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍️',액티비티:'🏄'};
 
 function renderMap(){
   const svg=document.getElementById('map-svg');
