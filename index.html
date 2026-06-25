@@ -1,104 +1,1168 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>제주 여행 플래너</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --teal:#0f7a61;
-  --teal2:#e0f5ee;
-  --teal3:#1aab80;
-  --coral:#d85a30;
-  --coral2:#faece7;
-  --amber:#b07010;
-  --amber2:#faeeda;
-  --blue:#1560a0;
-  --blue2:#e6f1fb;
-  --purple:#5040b0;
-  --purple2:#eeedfe;
-  --pink:#993060;
-  --pink2:#fbeaf0;
-  --bg:#f5f2ed;
-  --surface:#fff;
-  --surface2:#f0ece5;
-  --border:rgba(0,0,0,0.09);
-  --border2:rgba(0,0,0,0.15);
-  --text:#1a1a1a;
-  --text2:#666;
-  --text3:#aaa;
-  --radius:12px;
-  --shadow:0 2px 12px rgba(0,0,0,0.09);
+  --teal:#0f7a61;--teal2:#e0f5ee;--teal3:#1aab80;
+  --coral:#d85a30;--coral2:#faece7;
+  --amber:#b07010;--amber2:#faeeda;
+  --blue:#1560a0;--blue2:#e6f1fb;
+  --purple:#5040b0;--purple2:#eeedfe;
+  --pink:#993060;--pink2:#fbeaf0;
+  --bg:#f5f2ed;--surface:#fff;--surface2:#f0ece5;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.15);
+  --text:#1a1a1a;--text2:#666;--text3:#aaa;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.09);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-
 html,body{height:100%;overflow:hidden;background:var(--bg);}
 body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;color:var(--text);font-size:14px;display:flex;flex-direction:column;}
 
 /* ── Header ── */
 .hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;z-index:50;}
-.hdr-icon{width:30px;height:30px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-.hdr-title{font-size:15px;font-weight:700;}
-.hdr-sub{font-size:11px;color:var(--text2);}
+.hdr-icon{width:30px;height:30px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.hdr-title{font-size:15px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px;}
 .hdr-right{margin-left:auto;display:flex;gap:6px;}
-.hdr-btn{padding:6px 11px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-size:12px;}
+.hdr-btn{padding:6px 11px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;}
+.hdr-btn:active{background:var(--surface2);}
 
-/* ── FAB group ── */
-.fab-group{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;display:flex;flex-direction:column;gap:10px;z-index:60;}
+/* ── Tab bar (bottom nav style for days) ── */
+.day-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;flex-shrink:0;padding:0 4px;}
+.day-bar::-webkit-scrollbar{display:none;}
+.day-tab{padding:7px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.day-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.day-tab-x{font-size:13px;color:var(--text3);min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;margin-left:-2px;margin-right:-6px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+.day-tab-x:active{color:#c0392b;}
+.day-add-btn{padding:5px 10px;font-size:17px;color:var(--text3);cursor:pointer;flex-shrink:0;border:none;background:none;font-family:inherit;}
+.day-add-btn:active{color:var(--teal);}
 
-/* ✅ 수정된 FAB */
-.fab{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  background:#fff;
-  color:#333;
-  font-size:26px;
-  border:1px solid rgba(0,0,0,0.08);
-  box-shadow:0 6px 18px rgba(0,0,0,0.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:transform .15s;
-}
+/* ── View toggle ── */
+.view-toggle{display:flex;background:var(--surface2);border-radius:10px;padding:3px;margin:10px 14px 0;flex-shrink:0;}
+.view-btn{flex:1;padding:7px;text-align:center;font-size:12px;font-weight:500;color:var(--text2);border-radius:7px;cursor:pointer;transition:all .15s;}
+.view-btn.active{background:var(--surface);color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+
+/* ── Content area ── */
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative;}
+
+/* ── Map ── */
+.map-wrap{flex:1;position:relative;overflow:hidden;display:none;}
+.map-wrap.show{display:block;}
+#map-svg{width:100%;height:100%;display:block;touch-action:none;}
+.map-tooltip{position:absolute;background:rgba(20,20,20,0.85);color:#fff;padding:5px 10px;border-radius:8px;font-size:12px;pointer-events:none;white-space:nowrap;display:none;transform:translate(-50%,-110%);z-index:30;}
+.map-empty-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.92);padding:18px 24px;border-radius:14px;text-align:center;color:var(--text2);font-size:13px;line-height:1.7;border:1px solid var(--border);pointer-events:none;}
+.map-info{position:absolute;bottom:calc(16px + var(--safe-bottom));left:12px;right:12px;background:var(--surface);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);border:1px solid var(--border);display:none;}
+.map-info.show{display:block;}
+.map-info-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.map-info-meta{font-size:12px;color:var(--text2);display:flex;flex-wrap:wrap;gap:8px;}
+.map-info-close{position:absolute;top:12px;right:14px;font-size:20px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px;}
+
+/* ── List ── */
+.list-wrap{flex:1;overflow-y:auto;display:none;padding:10px 12px calc(80px + var(--safe-bottom));}
+.list-wrap.show{display:block;}
+.list-wrap::-webkit-scrollbar{width:3px;}
+.list-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+.place-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;position:relative;}
+.place-card:active{background:var(--surface2);}
+.place-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px;}
+.place-body{flex:1;min-width:0;}
+.place-name{font-size:14px;font-weight:600;margin-bottom:3px;}
+.place-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;}
+.cat-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.place-time{font-size:11px;color:var(--text2);}
+.place-memo{font-size:11px;color:var(--text3);margin-top:3px;}
+.place-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:17px;padding:4px;flex-shrink:0;align-self:center;}
+.place-del:active{color:#c0392b;}
+.place-order-btns{display:flex;flex-direction:column;gap:2px;flex-shrink:0;align-self:center;}
+.order-btn{background:none;border:1px solid var(--border2);border-radius:5px;width:22px;height:22px;font-size:10px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+.order-btn:active{background:var(--surface2);}
+.order-btn:disabled{opacity:0.25;cursor:default;}
+
+/* DB search */
+.db-search-wrap{position:relative;margin-bottom:8px;}
+.db-results{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;max-height:180px;overflow-y:auto;z-index:10;box-shadow:var(--shadow);display:none;}
+.db-results.show{display:block;}
+.db-result-item{padding:10px 13px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.db-result-item:last-child{border-bottom:none;}
+.db-result-item:active{background:var(--surface2);}
+.db-result-name{font-weight:500;}
+.db-result-pin{font-size:11px;color:var(--teal);background:var(--teal2);padding:1px 6px;border-radius:10px;}
+
+.connector{display:flex;align-items:center;gap:8px;padding:0 0 0 48px;margin:-1px 0;}
+.conn-line{width:1px;height:18px;background:var(--border2);}
+.conn-dur{font-size:11px;color:var(--text2);background:var(--surface);border:1px solid var(--border2);padding:2px 9px;border-radius:10px;font-weight:500;}
+
+.empty-card{text-align:center;padding:44px 20px;color:var(--text3);}
+.empty-card .ei{font-size:36px;margin-bottom:10px;}
+.empty-card p{font-size:13px;line-height:1.7;}
+
+/* ── FAB (add button) ── */
+.fab{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;width:52px;height:52px;border-radius:50%;background:var(--teal);color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(15,122,97,0.38);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;}
 .fab:active{transform:scale(0.92);}
 
-/* sub button */
-.fab-sub{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:#fff;
-  border:1px solid #0f7a61;
-  color:#0f7a61;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,0.12);
-}
+/* ── Bottom sheet ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:70;display:none;opacity:0;transition:opacity .2s;}
+.sheet-overlay.show{display:block;opacity:1;}
+.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:80;padding:20px 18px calc(24px + var(--safe-bottom));transform:translateY(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
+.sheet.show{transform:translateY(0);}
+.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px;}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:14px;}
+.field-label{font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:500;}
+.field-row{margin-bottom:12px;}
+.inp{width:100%;padding:11px 13px;border:1px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;}
+.inp:focus{border-color:var(--teal);}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.cat-opt{padding:10px 6px;border-radius:10px;border:1.5px solid var(--border);text-align:center;font-size:12px;cursor:pointer;background:var(--surface2);}
+.cat-opt.sel{border-color:var(--teal);background:var(--teal2);color:var(--teal);font-weight:600;}
+.sheet-row{display:flex;gap:8px;}
+.btn-sheet{flex:1;padding:13px;border-radius:11px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
+.btn-confirm{background:var(--teal);color:#fff;}
+.btn-confirm:active{background:#0d6652;}
+.btn-cancel{background:var(--surface2);color:var(--text2);}
+.btn-cancel:active{background:var(--border2);}
 
-/* 나머지는 원본 유지 (생략 없이 필요하면 이어서 보내줄게) */
+/* ── DB browser sheet ── */
+.db-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:80;transform:translateY(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;max-height:85vh;}
+.db-sheet.show{transform:translateY(0);}
+.db-sheet-head{padding:16px 18px 10px;flex-shrink:0;}
+.db-sheet-search{width:100%;padding:10px 13px;border:1px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:var(--surface2);outline:none;margin-bottom:10px;}
+.db-sheet-search:focus{border-color:var(--teal);background:var(--surface);}
+.db-region-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.db-region-tabs::-webkit-scrollbar{display:none;}
+.db-rtab{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.db-rtab.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+.db-list{flex:1;overflow-y:auto;padding:8px 12px calc(16px + var(--safe-bottom));}
+.db-list::-webkit-scrollbar{width:3px;}
+.db-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.db-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);margin-bottom:7px;}
+.db-item:active{background:var(--surface2);}
+.db-item-name{font-size:13px;font-weight:600;flex:1;}
+.db-item-region{font-size:10px;color:var(--text3);}
+.db-item-add{font-size:18px;color:var(--teal);font-weight:300;flex-shrink:0;}
+.db-pin{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 
+/* FAB group */
+.fab-group{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:60;}
+.fab{position:static;bottom:auto;right:auto;}
+.fab-sub{width:44px;height:44px;border-radius:50%;background:var(--surface);color:var(--teal);font-size:20px;border:1.5px solid var(--teal);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+.fab-sub:active{transform:scale(0.92);}
+
+/* category color helpers */
+.c관광{background:var(--teal3);}
+.c맛집{background:var(--coral);}
+.c카페{background:var(--amber);}
+.c숙소{background:var(--blue);}
+.c쇼핑{background:var(--purple);}
+.c액티비티{background:var(--pink);}
+.b관광{background:var(--teal2);color:var(--teal);}
+.b맛집{background:var(--coral2);color:var(--coral);}
+.b카페{background:var(--amber2);color:var(--amber);}
+.b숙소{background:var(--blue2);color:var(--blue);}
+.b쇼핑{background:var(--purple2);color:var(--purple);}
+.b액티비티{background:var(--pink2);color:var(--pink);}
 </style>
 </head>
-
 <body>
 
+<!-- Header -->
 <div class="hdr">
-  <div class="hdr-icon">🍊</div>
+  <div class="hdr-icon">🌿</div>
   <div>
     <div class="hdr-title">제주 여행 플래너</div>
-    <div class="hdr-sub">일정을 만들어보세요</div>
+    <div class="hdr-sub" id="hdr-sub">일정을 만들어보세요</div>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="share-btn" onclick="shareURL()">🔗</button>
+    <button class="hdr-btn" onclick="exportTxt()">📤</button>
   </div>
 </div>
 
-<!-- FAB -->
-<div class="fab-group">
-  <button class="fab-sub">🗂️</button>
-  <button class="fab">➕</button>
+<!-- Day tabs -->
+<div class="day-bar" id="day-bar"></div>
+
+<!-- View toggle -->
+<div class="view-toggle">
+  <div class="view-btn active" id="btn-list" onclick="setView('list')">📋 목록</div>
+  <div class="view-btn" id="btn-map" onclick="setView('map')">📍 지도</div>
 </div>
 
+<!-- Content -->
+<div class="content">
+  <div class="map-wrap" id="map-wrap">
+    <svg id="map-svg" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="map-tooltip" id="tooltip"></div>
+    <div class="map-empty-msg" id="map-empty">장소를 추가하면<br>지도에 표시됩니다</div>
+    <div class="map-info" id="map-info">
+      <button class="map-info-close" onclick="closeInfo()">×</button>
+      <div class="map-info-name" id="info-name"></div>
+      <div class="map-info-meta" id="info-meta"></div>
+    </div>
+  </div>
+  <div class="list-wrap show" id="list-wrap"></div>
+</div>
+
+<!-- FAB group -->
+<div class="fab-group">
+  <button class="fab-sub" onclick="openDBSheet()" title="장소 DB 보기">🗂️</button>
+  <button class="fab" onclick="openSheet()">＋</button>
+</div>
+
+<!-- Sheet overlay -->
+<div class="sheet-overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- DB browser sheet -->
+<div class="db-sheet" id="db-sheet">
+  <div class="db-sheet-head">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="sheet-title" style="margin-bottom:0">📍 장소 DB <span style="font-size:12px;color:var(--text3);font-weight:400" id="db-count"></span></div>
+      <button onclick="closeDBSheet()" style="background:none;border:none;font-size:22px;color:var(--text3);cursor:pointer;padding:4px;">×</button>
+    </div>
+    <input class="db-sheet-search" id="db-sheet-search" placeholder="장소 검색..." oninput="renderDBList()" autocomplete="off"/>
+    <div class="db-region-tabs" id="db-region-tabs"></div>
+  </div>
+  <div class="db-list" id="db-list"></div>
+</div>
+
+<!-- Bottom sheet -->
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">장소 추가</div>
+
+  <div class="field-row">
+    <div class="field-label">장소 이름</div>
+    <div class="db-search-wrap">
+      <input class="inp" id="inp-name" placeholder="이름 입력 또는 검색" oninput="onNameInput(this.value)" autocomplete="off"/>
+      <div class="db-results" id="db-results"></div>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field-label">카테고리</div>
+    <div class="cat-grid" id="cat-grid">
+      <div class="cat-opt sel" data-cat="관광" onclick="selCat(this)">🏔 관광</div>
+      <div class="cat-opt" data-cat="맛집" onclick="selCat(this)">🍜 맛집</div>
+      <div class="cat-opt" data-cat="카페" onclick="selCat(this)">☕ 카페</div>
+      <div class="cat-opt" data-cat="숙소" onclick="selCat(this)">🏨 숙소</div>
+      <div class="cat-opt" data-cat="쇼핑" onclick="selCat(this)">🛍 쇼핑</div>
+      <div class="cat-opt" data-cat="액티비티" onclick="selCat(this)">🏄 액티비티</div>
+    </div>
+  </div>
+
+  <div class="field-row" style="display:flex;gap:8px;">
+    <div style="flex:1">
+      <div class="field-label">방문 시간</div>
+      <input class="inp" id="inp-time" placeholder="09:00" type="time" />
+    </div>
+    <div style="flex:1">
+      <div class="field-label">메모</div>
+      <input class="inp" id="inp-memo" placeholder="간단 메모" />
+    </div>
+  </div>
+
+  <div class="sheet-row">
+    <button class="btn-sheet btn-confirm" onclick="addPlace()">추가</button>
+    <button class="btn-sheet btn-cancel" onclick="closeSheet()">취소</button>
+  </div>
+</div>
+
+<script id="sdb">
+/* 저장된 상태 - 저장 버튼 클릭 시 자동 업데이트됩니다 */
+const _SAVED_STATE = null;
+</script>
+
+<script>
+// ══════════════════════════════════════════════
+const JEJU_DB = {
+  // 공항/항구
+  '제주국제공항':   [126.493,33.511,'제주시'], '제주항':        [126.527,33.527,'제주시'],
+  '성산항':        [126.924,33.472,'동부'],   '서귀포항':      [126.563,33.246,'서귀포'],
+  '화순항':        [126.318,33.234,'서부'],   '한림항':        [126.262,33.415,'서부'],
+  // 동부
+  '성산일출봉':    [126.942,33.458,'동부'],   '우도':          [126.952,33.502,'동부'],
+  '섭지코지':      [126.924,33.440,'동부'],   '광치기해변':    [126.906,33.455,'동부'],
+  '종달리해변':    [126.898,33.519,'동부'],   '김녕해수욕장':  [126.756,33.554,'동부'],
+  '월정리해변':    [126.796,33.555,'동부'],   '함덕해수욕장':  [126.670,33.543,'동부'],
+  '비자림':        [126.812,33.484,'동부'],   '만장굴':        [126.772,33.528,'동부'],
+  '성읍민속마을':  [126.807,33.435,'동부'],   '표선해비치해변':[126.840,33.323,'동부'],
+  '신천리해변':    [126.888,33.303,'동부'],   '섭지코지유채꽃밭':[126.925,33.442,'동부'],
+  '산굼부리':      [126.727,33.459,'동부'],   '다랑쉬오름':    [126.840,33.468,'동부'],
+  '용눈이오름':    [126.851,33.452,'동부'],   '아부오름':      [126.718,33.445,'동부'],
+  '거문오름':      [126.727,33.490,'동부'],   '에코랜드':      [126.681,33.461,'동부'],
+  '제주허브동산':  [126.824,33.428,'동부'],   '우도땅콩아이스크림':[126.953,33.503,'동부'],
+  // 서부
+  '협재해수욕장':  [126.239,33.394,'서부'],   '금능해수욕장':  [126.248,33.385,'서부'],
+  '한림공원':      [126.265,33.404,'서부'],   '애월해안도로':  [126.314,33.462,'서부'],
+  '곽지해수욕장':  [126.280,33.462,'서부'],   '이호테우해변':  [126.443,33.496,'서부'],
+  '새별오름':      [126.356,33.409,'서부'],   '저지오름':      [126.185,33.355,'서부'],
+  '수월봉':        [126.166,33.296,'서부'],   '차귀도':        [126.153,33.316,'서부'],
+  '신창풍차해안':  [126.167,33.342,'서부'],   '항몽유적지':    [126.264,33.396,'서부'],
+  '오설록티뮤지엄':[126.290,33.305,'서부'],   '신화월드':      [126.253,33.303,'서부'],
+  '카멜리아힐':    [126.368,33.277,'서부'],
+  // 남부(서귀포)
+  '중문해수욕장':  [126.416,33.244,'서귀포'], '천제연폭포':    [126.429,33.253,'서귀포'],
+  '천지연폭포':    [126.558,33.249,'서귀포'], '정방폭포':      [126.567,33.243,'서귀포'],
+  '외돌개':        [126.539,33.235,'서귀포'], '서귀포매일올레시장':[126.561,33.250,'서귀포'],
+  '제주올레7코스': [126.390,33.245,'서귀포'], '박수기정':      [126.296,33.233,'서귀포'],
+  '산방산':        [126.312,33.240,'서귀포'], '용머리해안':    [126.305,33.234,'서귀포'],
+  '송악산':        [126.296,33.218,'서귀포'], '새연교':        [126.563,33.243,'서귀포'],
+  '이중섭거리':    [126.558,33.250,'서귀포'],
+  // 중산간/한라산
+  '한라산':        [126.529,33.362,'중산간'], '한라산백록담':  [126.529,33.362,'중산간'],
+  '사려니숲길':    [126.645,33.401,'중산간'], '절물자연휴양림':[126.594,33.457,'중산간'],
+  '1100고지습지':  [126.429,33.362,'중산간'], '어리목':        [126.468,33.390,'중산간'],
+  '영실':          [126.474,33.343,'중산간'], '성판악':        [126.601,33.385,'중산간'],
+  // 제주시
+  '동문시장':      [126.531,33.512,'제주시'], '서문시장':      [126.517,33.511,'제주시'],
+  '올레시장':      [126.511,33.499,'제주시'], '제주목관아':    [126.519,33.513,'제주시'],
+  '삼성혈':        [126.520,33.506,'제주시'], '용두암':        [126.508,33.518,'제주시'],
+  '도두봉':        [126.465,33.511,'제주시'], '국립제주박물관':[126.508,33.494,'제주시'],
+  '넥슨컴퓨터박물관':[126.479,33.493,'제주시'],'제주돌문화공원':[126.600,33.467,'제주시'],
+};
+
+// DB_NAMES (장소 이름 배열 - 검색 자동완성용)
+const DB_NAMES = Object.keys(JEJU_DB);
+
+// ══════════════════════════════════════════════
+// SVG 좌표 변환  lon: 126.12~127.00  lat: 33.08~33.62
+// ══════════════════════════════════════════════
+const MAP = {minLon:126.12,maxLon:127.00,minLat:33.08,maxLat:33.62,W:500,H:340,PAD:30};
+function toSVG(lon,lat){
+  const x = MAP.PAD + (lon-MAP.minLon)/(MAP.maxLon-MAP.minLon)*(MAP.W-MAP.PAD*2);
+  const y = MAP.H-MAP.PAD - (lat-MAP.minLat)/(MAP.maxLat-MAP.minLat)*(MAP.H-MAP.PAD*2);
+  return [Math.round(x*10)/10, Math.round(y*10)/10];
+}
+
+function getCoord(name){
+  if(JEJU_DB[name]) return toSVG(JEJU_DB[name][0], JEJU_DB[name][1]);
+  const h=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return [190+(h*47%200), 110+(h*73%110)];
+}
+
+// ══════════════════════════════════════════════
+// State  (초기값 - _SAVED_STATE가 있으면 덮어씀)
+// ══════════════════════════════════════════════
+const CAT_EMOJI={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
+let days=[
+  {id:1,label:'1일차',places:[
+    {id:1,name:'제주국제공항',cat:'숙소',time:'12:00',memo:'도착'},
+    {id:2,name:'동문시장',cat:'맛집',time:'13:30',memo:'점심 & 구경'},
+    {id:3,name:'만장굴',cat:'관광',time:'15:30',memo:'세계자연유산'},
+    {id:4,name:'월정리해변',cat:'관광',time:'17:30',memo:'일몰 감상'},
+  ]},
+  {id:2,label:'2일차',places:[
+    {id:5,name:'성산일출봉',cat:'관광',time:'07:00',memo:'일출 필수'},
+    {id:6,name:'우도',cat:'액티비티',time:'10:00',memo:'전기차 투어'},
+    {id:7,name:'섭지코지',cat:'관광',time:'14:00',memo:'드라마 촬영지'},
+    {id:8,name:'서귀포매일올레시장',cat:'맛집',time:'17:00',memo:'흑돼지'},
+  ]},
+  {id:3,label:'3일차',places:[
+    {id:9,name:'한라산',cat:'관광',time:'06:00',memo:'성판악 코스'},
+    {id:10,name:'천지연폭포',cat:'관광',time:'14:00',memo:''},
+    {id:11,name:'외돌개',cat:'관광',time:'16:00',memo:'산책'},
+  ]},
+];
+let activeDayId=1;
+let nextId=20;
+let nextDayId=4;
+// _SAVED_STATE 복원 (PC에서 저장한 파일 다시 열 때)
+if(typeof _SAVED_STATE !== 'undefined' && _SAVED_STATE){
+  days = _SAVED_STATE.days || days;
+  activeDayId = _SAVED_STATE.activeDayId || days[0].id;
+  nextId = _SAVED_STATE.nextId || 100;
+  nextDayId = _SAVED_STATE.nextDayId || days.length+1;
+}
+let curView='list';
+let selCatVal='관광';
+let touchStartY=0;
+
+// ══════════════════════════════════════════════
+// Render
+// ══════════════════════════════════════════════
+function getDay(id){return days.find(d=>d.id===id);}
+function getActive(){return getDay(activeDayId);}
+
+function autoSave(){
+  try { localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId})); } catch(e){}
+}
+
+function renderAll(){
+  renderDayBar();
+  renderList();
+  renderMap();
+  updateSub();
+  autoSave();
+}
+
+function updateSub(){
+  const d=getActive();
+  const total=days.reduce((s,d)=>s+d.places.length,0);
+  document.getElementById('hdr-sub').textContent=`${days.length}일 일정 · 총 ${total}곳`;
+}
+
+function renderDayBar(){
+  const bar=document.getElementById('day-bar');
+  bar.innerHTML='';
+  days.forEach(d=>{
+    const t=document.createElement('div');
+    t.className='day-tab'+(d.id===activeDayId?' active':'');
+    t.innerHTML=`${d.label}<button class="day-tab-x" ontouchend="delDay(event,${d.id})" onclick="delDay(event,${d.id})">✕</button>`;
+    t.onclick=e=>{if(e.target.closest('.day-tab-x'))return;activeDayId=d.id;renderAll();};
+    bar.appendChild(t);
+  });
+  const add=document.createElement('button');
+  add.className='day-add-btn';
+  add.textContent='+';
+  add.title='일차 추가';
+  add.onclick=addDay;
+  bar.appendChild(add);
+}
+
+function renderList(){
+  const wrap=document.getElementById('list-wrap');
+  const d=getActive();
+  if(!d||d.places.length===0){
+    wrap.innerHTML=`<div class="empty-card"><div class="ei">📍</div><p>아직 장소가 없어요<br>＋ 버튼으로 추가해보세요</p></div>`;
+    return;
+  }
+  wrap.innerHTML='';
+  d.places.forEach((p,i)=>{
+    if(i>0){
+      const prev=d.places[i-1];
+      let dur='';
+      if(prev.time&&p.time){const m=tdiff(prev.time,p.time);if(m>0)dur=fmtDur(m);}
+      const conn=document.createElement('div');
+      conn.className='connector';
+      conn.innerHTML=`<div class="conn-line"></div>${dur?`<div class="conn-dur">🚗 ${dur}</div>`:''}`;
+      wrap.appendChild(conn);
+    }
+    const el=document.createElement('div');
+    el.className='place-card';
+    el.innerHTML=`
+      <div class="place-num c${p.cat}">${i+1}</div>
+      <div class="place-body">
+        <div class="place-name">${p.name}</div>
+        <div class="place-row">
+          <span class="cat-badge b${p.cat}">${CAT_EMOJI[p.cat]} ${p.cat}</span>
+          ${p.time?`<span class="place-time">🕐 ${p.time}</span>`:''}
+        </div>
+        ${p.memo?`<div class="place-memo">${p.memo}</div>`:''}
+      </div>
+      <div class="place-order-btns">
+        <button class="order-btn" onclick="movePlace(${d.id},${p.id},-1)" ${i===0?'disabled':''}>▲</button>
+        <button class="order-btn" onclick="movePlace(${d.id},${p.id},1)" ${i===d.places.length-1?'disabled':''}>▼</button>
+      </div>
+      <button class="place-del" onclick="delPlace(${d.id},${p.id})">✕</button>
+    `;
+    wrap.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════════════
+// Map render — 여행 가이드 일러스트 스타일
+// ══════════════════════════════════════════════
+const CAT_COLOR={관광:'#2a9d6e',맛집:'#d85a30',카페:'#b07010',숙소:'#1560a0',쇼핑:'#6040c0',액티비티:'#b03060'};
+const CAT_ICON={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
+
+function renderMap(){
+  const svg=document.getElementById('map-svg');
+  svg.innerHTML='';
+  const d=getActive();
+  document.getElementById('map-empty').style.display=(!d||d.places.length===0)?'block':'none';
+  if(!d||d.places.length===0) return;
+
+  const ns='http://www.w3.org/2000/svg';
+  function mk(tag,attrs,txt){
+    const e=document.createElementNS(ns,tag);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+    if(txt!=null) e.textContent=txt;
+    return e;
+  }
+
+  // ── 배경: 파스텔 바다 그라디언트 ──
+  const defs=mk('defs',{});
+  // 바다 그라디언트
+  const seaGrad=mk('linearGradient',{id:'seaGrad',x1:'0%',y1:'0%',x2:'100%',y2:'100%'});
+  seaGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#b8dff0'}));
+  seaGrad.appendChild(mk('stop',{offset:'100%','stop-color':'#8ecae6'}));
+  defs.appendChild(seaGrad);
+  // 섬 그라디언트
+  const islandGrad=mk('linearGradient',{id:'islandGrad',x1:'0%',y1:'0%',x2:'0%',y2:'100%'});
+  islandGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#d4edaa'}));
+  islandGrad.appendChild(mk('stop',{offset:'100%','stop-color':'#b8d98a'}));
+  defs.appendChild(islandGrad);
+  // 드롭섀도 필터
+  const filt=mk('filter',{id:'dropshadow',x:'-20%',y:'-20%',width:'140%',height:'140%'});
+  const fe=mk('feDropShadow',{dx:'0',dy:'2',stdDeviation:'3','flood-color':'rgba(0,0,0,0.22)'});
+  filt.appendChild(fe);
+  defs.appendChild(filt);
+  // 마커 글로우
+  const glow=mk('filter',{id:'glow'});
+  glow.appendChild(mk('feGaussianBlur',{stdDeviation:'2',result:'coloredBlur'}));
+  const feMerge=mk('feMerge',{});
+  feMerge.appendChild(mk('feMergeNode',{in:'coloredBlur'}));
+  feMerge.appendChild(mk('feMergeNode',{in:'SourceGraphic'}));
+  glow.appendChild(feMerge);
+  defs.appendChild(glow);
+  svg.appendChild(defs);
+
+  // 바다 배경
+  svg.appendChild(mk('rect',{width:500,height:340,fill:'url(#seaGrad)'}));
+
+  // 바다 물결 텍스처 (가로 웨이브 라인들)
+  for(let wy=30;wy<340;wy+=22){
+    const wave=mk('path',{
+      d:`M0,${wy} Q62,${wy-5} 125,${wy} Q187,${wy+5} 250,${wy} Q312,${wy-5} 375,${wy} Q437,${wy+5} 500,${wy}`,
+      fill:'none',stroke:'rgba(255,255,255,0.28)','stroke-width':'1'
+    });
+    svg.appendChild(wave);
+  }
+
+  // ── 제주도 해안선 (더 정밀한 포인트 ~65개) ──
+  const coastLL=[
+    [126.148,33.395],[126.153,33.360],[126.162,33.330],[126.175,33.305],
+    [126.195,33.280],[126.215,33.262],[126.248,33.250],[126.278,33.242],
+    [126.305,33.232],[126.340,33.225],[126.375,33.220],[126.410,33.218],
+    [126.448,33.216],[126.490,33.215],[126.528,33.214],[126.568,33.216],
+    [126.605,33.220],[126.645,33.228],[126.678,33.235],[126.710,33.248],
+    [126.742,33.262],[126.772,33.278],[126.800,33.298],[126.826,33.318],
+    [126.848,33.338],[126.868,33.360],[126.886,33.382],[126.900,33.406],
+    [126.912,33.428],[126.924,33.450],[126.932,33.468],[126.938,33.485],
+    [126.938,33.502],[126.928,33.518],[126.912,33.530],[126.892,33.536],
+    [126.868,33.538],[126.838,33.538],[126.805,33.542],[126.770,33.548],
+    [126.735,33.554],[126.698,33.558],[126.660,33.560],[126.622,33.560],
+    [126.582,33.558],[126.542,33.558],[126.502,33.558],[126.463,33.555],
+    [126.424,33.548],[126.388,33.545],[126.350,33.542],[126.318,33.538],
+    [126.288,33.530],[126.262,33.518],[126.238,33.505],[126.218,33.490],
+    [126.200,33.472],[126.185,33.452],[126.172,33.432],[126.160,33.415],
+    [126.148,33.395],
+  ];
+  const coastPath = coastLL.map(([lo,la],i)=>{
+    const [x,y]=toSVG(lo,la);
+    return (i===0?`M${x},${y}`:`L${x},${y}`);
+  }).join(' ')+'Z';
+
+  // 섬 그림자
+  svg.appendChild(mk('path',{d:coastPath,fill:'rgba(0,0,0,0.12)',transform:'translate(4,6)',filter:'url(#dropshadow)'}));
+  // 섬 본체
+  svg.appendChild(mk('path',{d:coastPath,fill:'url(#islandGrad)',stroke:'#8aaf5a','stroke-width':'1.8','stroke-linejoin':'round'}));
+
+  // 해안가 안쪽 테두리 (얕은 바다 효과)
+  svg.appendChild(mk('path',{d:coastPath,fill:'none',stroke:'rgba(140,200,120,0.4)','stroke-width':'4','stroke-linejoin':'round'}));
+
+  // ── 내부 지형 디테일 ──
+  // 한라산 — 겹쳐쌓인 산 모양
+  const [hx,hy]=toSVG(126.529,33.362);
+  // 산 그림자
+  svg.appendChild(mk('ellipse',{cx:hx+3,cy:hy+4,rx:28,ry:12,fill:'rgba(0,0,0,0.1)'}));
+  // 산 레이어3 (가장 뒤)
+  svg.appendChild(mk('path',{d:`M${hx-32},${hy+8} Q${hx-10},${hy-28} ${hx+2},${hy-34} Q${hx+14},${hy-28} ${hx+36},${hy+8}Z`,fill:'#7ab850',opacity:'0.6'}));
+  // 산 레이어2
+  svg.appendChild(mk('path',{d:`M${hx-26},${hy+8} Q${hx-8},${hy-24} ${hx+1},${hy-32} Q${hx+12},${hy-24} ${hx+28},${hy+8}Z`,fill:'#5e9840'}));
+  // 산 레이어1 (앞)
+  svg.appendChild(mk('path',{d:`M${hx-20},${hy+8} Q${hx-4},${hy-18} ${hx},${hy-28} Q${hx+6},${hy-18} ${hx+22},${hy+8}Z`,fill:'#4a8030'}));
+  // 눈 덮인 봉우리
+  svg.appendChild(mk('path',{d:`M${hx-5},${hy-24} Q${hx},${hy-30} ${hx+5},${hy-24} Q${hx},${hy-22} ${hx-5},${hy-24}Z`,fill:'white',opacity:'0.85'}));
+  // 한라산 레이블
+  const hLabel=mk('text',{x:hx,y:hy+20,'text-anchor':'middle','font-size':'9','font-weight':'700',fill:'#3a6020','letter-spacing':'-0.3'});
+  hLabel.textContent='한라산 ▲1950m';
+  svg.appendChild(hLabel);
+
+  // 숲/녹지 힌트 (중산간)
+  [[126.64,33.40],[126.72,33.47],[126.59,33.43],[126.80,33.48]].forEach(([lo,la])=>{
+    const [tx,ty]=toSVG(lo,la);
+    const tree=mk('text',{x:tx,y:ty,'text-anchor':'middle','font-size':'11',opacity:'0.45'});
+    tree.textContent='🌲';
+    svg.appendChild(tree);
+  });
+
+  // 바다 텍스트 장식
+  const seaText=mk('text',{x:55,y:290,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
+  seaText.textContent='제주 바다';
+  svg.appendChild(seaText);
+  const seaText2=mk('text',{x:410,y:40,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
+  seaText2.textContent='동쪽 바다';
+  svg.appendChild(seaText2);
+
+  // 제주시·서귀포 지명
+  const [jjx,jjy]=toSVG(126.530,33.508);
+  const jLabel=mk('text',{x:jjx,y:jjy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
+  jLabel.textContent='제주시';
+  svg.appendChild(jLabel);
+  const [sgx,sgy]=toSVG(126.558,33.252);
+  const sgLabel=mk('text',{x:sgx,y:sgy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
+  sgLabel.textContent='서귀포시';
+  svg.appendChild(sgLabel);
+
+  // 우도 소섬
+  const [udx,udy]=toSVG(126.955,33.502);
+  svg.appendChild(mk('ellipse',{cx:udx,cy:udy,rx:9,ry:6,fill:'#c2d990',stroke:'#8aaf5a','stroke-width':'1'}));
+  const udL=mk('text',{x:udx,y:udy+1,'text-anchor':'middle','font-size':'6','font-weight':'600',fill:'#3a5a20'});
+  udL.textContent='우도';
+  svg.appendChild(udL);
+
+  // ── 나침반 (여행 가이드 스타일) ──
+  const compass=mk('g',{transform:'translate(470,26)'});
+  compass.appendChild(mk('circle',{cx:0,cy:0,r:18,fill:'rgba(255,255,255,0.9)',stroke:'#c8a96a','stroke-width':'1.5'}));
+  compass.appendChild(mk('circle',{cx:0,cy:0,r:15,fill:'none',stroke:'#e8d090','stroke-width':'0.8'}));
+  // 방위 눈금
+  ['N','E','S','W'].forEach((dir,i)=>{
+    const ang=i*90*(Math.PI/180);
+    const lx=Math.sin(ang)*10, ly=-Math.cos(ang)*10;
+    const t=mk('text',{x:lx,y:ly+3.5,'text-anchor':'middle','font-size':'6','font-weight':'700',fill:dir==='N'?'#c84030':'#5a4020'});
+    t.textContent=dir;
+    compass.appendChild(t);
+  });
+  // 나침반 바늘
+  compass.appendChild(mk('polygon',{points:'0,-12 -2.5,0 0,3 2.5,0',fill:'#c84030'}));
+  compass.appendChild(mk('polygon',{points:'0,12 -2.5,0 0,-3 2.5,0',fill:'#8a9aaa'}));
+  compass.appendChild(mk('circle',{cx:0,cy:0,r:2.5,fill:'#fff',stroke:'#999','stroke-width':'0.8'}));
+  svg.appendChild(compass);
+
+  // ── 일차 레이블 배지 ──
+  const dayBadge=mk('g',{transform:'translate(14,14)'});
+  dayBadge.appendChild(mk('rect',{x:0,y:0,width:52,height:20,rx:10,fill:'#2a9d6e'}));
+  const dayTxt=mk('text',{x:26,y:14,'text-anchor':'middle','font-size':'10','font-weight':'700',fill:'white'});
+  dayTxt.textContent=`${d.label}`;
+  dayBadge.appendChild(dayTxt);
+  svg.appendChild(dayBadge);
+
+  // ── 경로 곡선 (손그림 느낌) ──
+  const places=d.places;
+  const coords=places.map(p=>getCoord(p.name));
+
+  for(let i=0;i<coords.length-1;i++){
+    const [ax,ay]=coords[i],[bx,by]=coords[i+1];
+    // 살짝 꺾이는 자연스러운 커브
+    const cpx=(ax+bx)/2+((ay-by)*0.18), cpy=(ay+by)/2+((bx-ax)*0.18);
+    // 경로 배경 (두꺼운 흰선)
+    svg.appendChild(mk('path',{
+      d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
+      fill:'none',stroke:'rgba(255,255,255,0.7)','stroke-width':'4','stroke-linecap':'round'
+    }));
+    // 경로 본선 (점선)
+    svg.appendChild(mk('path',{
+      d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
+      fill:'none',stroke:'#e07040','stroke-width':'2','stroke-dasharray':'6,4','stroke-linecap':'round',opacity:'0.85'
+    }));
+    // 중간 화살표
+    const mt=0.5;
+    const qx=(1-mt)*(1-mt)*ax+2*(1-mt)*mt*cpx+mt*mt*bx;
+    const qy=(1-mt)*(1-mt)*ay+2*(1-mt)*mt*cpy+mt*mt*by;
+    const ang2=Math.atan2(by-ay,bx-ax)*180/Math.PI;
+    const arrow=mk('polygon',{
+      points:'0,-3 6,0 0,3',fill:'#e07040',opacity:'0.85',
+      transform:`translate(${qx},${qy}) rotate(${ang2})`
+    });
+    svg.appendChild(arrow);
+  }
+
+  // ── 마커: 말풍선 스티커 스타일 ──
+  places.forEach((p,i)=>{
+    const [px,py]=coords[i];
+    const color=CAT_COLOR[p.cat]||'#888';
+    const g=mk('g',{style:'cursor:pointer'});
+
+    // 핀 그림자
+    g.appendChild(mk('ellipse',{cx:px+1,cy:py+3,rx:7,ry:3.5,fill:'rgba(0,0,0,0.2)'}));
+
+    // 핀 몸체 — 여행 가이드 스타일 (동그란 머리 + 뾰족한 아래)
+    const pinPath=`M${px},${py} C${px-6},${py-4} ${px-10},${py-14} ${px-10},${py-22} A10,10 0 1,1 ${px+10},${py-22} C${px+10},${py-14} ${px+6},${py-4} ${px},${py}Z`;
+    g.appendChild(mk('path',{d:pinPath,fill:color,filter:'url(#glow)'}));
+    // 핀 하이라이트
+    g.appendChild(mk('ellipse',{cx:px-3,cy:py-26,rx:3,ry:2,fill:'rgba(255,255,255,0.4)'}));
+    // 번호 배지
+    g.appendChild(mk('circle',{cx:px,cy:py-22,r:8,fill:'white'}));
+    const numT=mk('text',{x:px,y:py-18.5,'text-anchor':'middle','font-size':'8.5','font-weight':'700',fill:color});
+    numT.textContent=i+1;
+    g.appendChild(numT);
+
+    g.addEventListener('click',()=>showInfo(p,i));
+    g.addEventListener('touchstart',e=>{e.stopPropagation();showInfo(p,i);},{passive:true});
+    svg.appendChild(g);
+  });
+
+  // ── 장소 이름 말풍선 라벨 ──
+  places.forEach((p,i)=>{
+    const [px,py]=coords[i];
+    const name=p.name.length>7?p.name.slice(0,7)+'…':p.name;
+    const w=name.length*7+16;
+    // 말풍선 위치: 핀 위
+    const lx=px, ly=py-34;
+    const g=mk('g',{});
+    // 배경 말풍선
+    g.appendChild(mk('rect',{x:lx-w/2,y:ly-11,width:w,height:15,rx:7,fill:'rgba(255,255,255,0.92)',stroke:'rgba(0,0,0,0.1)','stroke-width':'0.8'}));
+    // 말풍선 꼬리
+    g.appendChild(mk('polygon',{points:`${lx-3},${ly+4} ${lx+3},${ly+4} ${lx},${ly+8}`,fill:'rgba(255,255,255,0.92)'}));
+    const lbl=mk('text',{x:lx,y:ly,'text-anchor':'middle','font-size':'7.5','font-weight':'600',fill:'#2a2a2a'});
+    lbl.textContent=name;
+    g.appendChild(lbl);
+    svg.appendChild(g);
+  });
+}
+
+// ══════════════════════════════════════════════
+// Info panel
+// ══════════════════════════════════════════════
+function showInfo(p,i){
+  const panel=document.getElementById('map-info');
+  document.getElementById('info-name').textContent=`${i+1}. ${p.name}`;
+  const inDB=!!JEJU_DB[p.name];
+  document.getElementById('info-meta').innerHTML=
+    `<span class="cat-badge b${p.cat}">${CAT_EMOJI[p.cat]} ${p.cat}</span>`+
+    (p.time?`<span>🕐 ${p.time}</span>`:'')+
+    (p.memo?`<span style="color:var(--text2)">${p.memo}</span>`:'')+
+    `<span style="color:var(--text3);font-size:10px">${inDB?'📍 정확한 위치':'📍 근사 위치'}</span>`;
+  panel.classList.add('show');
+}
+function closeInfo(){document.getElementById('map-info').classList.remove('show');}
+
+// ══════════════════════════════════════════════
+// View toggle
+// ══════════════════════════════════════════════
+function setView(v){
+  curView=v;
+  document.getElementById('map-wrap').classList.toggle('show',v==='map');
+  document.getElementById('list-wrap').classList.toggle('show',v==='list');
+  document.getElementById('btn-map').classList.toggle('active',v==='map');
+  document.getElementById('btn-list').classList.toggle('active',v==='list');
+  if(v==='map') renderMap();
+}
+
+// ══════════════════════════════════════════════
+// Day management
+// ══════════════════════════════════════════════
+function addDay(){
+  const id=nextDayId++;
+  days.push({id,label:`${id}일차`,places:[]});
+  activeDayId=id;
+  renderAll();
+  // scroll tab into view
+  setTimeout(()=>{const bar=document.getElementById('day-bar');bar.scrollLeft=bar.scrollWidth;},50);
+}
+function delDay(e,id){
+  e.stopPropagation();
+  e.preventDefault();
+  if(days.length<=1){showConfirmModal('1일차는 삭제할 수 없어요',null);return;}
+  const d=getDay(id);
+  showConfirmModal(
+    `${d.label}을 삭제할까요?`,
+    ()=>{
+      days=days.filter(d=>d.id!==id);
+      if(activeDayId===id) activeDayId=days[0].id;
+      renderAll();
+    }
+  );
+}
+
+function showConfirmModal(msg, onConfirm){
+  document.getElementById('confirm-modal')?.remove();
+  const modal=document.createElement('div');
+  modal.id='confirm-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;';
+  modal.innerHTML=`
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 20px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:480px;">
+      <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 20px;"></div>
+      <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:24px;">${msg}</div>
+      <div style="display:flex;gap:10px;">
+        ${onConfirm ? `<button onclick="document.getElementById('confirm-modal').remove()" style="flex:1;padding:14px;background:#f0ece5;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#666;cursor:pointer;">취소</button>
+        <button id="confirm-ok" style="flex:1;padding:14px;background:#e53935;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#fff;cursor:pointer;">삭제</button>`
+        : `<button onclick="document.getElementById('confirm-modal').remove()" style="flex:1;padding:14px;background:#0f7a61;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#fff;cursor:pointer;">확인</button>`}
+      </div>
+    </div>
+  `;
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+  if(onConfirm){
+    document.getElementById('confirm-ok').addEventListener('click',()=>{
+      modal.remove();
+      onConfirm();
+    });
+  }
+}
+
+// ══════════════════════════════════════════════
+// Place management
+// ══════════════════════════════════════════════
+function delPlace(dayId,placeId){
+  const d=getDay(dayId);
+  if(!d)return;
+  d.places=d.places.filter(p=>p.id!==placeId);
+  renderAll();
+}
+
+function movePlace(dayId,placeId,dir){
+  const d=getDay(dayId);
+  if(!d)return;
+  const idx=d.places.findIndex(p=>p.id===placeId);
+  if(idx<0)return;
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=d.places.length)return;
+  const tmp=d.places[idx];
+  d.places[idx]=d.places[newIdx];
+  d.places[newIdx]=tmp;
+  renderAll();
+}
+
+function addPlace(){
+  const name=document.getElementById('inp-name').value.trim();
+  if(!name){document.getElementById('inp-name').focus();return;}
+  const d=getActive();
+  if(!d)return;
+  d.places.push({id:nextId++,name,cat:selCatVal,time:document.getElementById('inp-time').value,memo:document.getElementById('inp-memo').value.trim()});
+  closeSheet();
+  if(curView==='map') renderMap(); else renderList();
+  updateSub();
+  renderDayBar();
+}
+
+// ══════════════════════════════════════════════
+// DB Browser
+// ══════════════════════════════════════════════
+const REGIONS = ['전체','제주시','동부','서부','서귀포','중산간'];
+const REGION_EMOJI = {'전체':'🗺','제주시':'🏙','동부':'🌅','서부':'🌊','서귀포':'🏔','중산간':'🌿'};
+let dbActiveRegion = '전체';
+
+function openDBSheet(){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('db-sheet').classList.add('show');
+  renderDBRegionTabs();
+  renderDBList();
+  setTimeout(()=>document.getElementById('db-sheet-search').focus(), 300);
+}
+function closeDBSheet(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('db-sheet').classList.remove('show');
+  document.getElementById('db-sheet-search').value='';
+  dbActiveRegion='전체';
+}
+function closeAll(){
+  closeSheet();
+  closeDBSheet();
+}
+
+function renderDBRegionTabs(){
+  const wrap = document.getElementById('db-region-tabs');
+  wrap.innerHTML = REGIONS.map(r=>
+    `<div class="db-rtab${r===dbActiveRegion?' active':''}" onclick="setDBRegion('${r}')">${REGION_EMOJI[r]} ${r}</div>`
+  ).join('');
+}
+function setDBRegion(r){
+  dbActiveRegion=r;
+  renderDBRegionTabs();
+  renderDBList();
+}
+
+function renderDBList(){
+  const q = (document.getElementById('db-sheet-search').value||'').trim();
+  const list = document.getElementById('db-list');
+  const all = Object.entries(JEJU_DB);
+  const filtered = all.filter(([name, info])=>{
+    const regionOk = dbActiveRegion==='전체' || info[2]===dbActiveRegion;
+    const searchOk = !q || name.includes(q);
+    return regionOk && searchOk;
+  });
+  document.getElementById('db-count').textContent = `(${filtered.length}곳)`;
+  if(filtered.length===0){
+    list.innerHTML=`<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">검색 결과가 없어요</div>`;
+    return;
+  }
+  // 지역별 그룹
+  const groups = {};
+  filtered.forEach(([name,info])=>{
+    const r = info[2];
+    if(!groups[r]) groups[r]=[];
+    groups[r].push(name);
+  });
+  const regionOrder = ['제주시','동부','서부','서귀포','중산간'];
+  let html = '';
+  (dbActiveRegion==='전체' ? regionOrder : [dbActiveRegion]).forEach(r=>{
+    if(!groups[r]||groups[r].length===0) return;
+    html += `<div style="font-size:11px;font-weight:600;color:var(--text3);padding:8px 4px 5px;letter-spacing:0.3px;">${REGION_EMOJI[r]} ${r}</div>`;
+    groups[r].forEach(name=>{
+      const already = getActive()?.places.some(p=>p.name===name);
+      html += `<div class="db-item" onclick="addFromDB('${name}')">
+        <div class="db-pin" style="background:var(--teal2);color:var(--teal)">📍</div>
+        <div class="db-item-name">${name}</div>
+        <div class="db-item-add">${already?'✓':'+'}</div>
+      </div>`;
+    });
+  });
+  list.innerHTML = html;
+}
+
+function addFromDB(name){
+  const d = getActive();
+  if(!d) return;
+  // 이미 있으면 표시만
+  if(d.places.some(p=>p.name===name)){
+    const items = document.querySelectorAll('.db-item');
+    items.forEach(el=>{ if(el.querySelector('.db-item-name')?.textContent===name) el.style.opacity='0.5'; });
+    return;
+  }
+  d.places.push({id:nextId++, name, cat:'관광', time:'', memo:''});
+  renderAll();
+  renderDBList(); // refresh checkmarks
+}
+
+function onNameInput(val){
+  const box=document.getElementById('db-results');
+  const q=val.trim();
+  if(!q){box.classList.remove('show');box.innerHTML='';return;}
+  const matches=DB_NAMES.filter(n=>n.includes(q)).slice(0,8);
+  if(matches.length===0){box.classList.remove('show');return;}
+  box.innerHTML=matches.map(n=>`
+    <div class="db-result-item" onclick="pickDB('${n}')">
+      <span class="db-result-pin">📍 DB</span>
+      <span class="db-result-name">${n}</span>
+    </div>
+  `).join('');
+  box.classList.add('show');
+}
+
+function pickDB(name){
+  document.getElementById('inp-name').value=name;
+  document.getElementById('db-results').classList.remove('show');
+  document.getElementById('db-results').innerHTML='';
+}
+
+function openSheet(){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  setTimeout(()=>document.getElementById('inp-name').focus(),300);
+}
+function closeSheet(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('sheet').classList.remove('show');
+  document.getElementById('inp-name').value='';
+  document.getElementById('inp-time').value='';
+  document.getElementById('inp-memo').value='';
+  document.getElementById('db-results').classList.remove('show');
+  document.getElementById('db-results').innerHTML='';
+}
+function selCat(el){
+  document.querySelectorAll('.cat-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  selCatVal=el.dataset.cat;
+}
+
+// ══════════════════════════════════════════════
+// Utils
+// ══════════════════════════════════════════════
+function tdiff(a,b){
+  const [ah,am]=a.split(':').map(Number),[bh,bm]=b.split(':').map(Number);
+  return(bh*60+bm)-(ah*60+am);
+}
+function fmtDur(m){
+  if(m<60)return `${m}분`;
+  const h=Math.floor(m/60),mm=m%60;
+  return h+'시간'+(mm?` ${mm}분`:'');
+}
+
+// ══════════════════════════════════════════════
+// URL 인코딩/디코딩 (공유 핵심)
+// ══════════════════════════════════════════════
+function stateToURL(){
+  const data = {d: days, a: activeDayId, n: nextId, nd: nextDayId};
+  const json = JSON.stringify(data);
+  // 압축: btoa + encodeURIComponent
+  try {
+    const compressed = btoa(unescape(encodeURIComponent(json)));
+    return compressed;
+  } catch(e){ return null; }
+}
+
+function urlToState(encoded){
+  try {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    const data = JSON.parse(json);
+    if(data.d && data.d.length > 0){
+      days = data.d;
+      activeDayId = data.a || days[0].id;
+      nextId = data.n || 100;
+      nextDayId = data.nd || days.length + 1;
+      return true;
+    }
+  } catch(e){}
+  return false;
+}
+
+// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// 공유 URL 생성 & 복사
+// ══════════════════════════════════════════════
+async function shareURL(){
+  const btn = document.getElementById('share-btn');
+  const encoded = stateToURL();
+  if(!encoded){ alert('공유 데이터 생성 실패'); return; }
+
+  const url = location.href.split('#')[0] + '#' + encoded;
+
+  // 1순위: Web Share API (모바일 네이티브 공유창)
+  if(navigator.share){
+    try {
+      await navigator.share({
+        title: '제주 여행 플래너',
+        text: `${days.length}일 제주 여행 일정 공유해요 🌿`,
+        url: url
+      });
+      showBtnConfirm(btn, '✅', '🔗 공유');
+      return;
+    } catch(e){
+      if(e.name === 'AbortError') return; // 사용자가 취소
+    }
+  }
+
+  // 2순위: 클립보드 복사
+  try {
+    await navigator.clipboard.writeText(url);
+    showBtnConfirm(btn, '📋 복사됨!', '🔗 공유');
+    showToast('링크가 클립보드에 복사됐어요 📋');
+  } catch(e){
+    // 3순위: 수동 복사 모달
+    showShareModal(url);
+  }
+}
+
+function showShareModal(url){
+  // 기존 모달 제거
+  document.getElementById('share-modal')?.remove();
+  const modal = document.createElement('div');
+  modal.id = 'share-modal';
+  modal.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;
+    display:flex;align-items:flex-end;justify-content:center;
+  `;
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:480px;">
+      <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 18px;"></div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px;">🔗 일정 공유하기</div>
+      <div style="font-size:12px;color:#888;margin-bottom:14px;">아래 링크를 복사해서 공유하세요</div>
+      <div style="display:flex;gap:8px;">
+        <input id="share-url-input" readonly value="${url}"
+          style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:11px;color:#444;background:#f8f8f8;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" />
+        <button onclick="copyShareURL()" style="padding:10px 14px;background:#0f7a61;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">복사</button>
+      </div>
+      <button onclick="document.getElementById('share-modal').remove()"
+        style="width:100%;margin-top:12px;padding:12px;background:#f0ece5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;">닫기</button>
+    </div>
+  `;
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+function copyShareURL(){
+  const input = document.getElementById('share-url-input');
+  input.select();
+  try {
+    document.execCommand('copy');
+    showToast('링크가 복사됐어요 📋');
+    setTimeout(()=>document.getElementById('share-modal')?.remove(), 800);
+  } catch(e){}
+}
+
+function showBtnConfirm(btn, confirmText, originalText){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const showTime = confirmText.includes('✅');
+  btn.textContent = showTime ? `${confirmText} ${hh}:${mm}` : confirmText;
+  setTimeout(()=>{ btn.textContent = originalText; }, 2000);
+}
+
+// 하위호환: 기존 showSaveConfirm 유지
+function showSaveConfirm(btn){
+  showBtnConfirm(btn, '✅', '💾 저장');
+}
+
+function showToast(msg, duration=2800){
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));left:50%;
+    transform:translateX(-50%) translateY(8px);opacity:0;
+    background:rgba(20,20,20,0.88);color:#fff;padding:10px 18px;border-radius:20px;
+    font-size:12px;z-index:300;white-space:nowrap;pointer-events:none;
+    transition:opacity .2s,transform .2s;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>{
+    t.style.opacity='1';
+    t.style.transform='translateX(-50%) translateY(0)';
+  });
+  setTimeout(()=>{
+    t.style.opacity='0';
+    t.style.transform='translateX(-50%) translateY(8px)';
+    setTimeout(()=>t.remove(), 300);
+  }, duration);
+}
+
+// Ctrl+S 단축키
+document.addEventListener('keydown', e=>{
+  if((e.ctrlKey||e.metaKey) && e.key==='s'){
+    e.preventDefault();
+    shareURL();
+  }
+  if(e.key==='Enter' && document.activeElement.closest('.sheet')) addPlace();
+  if(e.key==='Escape') closeAll();
+});
+
+// ══════════════════════════════════════════════
+// 앱 시작: URL hash → localStorage → 기본값 순서로 복원
+// ══════════════════════════════════════════════
+function loadFromStorage(){
+  // 1순위: URL hash (공유 링크로 열었을 때)
+  const hash = location.hash.slice(1);
+  if(hash && urlToState(hash)){
+    // URL로 복원 성공 → localStorage도 덮어쓰기
+    try { localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId})); } catch(e){}
+    showToast('📤 공유받은 일정을 불러왔어요!', 3200);
+    return true;
+  }
+  // 2순위: localStorage
+  try {
+    const saved = localStorage.getItem('jeju_planner_data');
+    if(!saved) return false;
+    const d = JSON.parse(saved);
+    if(d.days && d.days.length > 0){
+      days = d.days;
+      activeDayId = d.activeDayId || days[0].id;
+      nextId = d.nextId || 100;
+      nextDayId = d.nextDayId || days.length+1;
+      return true;
+    }
+  } catch(e){}
+  return false;
+}
+
+// Export
+function exportTxt(){
+  let t='🍊 제주 여행 플래너\n'+'─'.repeat(28)+'\n\n';
+  days.forEach(d=>{
+    t+=`📅 ${d.label}\n`;
+    d.places.forEach((p,i)=>{
+      t+=`  ${i+1}. [${p.cat}] ${p.name}`;
+      if(p.time)t+=` (${p.time})`;
+      if(p.memo)t+=` - ${p.memo}`;
+      t+='\n';
+    });
+    t+='\n';
+  });
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(t);
+  a.download='제주여행플래너.txt';
+  a.click();
+}
+
+// Init
+loadFromStorage();
+renderAll();
+</script>
 </body>
 </html>
