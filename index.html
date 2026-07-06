@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -499,6 +500,51 @@ input:-webkit-autofill:focus {
   font-size: .82rem; color: var(--pink); backdrop-filter: blur(12px);
   z-index: 500; opacity: 0; transition: all .22s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* =========== MEMBER PAGE =========== */
+.member-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 20px) 16px 16px; }
+.member-header { text-align: center; margin-bottom: 22px; }
+.member-title { font-family: 'Pretendard', sans-serif; font-size: 1.9rem; font-weight: 800;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; }
+.member-sub { font-size: .78rem; color: var(--dim); margin-top: 4px; }
+
+/* WAITING ROOM */
+.waiting-room { background: radial-gradient(ellipse at 50% 0%, rgba(255,157,226,.08), transparent 70%),
+  rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 20px;
+  padding: 16px 14px; margin-bottom: 16px; }
+.wr-label { font-size: .78rem; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
+.wr-avatars { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.wr-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 62px; }
+.wr-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 3px 10px rgba(0,0,0,.35),
+  inset 0 1px 2px rgba(255,255,255,.25); animation: ballPop .4s ease both; }
+.wr-name { font-size: .68rem; color: var(--sub); text-align: center; max-width: 62px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wr-empty { width: 100%; text-align: center; padding: 14px 0; font-size: .8rem; color: var(--dim); }
+
+/* MEMBER CARD LIST */
+.mcard { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 13px 14px; display: flex; align-items: center; gap: 12px; }
+.mcard-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 1.4rem; flex-shrink: 0; box-shadow: 0 3px 10px rgba(0,0,0,.35),
+  inset 0 1px 2px rgba(255,255,255,.25); }
+.mcard-info { flex: 1; min-width: 0; }
+.mcard-name-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+.mcard-name { font-size: .98rem; font-weight: 800; color: var(--text); }
+.mcard-mbti { font-size: .66rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  background: rgba(255,157,226,.12); border: 1px solid rgba(255,157,226,.28); color: var(--pink); }
+.mcard-detail { font-size: .74rem; color: var(--sub); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+.mcard-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+/* CHAR PICKER (inside edit modal) */
+.char-pick { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 1.35rem; cursor: pointer; border: 2px solid transparent;
+  box-shadow: 0 3px 10px rgba(0,0,0,.3), inset 0 1px 2px rgba(255,255,255,.2); transition: all .15s; }
+.char-pick.sel { border-color: #ffffff; transform: scale(1.08); }
+.mem-empty { text-align: center; padding: 30px 0; }
+.mem-empty-e { font-size: 2.5rem; display: block; opacity: .3; margin-bottom: 8px; }
+.mem-empty-t { font-size: .82rem; color: var(--dim); }
 </style>
 </head>
 <body>
@@ -519,7 +565,7 @@ input:-webkit-autofill:focus {
       <span>⚙ 메뉴 설정</span>
       <button class="em-close" onclick="closeMenuSettings()">✕</button>
     </div>
-    <p style="font-size:.75rem;color:var(--sub);margin-bottom:12px;">켜고 끄면 추천 목록에서 제외돼</p>
+    <p style="font-size:.75rem;color:var(--sub);margin-bottom:12px;">켜고 끄면 추천 목록에서 제외돼요</p>
     <div id="menu-settings-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
   </div>
 </div>
@@ -528,7 +574,7 @@ input:-webkit-autofill:focus {
 <div class="modal-ov" id="note-modal">
   <div class="modal-box">
     <p class="mb-title" id="modal-menu-title"></p>
-    <p class="mb-sub">한 마디 남기고 싶으면 적어봐 (선택)</p>
+    <p class="mb-sub">한 마디 남기고 싶으면 적어봐요 (선택)</p>
     <textarea class="mb-ta" id="modal-note" rows="3" placeholder="예: 반반무마니로 시켰는데 맛있었음 😋"></textarea>
     <div class="mb-btns">
       <button class="mb-cancel" onclick="closeNoteModal()">취소</button>
@@ -583,7 +629,7 @@ input:-webkit-autofill:focus {
       <button class="em-close" onclick="closeLadder()">✕</button>
     </div>
     <div id="ladder-setup" style="display:block;">
-      <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px;">현재 추천 메뉴 포함 후보를 입력해라 (2~4개)</p>
+      <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px;">현재 추천 메뉴 포함 후보를 메뉴 목록에서 선택하세요 (2~4개)</p>
       <div id="ladder-inputs" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
       <button onclick="addLadderItem()" style="width:100%;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);border-radius:10px;padding:9px;color:var(--sub);font-family:'Pretendard',sans-serif;font-size:.82rem;cursor:pointer;margin-bottom:14px;">+ 후보 추가</button>
       <div class="add-action-row">
@@ -604,12 +650,80 @@ input:-webkit-autofill:focus {
   </div>
 </div>
 
+<!-- ===== MEMBER PAGE ===== -->
+<div class="page" id="page-member">
+  <div class="member-wrap">
+    <div class="member-header">
+      <p class="member-title">🙋‍♂️ 멤버 카드</p>
+      <p class="member-sub">우리 멤버들을 카드로 저장해보세요</p>
+    </div>
+
+    <!-- 대기실 -->
+    <div class="waiting-room">
+      <p class="wr-label">🏠 대기실</p>
+      <div class="wr-avatars" id="wr-avatars"></div>
+    </div>
+
+    <button class="gen-btn" style="margin-bottom:16px;" onclick="openMemberEdit()">➕ 멤버 추가</button>
+
+    <div id="member-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+</div>
+
+<!-- MEMBER EDIT MODAL -->
+<div class="edit-modal-ov" id="member-modal">
+  <div class="edit-modal-box">
+    <div class="em-title">
+      <span id="member-modal-title">멤버 추가</span>
+      <button class="em-close" onclick="closeMemberModal()">✕</button>
+    </div>
+    <div class="af-row">
+      <input class="fi fw" id="mem-name" placeholder="이름" maxlength="10">
+    </div>
+    <div class="af-row">
+      <input class="fi fw" id="mem-phone" placeholder="전화번호 (010-0000-0000)" maxlength="13">
+    </div>
+    <div class="af-row">
+      <select class="fi" id="mem-blood" style="flex:1;">
+        <option value="A">A형</option>
+        <option value="B">B형</option>
+        <option value="O">O형</option>
+        <option value="AB">AB형</option>
+      </select>
+      <select class="fi" id="mem-mbti" style="flex:1;" onchange="onMbtiChange()">
+        <option value="ISTJ">ISTJ · 원칙주의자</option>
+        <option value="ISFJ">ISFJ · 수호자</option>
+        <option value="INFJ">INFJ · 신비주의자</option>
+        <option value="INTJ">INTJ · 전략가</option>
+        <option value="ISTP">ISTP · 장인</option>
+        <option value="ISFP">ISFP · 예술가</option>
+        <option value="INFP">INFP · 몽상가</option>
+        <option value="INTP">INTP · 사색가</option>
+        <option value="ESTP">ESTP · 모험가</option>
+        <option value="ESFP">ESFP · 연예인</option>
+        <option value="ENFP">ENFP · 활동가</option>
+        <option value="ENTP">ENTP · 변론가</option>
+        <option value="ESTJ">ESTJ · 경영자</option>
+        <option value="ESFJ">ESFJ · 친선도모자</option>
+        <option value="ENFJ">ENFJ · 선도자</option>
+        <option value="ENTJ">ENTJ · 통솔자</option>
+      </select>
+    </div>
+    <p class="af-title" style="margin-top:2px;">캐릭터 선택</p>
+    <div id="mem-char-picker" style="display:flex;gap:10px;margin-bottom:16px;"></div>
+    <div class="add-action-row">
+      <button class="ab cancel" onclick="closeMemberModal()">취소</button>
+      <button class="ab" onclick="saveMember()">저장하기 ✓</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== GAME PAGE ===== -->
 <div class="page active" id="page-game">
   <div class="game-wrap">
     <div class="game-header">
       <p class="game-title">🍽️ 오늘 뭐먹지?</p>
-      <p class="game-sub">지금 당장 먹고 싶은 걸 찾아드림</p>
+      <p class="game-sub">지금 당장 먹고 싶은 걸 찾아드려요</p>
     </div>
     <div class="card" style="position:relative;">
       <button onclick="openMenuSettings()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:4px 9px;font-size:.72rem;color:rgba(255,255,255,.45);font-family:'Pretendard',sans-serif;cursor:pointer;z-index:2;">⚙ 메뉴 설정</button>
@@ -617,8 +731,8 @@ input:-webkit-autofill:focus {
       <div id="pick-section">
         <div style="text-align:center;padding:10px 0 18px;">
           <div id="idle-emoji" style="font-size:3.5rem;margin-bottom:10px;opacity:.5;">🍽️</div>
-          <p style="font-family:'Pretendard',sans-serif;font-size:1.1rem;color:var(--sub);margin-bottom:4px;">오늘 뭐 먹을까?</p>
-          <p style="font-size:.76rem;color:var(--dim);">버튼을 누르면 바로 추천해드림</p>
+          <p style="font-family:'Pretendard',sans-serif;font-size:1.1rem;color:var(--sub);margin-bottom:4px;">오늘 뭐 먹을까요?</p>
+          <p style="font-size:.76rem;color:var(--dim);">버튼을 누르면 바로 추천해드려요</p>
         </div>
         <button class="gen-btn" style="font-size:1.15rem;padding:16px;margin-bottom:10px;border-radius:16px;" onclick="pickRandom()">🎲 메뉴 뽑기!</button>
         <div class="roulette-wrap" id="roulette-wrap" style="display:none;">
@@ -633,7 +747,7 @@ input:-webkit-autofill:focus {
         <button class="eat-btn" id="eat-btn" onclick="openNoteModal()">바로 먹자!</button>
         <button class="again-btn" onclick="restart()" style="margin-top:8px;">다른 거 볼래</button>
         <button class="ladder-btn" onclick="openLadder()" style="margin-top:8px;">못 고르겠어, 사다리 타자</button>
-        <p class="tip" id="tip">맛있게 드셈 🌙</p>
+        <p class="tip" id="tip">맛있게 드세요 🌙</p>
       </div>
     </div>
   </div>
@@ -660,7 +774,7 @@ input:-webkit-autofill:focus {
   <div class="lotto-wrap">
     <div class="lotto-header">
       <p class="lotto-title">🎱 로또 번호 추출기</p>
-      <p class="lotto-sub">행운의 번호를 뽑아보셈</p>
+      <p class="lotto-sub">행운의 번호를 뽑아보세요</p>
     </div>
     <!-- MODE TABS -->
     <div class="mode-tabs">
@@ -701,6 +815,9 @@ input:-webkit-autofill:focus {
   </button>
   <button class="bot-nav-btn" id="nav-lotto" onclick="goPage('lotto',this)">
     <span class="nav-icon">🎱</span>로또
+  </button>
+  <button class="bot-nav-btn" id="nav-member" onclick="goPage('member',this)">
+    <span class="nav-icon">🙋‍♂️</span>멤버
   </button>
   <button class="bot-nav-btn" id="nav-history" onclick="goPage('history',this)">
     <span class="nav-icon">📅</span>기록
@@ -760,22 +877,54 @@ const DEFAULT_MENUS = [
 ];
 const DEFAULT_SETTINGS={showRunnerUp:false,showRndBtn:true,excludeDisabled:true,budgetPref:"any"};
 
+// ============ MEMBER / MBTI 캐릭터 ============
+const MBTI_CHARS = {
+  ISTJ:{grad:'linear-gradient(145deg,#b0b0c8,#606080)', emojis:['🛡️','📏','🧱'], label:'원칙주의자'},
+  ISFJ:{grad:'linear-gradient(145deg,#ffd9ec,#ff9de2)', emojis:['🕊️','🧸','🍵'], label:'수호자'},
+  INFJ:{grad:'linear-gradient(145deg,#c9a8ff,#7b4fd6)', emojis:['🌙','🔮','🦉'], label:'신비주의자'},
+  INTJ:{grad:'linear-gradient(145deg,#8fa6ff,#3d54c9)', emojis:['♟️','🧠','🗺️'], label:'전략가'},
+  ISTP:{grad:'linear-gradient(145deg,#9be8d8,#1f9c86)', emojis:['🔧','🛠️','🏍️'], label:'장인'},
+  ISFP:{grad:'linear-gradient(145deg,#b8f0a0,#4caf50)', emojis:['🎨','🌿','🍃'], label:'예술가'},
+  INFP:{grad:'linear-gradient(145deg,#ffc4dd,#e8709f)', emojis:['🌸','📖','🕯️'], label:'몽상가'},
+  INTP:{grad:'linear-gradient(145deg,#a0d8f0,#3f8fc4)', emojis:['🧪','💭','🔬'], label:'사색가'},
+  ESTP:{grad:'linear-gradient(145deg,#f08080,#c0392b)', emojis:['🔥','🏎️','🥊'], label:'모험가'},
+  ESFP:{grad:'linear-gradient(145deg,#ffe08a,#ffb238)', emojis:['🎤','🎉','✨'], label:'연예인'},
+  ENFP:{grad:'linear-gradient(145deg,#ff9de2,#d84fc0)', emojis:['🌟','🦋','🎈'], label:'활동가'},
+  ENTP:{grad:'linear-gradient(145deg,#ffe066,#ff9d3d)', emojis:['💡','🎭','⚡'], label:'변론가'},
+  ESTJ:{grad:'linear-gradient(145deg,#7be0ff,#2f8fd4)', emojis:['📊','🏛️','🧭'], label:'경영자'},
+  ESFJ:{grad:'linear-gradient(145deg,#ffd27a,#e69a2e)', emojis:['🤝','🌻','🍯'], label:'친선도모자'},
+  ENFJ:{grad:'linear-gradient(145deg,#c8f0ff,#63c4e8)', emojis:['🕯️','🌈','📣'], label:'선도자'},
+  ENTJ:{grad:'linear-gradient(145deg,#d8b4ff,#7a3fd1)', emojis:['👑','🚀','⚙️'], label:'통솔자'},
+};
+const DEFAULT_MEMBERS = [
+  {id:1, name:"주현", phone:"010-4383-7516", blood:"B", mbti:"ESTP", charIdx:0},
+  {id:2, name:"찬현", phone:"010-2588-7516", blood:"B", mbti:"ENFP", charIdx:0},
+  {id:3, name:"기훈", phone:"010-3682-9892", blood:"B", mbti:"ISTJ", charIdx:0},
+  {id:4, name:"준엽", phone:"010-5045-1796", blood:"B", mbti:"ENFP", charIdx:1},
+  {id:5, name:"민우", phone:"010-5227-4441", blood:"O", mbti:"ISTP", charIdx:0},
+];
+let members=[], nextMemberId=100, editingMemberId=null, memberCharIdx=0;
+
 let menus=[], settings={}, history=[], isDirty=false, nextId=100;
 let currentResultMenu=null, editingMenuId=null;
 
 function loadState(){
   try{
     const sm=localStorage.getItem("ys_menus"),ss=localStorage.getItem("ys_settings"),sh=localStorage.getItem("ys_history");
+    const smem=localStorage.getItem("ys_members");
     menus=sm?JSON.parse(sm):JSON.parse(JSON.stringify(DEFAULT_MENUS));
     settings=ss?JSON.parse(ss):{...DEFAULT_SETTINGS};
     history=sh?JSON.parse(sh):[];
+    members=smem?JSON.parse(smem):JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
     nextId=Math.max(...menus.map(m=>m.id),99)+1;
-  }catch(e){menus=JSON.parse(JSON.stringify(DEFAULT_MENUS));settings={...DEFAULT_SETTINGS};history=[];}
+    nextMemberId=Math.max(...members.map(m=>m.id),99)+1;
+  }catch(e){menus=JSON.parse(JSON.stringify(DEFAULT_MENUS));settings={...DEFAULT_SETTINGS};history=[];members=JSON.parse(JSON.stringify(DEFAULT_MEMBERS));}
 }
 function saveState(){
   localStorage.setItem("ys_menus",JSON.stringify(menus));
   localStorage.setItem("ys_settings",JSON.stringify(settings));
   localStorage.setItem("ys_history",JSON.stringify(history));
+  localStorage.setItem("ys_members",JSON.stringify(members));
 }
 
 // ============ NAV ============
@@ -786,6 +935,7 @@ function goPage(name,btn){
   (btn||document.getElementById('nav-'+name)).classList.add('active');
   if(name==='history') { currentHistTab='food'; setHistTabUI('food'); renderHistory(); }
   if(name==='lotto') initLottoPage();
+  if(name==='member') renderMembers();
   window.scrollTo(0,0);
 }
 
@@ -805,8 +955,8 @@ function confirmEat(){
     dateStr:fmtDate(now),timeStr:fmtTime(now)});
   saveState(); closeNoteModal();
   const eb=document.getElementById('eat-btn');
-  eb.textContent='✓ 냠냠 기록됐어!'; eb.classList.add('eaten'); eb.disabled=true;
-  document.getElementById('tip').textContent='기록 탭에서 메뉴 히스토리를 확인해봐 📅';
+  eb.textContent='✓ 냠냠 기록됐어요!'; eb.classList.add('eaten'); eb.disabled=true;
+  document.getElementById('tip').textContent='기록 탭에서 메뉴 히스토리를 확인해봐요 📅';
   showToast('메뉴 기록 완료! '+currentResultMenu.emoji);
 }
 function fmtDate(d){const dy=['일','월','화','수','목','금','토'];return`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dy[d.getDay()]})`;}
@@ -882,8 +1032,8 @@ function renderLottoHistoryInRecord() {
   if (!lottoHistory || lottoHistory.length === 0) {
     el.innerHTML = `<div class="hist-empty">
       <span class="he-emoji">🎱</span>
-      <p class="he-text">저장된 로또 번호가 없어</p>
-      <p class="he-hint">로또 탭에서 번호를 뽑고 저장해보세</p>
+      <p class="he-text">저장된 로또 번호가 없어요</p>
+      <p class="he-hint">로또 탭에서 번호를 뽑고 저장해보세요</p>
     </div>`;
     return;
   }
@@ -956,7 +1106,7 @@ function delLottoEntryFromRecord(id) {
 function renderHistory(){
   const body=document.getElementById('hist-body');
   if(history.length===0){
-    body.innerHTML=`<div class="hist-empty"><p class="he-text">아직 기록이 없어</p><p class="he-hint">추천 받은 뒤 "이걸로 먹을래!" 버튼을 눌러봐</p></div>`;
+    body.innerHTML=`<div class="hist-empty"><p class="he-text">아직 기록이 없어요</p><p class="he-hint">추천 받은 뒤 "이걸로 먹을래!" 버튼을 눌러봐요</p></div>`;
     return;
   }
   // stats
@@ -1026,7 +1176,7 @@ function getActive() { return settings.excludeDisabled ? menus.filter(m=>m.enabl
 
 function pickRandom() {
   const active = getActive();
-  if (active.length === 0) { showToast('활성화된 메뉴가 없어!'); return; }
+  if (active.length === 0) { showToast('활성화된 메뉴가 없어요!'); return; }
 
   // 룰렛 애니메이션
   document.getElementById('pick-section').style.display = 'block';
@@ -1093,7 +1243,7 @@ function showResult(menu) {
   eb.textContent = '바로 먹자!';
   eb.classList.remove('eaten');
   eb.disabled = false;
-  document.getElementById('tip').textContent = '맛있게 드셈 🌙';
+  document.getElementById('tip').textContent = '맛있게 드세요 🌙';
 }
 
 function restart() {
@@ -1275,7 +1425,7 @@ function generateMulti(){
 }
 
 function copyNums(txt){
-  navigator.clipboard?.writeText(txt).then(()=>showToast('복사됐어! 📋')).catch(()=>showToast(txt));
+  navigator.clipboard?.writeText(txt).then(()=>showToast('복사됐어요! 📋')).catch(()=>showToast(txt));
 }
 
 function saveLottoNumbers(){
@@ -1288,7 +1438,7 @@ function saveLottoNumbers(){
   });
   saveLottoState();
   renderLottoHistory();
-  showToast('저장됐어 📌');
+  showToast('저장됐어요 📌');
   document.getElementById('lotto-save-btn').style.display='none';
   lastSingleNums=null;
 }
@@ -1303,7 +1453,7 @@ function renderLottoHistory(){
   const el=document.getElementById('lh-list');
   if(!el) return;
   if(lottoHistory.length===0){
-    el.innerHTML=`<div class="lh-empty"><span class="lh-empty-e">🎱</span><p class="lh-empty-t">저장된 번호가 없어</p></div>`;
+    el.innerHTML=`<div class="lh-empty"><span class="lh-empty-e">🎱</span><p class="lh-empty-t">저장된 번호가 없어요</p></div>`;
     return;
   }
   const modeLabel={basic:'랜덤',balanced:'균형',smart:'스마트'};
@@ -1373,11 +1523,18 @@ function openLadder() {
 
 function addLadderItem(val = '') {
   const items = document.getElementById('ladder-inputs');
-  if (items.children.length >= 4) { showToast('최대 4개까지 가능해!'); return; }
+  if (items.children.length >= 4) { showToast('최대 4개까지 가능해요!'); return; }
+  const options = getActive().map(m => m.name);
+  const optHtml = options.map(name =>
+    `<option value="${name}" ${name === val ? 'selected' : ''}>${name}</option>`
+  ).join('');
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;gap:7px;align-items:center;';
   div.innerHTML = `
-    <input class="fi" style="flex:1;" placeholder="후보 이름" value="${val}" maxlength="12">
+    <select class="fi" style="flex:1;">
+      <option value="" ${val ? '' : 'selected'} disabled>메뉴 선택</option>
+      ${optHtml}
+    </select>
     <button onclick="this.parentNode.remove()" style="background:transparent;border:1px solid rgba(255,80,80,.2);border-radius:7px;width:28px;height:28px;color:rgba(255,100,100,.5);cursor:pointer;font-size:.8rem;flex-shrink:0;">✕</button>`;
   items.appendChild(div);
 }
@@ -1387,9 +1544,9 @@ function closeLadder() {
 }
 
 function startLadder() {
-  const inputs = document.querySelectorAll('#ladder-inputs input');
-  ladderItems = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
-  if (ladderItems.length < 2) { showToast('후보를 2개 이상 입력해!'); return; }
+  const selects = document.querySelectorAll('#ladder-inputs select');
+  ladderItems = Array.from(selects).map(s => s.value.trim()).filter(Boolean);
+  if (ladderItems.length < 2) { showToast('후보를 2개 이상 선택해주세요!'); return; }
 
   document.getElementById('ladder-setup').style.display = 'none';
   document.getElementById('ladder-game').style.display = 'block';
@@ -1510,14 +1667,22 @@ function chooseLadderNum(startIdx) {
     if (i === startIdx) b.style.color = '#ff9de2';
   });
 
-  // 경로 계산
+  // 경로 계산 (사다리 실제 선을 따라가도록: 세로로 내려가다 가로줄에서 꺾임)
   const path = [{col: startIdx, y: topY}];
   let col = startIdx;
   for (let r = 1; r <= ROW; r++) {
     const y = topY + r * rowH;
-    if (rungs.find(rg => rg.r === r && rg.c === col)) col++;
-    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) col--;
-    path.push({col, y});
+    let nextCol = col;
+    if (rungs.find(rg => rg.r === r && rg.c === col)) nextCol = col + 1;
+    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) nextCol = col - 1;
+
+    if (nextCol !== col) {
+      path.push({col, y});         // 가로줄 높이까지 세로로 내려옴
+      path.push({col: nextCol, y}); // 가로줄을 따라 옆 칸으로 이동
+    } else {
+      path.push({col, y});          // 변화 없으면 그냥 세로로 계속
+    }
+    col = nextCol;
   }
   path.push({col, y: botY});
 
@@ -1550,7 +1715,7 @@ function chooseLadderNum(startIdx) {
 
       // 결과 표시
       document.getElementById('ladder-result-text').textContent = `🎉 ${ladderWinner}`;
-      document.getElementById('ladder-result-sub').textContent = '사다리 결과! 이걸로 먹을래?';
+      document.getElementById('ladder-result-sub').textContent = '사다리 결과! 이걸로 드실래요?';
       document.getElementById('ladder-result-text').style.display = 'block';
       document.getElementById('ladder-result-sub').style.display = 'block';
       document.getElementById('ladder-done-btns').style.display = 'flex';
@@ -1571,6 +1736,119 @@ function confirmLadderResult() {
   }
   closeLadder();
   openNoteModal();
+}
+
+// ============ MEMBER PAGE ============
+function renderMembers(){
+  // 대기실
+  const wr = document.getElementById('wr-avatars');
+  if (!members.length) {
+    wr.innerHTML = '<div class="wr-empty">아직 대기실이 비어있어요 🙌<br>멤버를 추가해보세요!</div>';
+  } else {
+    wr.innerHTML = members.map(m => {
+      const ch = MBTI_CHARS[m.mbti] || MBTI_CHARS.ISTJ;
+      const emoji = ch.emojis[m.charIdx % ch.emojis.length];
+      return `
+        <div class="wr-slot">
+          <div class="wr-avatar" style="background:${ch.grad};">${emoji}</div>
+          <div class="wr-name">${escapeHtml(m.name)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // 카드 리스트
+  const list = document.getElementById('member-list');
+  if (!members.length) {
+    list.innerHTML = `<div class="mem-empty"><span class="mem-empty-e">🙋‍♂️</span><p class="mem-empty-t">첫 멤버 카드를 추가해보세요!</p></div>`;
+    return;
+  }
+  list.innerHTML = members.map(m => {
+    const ch = MBTI_CHARS[m.mbti] || MBTI_CHARS.ISTJ;
+    const emoji = ch.emojis[m.charIdx % ch.emojis.length];
+    return `
+      <div class="mcard">
+        <div class="mcard-avatar" style="background:${ch.grad};">${emoji}</div>
+        <div class="mcard-info">
+          <div class="mcard-name-row">
+            <span class="mcard-name">${escapeHtml(m.name)}</span>
+            <span class="mcard-mbti">${m.mbti}</span>
+          </div>
+          <div class="mcard-detail">📞 ${escapeHtml(m.phone)}</div>
+          <div class="mcard-detail">🩸 ${m.blood}형</div>
+        </div>
+        <div class="mcard-actions">
+          <button class="mi-edit" onclick="openMemberEdit(${m.id})">수정</button>
+          <button class="mi-del" onclick="deleteMember(${m.id})">✕</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function openMemberEdit(id){
+  editingMemberId = id || null;
+  const m = id ? members.find(x => x.id === id) : null;
+  document.getElementById('member-modal-title').textContent = m ? '멤버 수정' : '멤버 추가';
+  document.getElementById('mem-name').value = m ? m.name : '';
+  document.getElementById('mem-phone').value = m ? m.phone : '';
+  document.getElementById('mem-blood').value = m ? m.blood : 'A';
+  document.getElementById('mem-mbti').value = m ? m.mbti : 'ISTJ';
+  memberCharIdx = m ? m.charIdx : 0;
+  renderCharPicker();
+  document.getElementById('member-modal').classList.add('open');
+}
+
+function closeMemberModal(){
+  document.getElementById('member-modal').classList.remove('open');
+}
+
+function onMbtiChange(){
+  memberCharIdx = 0;
+  renderCharPicker();
+}
+
+function renderCharPicker(){
+  const mbti = document.getElementById('mem-mbti').value;
+  const ch = MBTI_CHARS[mbti] || MBTI_CHARS.ISTJ;
+  const area = document.getElementById('mem-char-picker');
+  area.innerHTML = ch.emojis.map((emoji, i) => `
+    <div class="char-pick ${i === memberCharIdx ? 'sel' : ''}" style="background:${ch.grad};" onclick="selectMemberChar(${i})">${emoji}</div>
+  `).join('');
+}
+
+function selectMemberChar(i){
+  memberCharIdx = i;
+  renderCharPicker();
+}
+
+function saveMember(){
+  const name = document.getElementById('mem-name').value.trim();
+  const phone = document.getElementById('mem-phone').value.trim();
+  const blood = document.getElementById('mem-blood').value;
+  const mbti = document.getElementById('mem-mbti').value;
+  if (!name) { showToast('이름을 입력해주세요!'); return; }
+  if (!phone) { showToast('전화번호를 입력해주세요!'); return; }
+
+  if (editingMemberId) {
+    const m = members.find(x => x.id === editingMemberId);
+    if (m) { m.name = name; m.phone = phone; m.blood = blood; m.mbti = mbti; m.charIdx = memberCharIdx; }
+  } else {
+    members.push({ id: nextMemberId++, name, phone, blood, mbti, charIdx: memberCharIdx });
+  }
+  saveState();
+  closeMemberModal();
+  renderMembers();
+  showToast(editingMemberId ? '수정했어요! ✓' : '멤버를 추가했어요! ✓');
+}
+
+function deleteMember(id){
+  members = members.filter(m => m.id !== id);
+  saveState();
+  renderMembers();
+  showToast('삭제했어요');
 }
 
 // ============ INIT ============
