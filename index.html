@@ -1,1316 +1,1579 @@
 
-
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>제주 여행 플래너</title>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0a14">
+<title>2PMK</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Gaegu:wght@700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{
-  --teal:#8a6e4b;--teal2:#f0e8d8;--teal3:#a07850;
-  --coral:#d85a30;--coral2:#faece7;
-  --amber:#b07010;--amber2:#faeeda;
-  --blue:#1560a0;--blue2:#e6f1fb;
-  --purple:#5040b0;--purple2:#eeedfe;
-  --pink:#993060;--pink2:#fbeaf0;
-  --bg:#f5f2ed;--surface:#fff;--surface2:#f0ece5;
-  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.15);
-  --text:#1a1a1a;--text2:#666;--text3:#aaa;
-  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.09);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+:root {
+  --pink: #ff9de2; --gold: #ffce85; --blue: #85e0ff;
+  --bg: #0a0a14; --card: rgba(255,255,255,.05);
+  --border: rgba(255,255,255,.1); --text: #f0eaff;
+  --sub: rgba(240,234,255,.45); --dim: rgba(240,234,255,.25);
+  --nav-h: 62px; --logo-h: 48px;
+  color-scheme: dark;
 }
-html,body{height:100%;overflow:hidden;background:var(--bg);}
-body{font-family:-apple-system,'Apple SD Gothic Neo','Pretendard',sans-serif;color:var(--text);font-size:14px;display:flex;flex-direction:column;}
 
-/* ── Header ── */
-.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;z-index:50;}
-.hdr-icon{width:30px;height:30px;background:#b8dff0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.hdr-title{font-size:15px;font-weight:700;letter-spacing:-0.3px;}
-.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px;}
-.hdr-right{margin-left:auto;display:flex;gap:6px;}
-.hdr-btn{padding:6px 11px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;}
-.hdr-btn:active{background:var(--surface2);}
-
-/* ── Tab bar (bottom nav style for days) ── */
-.day-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;flex-shrink:0;padding:0 4px;}
-.day-bar::-webkit-scrollbar{display:none;}
-.day-tab{padding:7px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:4px;flex-shrink:0;}
-.day-tab.active{font-weight:700;}
-.day-tab-x{font-size:13px;color:var(--text3);min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;margin-left:-2px;margin-right:-6px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
-.day-tab-x:active{color:#c0392b;}
-.day-add-btn{padding:5px 10px;font-size:17px;color:var(--text3);cursor:pointer;flex-shrink:0;border:none;background:none;font-family:inherit;}
-.day-add-btn:active{color:#d4845a;}
-
-/* ── View toggle ── */
-.view-toggle{display:flex;background:var(--surface2);border-radius:10px;padding:3px;margin:10px 14px 0;flex-shrink:0;}
-.view-btn{flex:1;padding:7px;text-align:center;font-size:12px;font-weight:500;color:var(--text2);border-radius:7px;cursor:pointer;transition:all .15s;}
-.view-btn.active{background:var(--surface);color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
-
-/* ── Content area ── */
-.content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative;}
-
-/* ── Map ── */
-.map-wrap{flex:1;position:relative;overflow:hidden;display:none;}
-.map-wrap.show{display:block;}
-.map-wrap.fullscreen{
-  position:fixed;
-  z-index:150;
-  background:#8ecae6;
-  top:50%;left:50%;
-  width:100svh;
-  height:100svw;
-  margin:0;padding:0;
-  transform:translate(-50%,-50%) rotate(90deg);
-  transform-origin:center center;
-  overflow:hidden;
+/* LOGO BAR */
+.logo-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: calc(var(--logo-h) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  background: rgba(10,10,20,.92);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  backdrop-filter: blur(18px);
+  display: flex; align-items: center; justify-content: flex-start;
+  padding-left: 18px;
 }
-.map-fullscreen-btn{position:absolute;top:10px;right:10px;z-index:20;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.1);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,0.15);}
-.map-exit-btn{position:absolute;top:10px;left:10px;z-index:20;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.1);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.15);display:none;}
-.map-wrap.fullscreen .map-exit-btn{display:flex;align-items:center;gap:5px;}
-.map-wrap.fullscreen .map-fullscreen-btn{display:none;}
-.map-wrap.fullscreen .map-info{bottom:calc(20px + env(safe-area-inset-bottom));}
-#map-svg{width:100%;height:100%;display:block;touch-action:none;}
-.map-tooltip{position:absolute;background:rgba(20,20,20,0.85);color:#fff;padding:5px 10px;border-radius:8px;font-size:12px;pointer-events:none;white-space:nowrap;display:none;transform:translate(-50%,-110%);z-index:30;}
-.map-empty-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.92);padding:18px 24px;border-radius:14px;text-align:center;color:var(--text2);font-size:13px;line-height:1.7;border:1px solid var(--border);pointer-events:none;}
-.map-info{position:absolute;bottom:calc(16px + var(--safe-bottom));left:12px;right:12px;background:var(--surface);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);border:1px solid var(--border);display:none;}
-.map-info.show{display:block;}
-.map-info-name{font-size:15px;font-weight:700;margin-bottom:4px;}
-.map-info-meta{font-size:12px;color:var(--text2);display:flex;flex-wrap:wrap;gap:8px;}
-.map-info-close{position:absolute;top:12px;right:14px;font-size:20px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px;}
+.logo-text {
+  font-family: 'Boogaloo', cursive;
+  font-size: 1.7rem; letter-spacing: .08em;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     3px  3px 0 rgba(0,0,0,.4);
+  user-select: none; line-height: 1;
+}
+/* 시스템 설정과 무관하게 항상 다크 강제 */
+@media (prefers-color-scheme: light) {
+  :root { color-scheme: dark; }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #0a0a14 !important; }
+body { font-family: 'Pretendard', sans-serif; background: #0a0a14 !important; color: #f0eaff !important;
+  overflow-x: hidden; overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* 모든 입력 요소 다크 강제 */
+input, select, textarea, button {
+  color: #f0eaff;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+/* iOS Safari 입력창 다크 강제 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f0eaff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #1a1530 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 
-/* ── List ── */
-.list-wrap{flex:1;overflow-y:auto;display:none;padding:10px 12px calc(80px + var(--safe-bottom));}
-.list-wrap.show{display:block;}
-.list-wrap::-webkit-scrollbar{width:3px;}
-.list-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+/* =========== LOTTO PAGE =========== */
+.lotto-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 20px) 16px 16px; }
+.lotto-header { text-align: center; margin-bottom: 22px; }
+.lotto-title { font-family: 'Pretendard', sans-serif; font-size: 1.9rem; font-weight: 800;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; }
+.lotto-sub { font-size: .78rem; color: var(--dim); margin-top: 4px; }
 
-.place-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;position:relative;}
-.place-card:active{background:var(--surface2);}
-.place-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px;}
-.place-body{flex:1;min-width:0;}
-.place-name{font-size:14px;font-weight:600;margin-bottom:3px;}
-.place-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;}
-.cat-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
-.place-time{font-size:11px;color:var(--text2);}
-.place-memo{font-size:11px;color:var(--text3);margin-top:3px;}
-.place-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:17px;padding:4px;flex-shrink:0;align-self:center;}
-.place-del:active{color:#c0392b;}
-.place-order-btns{display:flex;flex-direction:column;gap:2px;flex-shrink:0;align-self:center;}
-.order-btn{background:none;border:1px solid var(--border2);border-radius:5px;width:22px;height:22px;font-size:10px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
-.order-btn:active{background:var(--surface2);}
-.order-btn:disabled{opacity:0.25;cursor:default;}
+/* MODE TABS */
+.mode-tabs { display: flex; gap: 6px; background: rgba(255,255,255,.05);
+  border: 1px solid var(--border); border-radius: 14px; padding: 5px; margin-bottom: 18px; }
+.mode-tab { flex: 1; background: transparent; border: none; border-radius: 10px;
+  padding: 9px 6px; font-family: 'Pretendard', sans-serif; font-size: .78rem; font-weight: 700;
+  color: var(--sub); cursor: pointer; transition: all .18s; text-align: center; line-height: 1.3; }
+.mode-tab.active { background: rgba(255,229,102,.15); color: #ffe566; }
+.mode-tab:active { opacity: .7; }
 
-/* DB search */
-.db-search-wrap{position:relative;margin-bottom:8px;}
-.db-results{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;max-height:180px;overflow-y:auto;z-index:10;box-shadow:var(--shadow);display:none;}
-.db-results.show{display:block;}
-.db-result-item{padding:10px 13px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
-.db-result-item:last-child{border-bottom:none;}
-.db-result-item:active{background:var(--surface2);}
-.db-result-name{font-weight:500;}
-.db-result-pin{font-size:11px;color:#fff;background:#b09070;padding:1px 6px;border-radius:10px;}
+/* BALLS */
+.ball-stage { background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px 16px; margin-bottom: 14px; min-height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.balls-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.ball { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-family: 'Pretendard', sans-serif; font-size: .95rem;
+  font-weight: 700; color: #fff; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0,0,0,.35), inset 0 1px 2px rgba(255,255,255,.25);
+  transition: transform .15s; animation: ballPop .4s ease both; }
+@keyframes ballPop { 0%{transform:scale(0) rotate(-20deg);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+.ball.b1  { background: linear-gradient(145deg,#f5d76e,#e8a000); }
+.ball.b2  { background: linear-gradient(145deg,#6ea8f5,#2563d4); }
+.ball.b3  { background: linear-gradient(145deg,#f08080,#c0392b); }
+.ball.b4  { background: linear-gradient(145deg,#7be8a0,#1a9c47); }
+.ball.b5  { background: linear-gradient(145deg,#b0b0c8,#606080); }
 
-.connector{display:flex;align-items:center;gap:8px;padding:0 0 0 48px;margin:-1px 0;}
-.conn-line{width:1px;height:18px;background:var(--border2);}
-.conn-dur{font-size:11px;color:var(--text2);background:var(--surface);border:1px solid var(--border2);padding:2px 9px;border-radius:10px;font-weight:500;}
+.ball-placeholder { display: flex; gap: 10px; }
+.ball-ph { width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,.06); border: 2px dashed rgba(255,255,255,.12); }
 
-.empty-card{text-align:center;padding:44px 20px;color:var(--text3);}
-.empty-card .ei{font-size:36px;margin-bottom:10px;}
-.empty-card p{font-size:13px;line-height:1.7;}
+/* GENERATE BTN */
+.gen-btn { width: 100%; background: linear-gradient(135deg,#ffe566,#ffb347); border: none;
+  border-radius: 14px; padding: 15px; font-family: 'Pretendard', sans-serif;
+  font-size: 1.15rem; color: #1a1000; cursor: pointer; transition: all .15s;
+  margin-bottom: 10px; letter-spacing: .02em; }
+.gen-btn:active { transform: scale(.97); filter: brightness(.93); }
 
-/* ── FAB (add button) ── */
-.fab{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;width:52px;height:52px;border-radius:50%;background:#8a6e4b;color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(138,110,75,0.38);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;}
-.fab:active{transform:scale(0.92);}
+.gen-multi-btn { width: 100%; background: rgba(255,229,102,.08); border: 1px solid rgba(255,229,102,.25);
+  border-radius: 13px; padding: 12px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #ffe566; cursor: pointer; transition: all .15s; margin-bottom: 14px; }
+.gen-multi-btn:active { background: rgba(255,229,102,.15); }
 
-/* ── Bottom sheet ── */
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:70;display:none;opacity:0;transition:opacity .2s;}
-.sheet-overlay.show{display:block;opacity:1;}
-.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:80;padding:20px 18px calc(24px + var(--safe-bottom));transform:translateY(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
-.sheet.show{transform:translateY(0);}
-.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px;}
-.sheet-title{font-size:16px;font-weight:700;margin-bottom:14px;}
-.field-label{font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:500;}
-.field-row{margin-bottom:12px;}
-.inp{width:100%;padding:11px 13px;border:1px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;}
-.inp:focus{border-color:var(--teal);}
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.cat-opt{padding:10px 6px;border-radius:10px;border:1.5px solid var(--border);text-align:center;font-size:12px;cursor:pointer;background:var(--surface2);}
-.cat-opt.sel{border-color:var(--teal);background:var(--teal2);color:var(--teal);font-weight:600;}
-.sheet-row{display:flex;gap:8px;}
-.btn-sheet{flex:1;padding:13px;border-radius:11px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
-.btn-confirm{background:var(--teal);color:#fff;}
-.btn-confirm:active{background:#6e5538;}
-.btn-cancel{background:var(--surface2);color:var(--text2);}
-.btn-cancel:active{background:var(--border2);}
+/* ANALYSIS TAGS */
+.analysis-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+.a-tag { padding: 4px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; }
+.a-tag.good { background: rgba(123,232,160,.15); border: 1px solid rgba(123,232,160,.3); color: #7be8a0; }
+.a-tag.warn { background: rgba(255,206,133,.12); border: 1px solid rgba(255,206,133,.3); color: var(--gold); }
+.a-tag.bad  { background: rgba(255,100,100,.1);  border: 1px solid rgba(255,100,100,.25); color: #ff8a8a; }
 
-/* ── DB browser sheet ── */
-.db-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:80;transform:translateY(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;max-height:85vh;}
-.db-sheet.show{transform:translateY(0);}
-.db-sheet-head{padding:16px 18px 10px;flex-shrink:0;}
-.db-sheet-search{width:100%;padding:10px 13px;border:1px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:var(--surface2);outline:none;margin-bottom:10px;}
-.db-sheet-search:focus{border-color:var(--teal);background:var(--surface);}
-.db-region-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-.db-region-tabs::-webkit-scrollbar{display:none;}
-.db-rtab{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.db-rtab.active{background:var(--teal);color:#fff;border-color:var(--teal);}
-.db-list{flex:1;overflow-y:auto;padding:8px 12px calc(16px + var(--safe-bottom));}
-.db-list::-webkit-scrollbar{width:3px;}
-.db-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-.db-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);margin-bottom:7px;}
-.db-item:active{background:var(--surface2);}
-.db-item-name{font-size:13px;font-weight:600;flex:1;}
-.db-item-region{font-size:10px;color:var(--text3);}
-.db-item-add{font-size:18px;color:var(--teal);font-weight:300;flex-shrink:0;}
-.db-pin{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+/* MULTI RESULTS */
+.multi-sets { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.multi-set { background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 14px; }
+.ms-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ms-label { font-size: .72rem; color: var(--dim); font-weight: 700; }
+.ms-copy { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 3px 9px; font-size: .68rem; color: var(--sub); cursor: pointer; }
+.ms-copy:active { background: rgba(255,255,255,.14); }
+.ms-balls { display: flex; gap: 7px; }
+.ms-ball { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-family: 'Pretendard', sans-serif; font-size: .8rem;
+  color: #fff; flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3), inset 0 1px 2px rgba(255,255,255,.2); }
 
-/* FAB group */
-.fab-group{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:60;}
-.fab{position:static;bottom:auto;right:auto;}
-.fab-sub{width:44px;height:44px;border-radius:50%;background:var(--surface);color:var(--teal);font-size:20px;border:1.5px solid var(--teal);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;transition:transform .15s;}
-.fab-sub:active{transform:scale(0.92);}
+/* SAVE HISTORY */
+.lotto-save-btn { width: 100%; background: linear-gradient(135deg, rgba(255,206,133,.25), rgba(133,224,255,.2)); border: 1px solid rgba(255,206,133,.5);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #ffce85; cursor: pointer; transition: all .15s; font-weight: 700; }
+  border-radius: 13px; padding: 12px; font-family: 'Pretendard', sans-serif;
+  font-size: .92rem; color: var(--sub); cursor: pointer; transition: all .15s; margin-bottom: 18px; }
+.lotto-save-btn:active { background: rgba(255,255,255,.1); color: var(--text); }
 
-/* category color helpers */
-.c관광{background:var(--teal3);}
-.c맛집{background:var(--coral);}
-.c카페{background:var(--amber);}
-.c숙소{background:var(--blue);}
-.c쇼핑{background:var(--purple);}
-.c액티비티{background:var(--pink);}
-.b관광{background:var(--teal2);color:var(--teal);}
-.b맛집{background:var(--coral2);color:var(--coral);}
-.b카페{background:var(--amber2);color:var(--amber);}
-.b숙소{background:var(--blue2);color:var(--blue);}
-.b쇼핑{background:var(--purple2);color:var(--purple);}
-.b액티비티{background:var(--pink2);color:var(--pink);}
+/* LOTTO HISTORY */
+.lh-section { margin-bottom: 18px; }
+.lh-title { font-size: .72rem; color: var(--dim); letter-spacing: .05em; margin-bottom: 10px; }
+.lh-list { display: flex; flex-direction: column; gap: 7px; }
+.lh-item { background: var(--card); border: 1px solid var(--border);
+  border-radius: 13px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; }
+.lh-item-balls { display: flex; gap: 5px; flex: 1; flex-wrap: wrap; }
+.lh-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.lh-date { font-size: .65rem; color: var(--dim); }
+.lh-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .75rem; }
+.lh-del:active { color: #ff6464; background: rgba(255,80,80,.1); }
+.lh-empty { text-align: center; padding: 30px 0; }
+.lh-empty-e { font-size: 2.5rem; display: block; opacity: .3; margin-bottom: 8px; }
+.lh-empty-t { font-size: .82rem; color: var(--dim); }
+
+/* SECTION DIVIDER */
+.lt-divider { height: 1px; background: rgba(255,255,255,.06); margin: 18px 0; }
+
+/* MODE DESCRIPTIONS */
+.mode-desc { background: rgba(255,229,102,.05); border: 1px solid rgba(255,229,102,.15);
+  border-radius: 12px; padding: 11px 13px; margin-bottom: 14px; }
+.md-row { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 4px; }
+.md-row:last-child { margin-bottom: 0; }
+.md-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.md-text { font-size: .75rem; color: rgba(255,229,102,.7); line-height: 1.45; }
+
+/* STARS */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 20% 30%,rgba(80,40,120,.15) 0%,transparent 60%),
+              radial-gradient(ellipse at 80% 70%,rgba(20,60,100,.15) 0%,transparent 60%); }
+.stars::before { content:''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 28% 42%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 54% 18%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 76% 58%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 9%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 44% 82%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 71%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 66% 38%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 86% 86%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 38% 4%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 96% 41%,rgba(255,255,255,.4) 0%,transparent 100%); }
+
+/* BOTTOM NAV */
+.bot-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  display: flex; background: rgba(12,10,24,.98) !important; border-top: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(16px); padding-bottom: env(safe-area-inset-bottom); }
+.bot-nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 10px 4px 8px; background: none; border: none; cursor: pointer;
+  color: var(--dim); font-family: 'Pretendard', sans-serif; font-size: .65rem; font-weight: 700;
+  transition: color .2s; position: relative; }
+.bot-nav-btn .nav-icon { font-size: 1.3rem; line-height: 1; transition: transform .2s; }
+.bot-nav-btn.active { color: var(--pink); }
+.bot-nav-btn.active .nav-icon { transform: scale(1.15); }
+.bot-nav-btn:active { opacity: .7; }
+
+/* PAGES */
+.page { display: none; position: relative; z-index: 1;
+  min-height: 100vh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px); }
+.page.active { display: block; }
+
+/* =========== GAME PAGE =========== */
+.game-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 28px) 16px 16px;
+  min-height: calc(100vh - var(--nav-h));
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+.game-header { text-align: center; margin-bottom: 20px; }
+.game-title { font-family: 'Pretendard', sans-serif; font-size: 2.7rem; font-weight: 800; line-height: 1.1;
+  color: #ffffff; -webkit-text-fill-color: #ffffff; }
+.game-sub { font-size: .8rem; color: var(--sub); margin-top: 4px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 20px 18px; width: 100%; }
+
+
+
+/* RESULT */
+.result-area { display: none; text-align: center; padding: 44px 0 32px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pop { 0%{transform:scale(0) rotate(-8deg);opacity:0} 60%{transform:scale(1.22) rotate(3deg);opacity:1} 80%{transform:scale(.95) rotate(-1deg)} 100%{transform:scale(1) rotate(0)} }
+@keyframes nameBlast { 0%{transform:scale(0.4);opacity:0;letter-spacing:.3em} 55%{transform:scale(1.12);opacity:1;letter-spacing:.04em} 75%{transform:scale(.97)} 100%{transform:scale(1);letter-spacing:.03em} }
+.res-emoji { font-size: 4.5rem; display: block; margin-bottom: 10px; }
+.res-emoji.pop { animation: pop .55s cubic-bezier(.34,1.56,.64,1) forwards; }
+.res-name { font-family: 'Gaegu', cursive; font-size: 2.8rem; font-weight: 700;
+  background: linear-gradient(160deg, #fff5c0 0%, #ffd95a 35%, #e8a020 65%, #ffeaa0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 10px; letter-spacing:.03em; line-height:1.1;
+  filter: drop-shadow(0 2px 8px rgba(255,180,0,.35)); }
+.res-name.blast { animation: nameBlast .5s cubic-bezier(.34,1.56,.64,1) forwards; }
+.res-desc { font-family: 'Gowun Dodum', 'Pretendard', sans-serif; font-size: .92rem; color: rgba(240,234,255,.65); line-height: 1.7; margin-bottom: 16px; opacity:0; transition: opacity .3s; padding: 0 8px; }
+.res-desc.show { opacity:1; }
+.res-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; opacity:0; transition: opacity .3s; }
+.res-tags.show { opacity:1; }
+.tag { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13);
+  border-radius: 20px; padding: 3px 10px; font-size: .72rem; color: rgba(240,234,255,.65); }
+.runner-up { margin-bottom: 12px; }
+.ru-label { font-size: .7rem; color: var(--dim); margin-bottom: 6px; }
+.ru-items { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.ru-chip { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 10px; padding: 5px 10px; font-size: .78rem; color: rgba(240,234,255,.5); }
+
+.eat-btn { width: 100%; background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 14px; padding: 15px; font-family: 'Pretendard', sans-serif;
+  font-size: 1.1rem; color: #1a0a2e; cursor: pointer; margin-bottom: 8px;
+  transition: all .15s; -webkit-user-select: none; user-select: none; }
+.eat-btn:active { transform: scale(.97); filter: brightness(.95); }
+.eat-btn.eaten { background: linear-gradient(135deg,#7be8a0,#5bcfdc); }
+.eat-btn:disabled { opacity: .8; cursor: default; }
+
+.again-btn { width: 100%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.3);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #ffffff; cursor: pointer; transition: all .15s; font-weight: 600; }
+.again-btn:active { background: rgba(255,255,255,.18); }
+.ladder-btn { width: 100%; background: rgba(133,224,255,.07); border: 1px solid rgba(133,224,255,.22);
+  border-radius: 13px; padding: 13px; font-family: 'Pretendard', sans-serif;
+  font-size: .95rem; color: #85e0ff; cursor: pointer; transition: all .15s; }
+.ladder-btn:active { background: rgba(133,224,255,.15); }
+.tip { margin-top: 10px; font-size: .73rem; color: var(--dim); text-align: center; }
+
+/* RANDOM */
+.sep { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+.sep-line { flex: 1; height: 1px; background: rgba(255,255,255,.07); }
+.sep-txt { font-size: .7rem; color: var(--dim); }
+.rnd-btn { width: 100%; background: rgba(255,255,255,.03); border: 1px dashed rgba(255,255,255,.18);
+  border-radius: 13px; padding: 12px; color: var(--sub); font-family: 'Pretendard', sans-serif;
+  font-size: .83rem; cursor: pointer; transition: all .15s; }
+.rnd-btn:active { border-color: rgba(255,206,133,.5); color: var(--gold); }
+
+.roulette-wrap { display: none; text-align: center; padding: 12px 0; }
+.spin-ring { width: 80px; height: 80px; border-radius: 50%;
+  border: 3px solid rgba(255,157,226,.25); border-top-color: var(--pink);
+  margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; }
+.spin-ring.spinning { animation: spin .3s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.spin-name { font-family: 'Pretendard', sans-serif; font-size: 1rem; color: var(--sub); }
+
+/* =========== HISTORY PAGE =========== */
+.hist-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + var(--logo-h) + 20px) 16px 16px; }
+
+.hist-top { margin-bottom: 18px; }
+.hist-title { font-family: 'Pretendard', sans-serif; font-size: 1.6rem; color: var(--text); }
+.hist-sub { font-size: .75rem; color: var(--dim); margin-top: 3px; }
+
+.stat-row { display: flex; gap: 8px; margin-bottom: 18px; }
+.stat-card { flex: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 10px; text-align: center; }
+.stat-num { font-family: 'Pretendard', sans-serif; font-size: 1.4rem; color: var(--pink); line-height: 1; }
+.stat-lbl { font-size: .65rem; color: var(--dim); margin-top: 3px; }
+
+.fav-scroll { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 18px;
+  scrollbar-width: none; }
+.fav-scroll::-webkit-scrollbar { display: none; }
+.fav-chip { flex-shrink: 0; display: flex; align-items: center; gap: 5px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; }
+.fav-chip.top { border-color: rgba(255,206,133,.4); background: rgba(255,206,133,.07); }
+.fav-chip .fc-e { font-size: 1rem; }
+.fav-chip .fc-n { font-size: .78rem; font-weight: 700; color: rgba(240,234,255,.7); }
+.fav-chip.top .fc-n { color: var(--gold); }
+.fav-chip .fc-c { font-size: .68rem; color: var(--dim); }
+
+/* HEAT */
+.heat-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 14px; margin-bottom: 18px; }
+.heat-label { font-size: .7rem; color: var(--dim); margin-bottom: 10px; letter-spacing: .05em; }
+.heat-grid { display: flex; gap: 3px; flex-wrap: wrap; }
+.hc { width: 12px; height: 12px; border-radius: 2px; background: rgba(255,255,255,.05); flex-shrink: 0; }
+.hc.h1 { background: rgba(255,157,226,.25); }
+.hc.h2 { background: rgba(255,157,226,.55); }
+.hc.h3 { background: rgba(255,157,226,.85); }
+
+/* TIMELINE */
+.tl-month { font-family: 'Pretendard', sans-serif; font-size: .78rem;
+  color: var(--dim); letter-spacing: .05em; margin: 20px 0 10px;
+  display: flex; align-items: center; gap: 8px; }
+.tl-month::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.06); }
+
+.tl-day { margin-bottom: 4px; }
+.tl-day-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,157,226,.3); flex-shrink:0; }
+.tl-day-lbl { font-size: .75rem; font-weight: 700; color: var(--sub); }
+.tl-day-cnt { font-size: .65rem; background: rgba(255,255,255,.06); border-radius: 10px;
+  padding: 2px 7px; color: var(--dim); }
+
+.tl-entries { padding-left: 16px; border-left: 1px solid rgba(255,255,255,.05);
+  margin-left: 3px; padding-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
+.tl-entry { display: flex; align-items: center; gap: 10px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 13px; padding: 11px 13px; }
+.te-emoji { font-size: 1.6rem; flex-shrink: 0; width: 36px; text-align: center; }
+.te-body { flex: 1; min-width: 0; }
+.te-name { font-family: 'Pretendard', sans-serif; font-size: .95rem; }
+.te-time { font-size: .68rem; color: var(--dim); margin-top: 1px; }
+.te-note { font-size: .73rem; color: var(--sub); margin-top: 3px; font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.te-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .8rem; flex-shrink: 0; }
+.te-del:active { background: rgba(255,80,80,.12); color: #ff6464; }
+
+.hist-empty { text-align: center; padding: 60px 20px; }
+.he-emoji { font-size: 3.5rem; display: block; opacity: .35; margin-bottom: 12px; }
+.he-text { font-family: 'Pretendard', sans-serif; font-size: 1.05rem; color: var(--dim); margin-bottom: 6px; }
+.he-hint { font-size: .78rem; color: rgba(240,234,255,.2); }
+
+/* =========== SETTINGS PAGE =========== */
+.set-wrap { max-width: 480px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 20px) 16px 16px; }
+.set-title { font-family: 'Pretendard', sans-serif; font-size: 1.6rem; margin-bottom: 3px; }
+.set-sub { font-size: .75rem; color: var(--dim); margin-bottom: 20px; }
+
+.set-card { background: var(--card); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px; padding: 14px 16px; margin-bottom: 12px; }
+.sc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sc-title { font-family: 'Pretendard', sans-serif; font-size: .9rem; color: rgba(240,234,255,.65); }
+.sc-desc { font-size: .7rem; color: var(--dim); margin-top: 2px; }
+
+.set-row { display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.set-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.set-row:first-of-type { padding-top: 0; }
+.sr-info { flex: 1; }
+.sr-label { font-size: .87rem; font-weight: 700; }
+.sr-hint { font-size: .7rem; color: var(--dim); margin-top: 2px; }
+
+.tog { position: relative; width: 42px; height: 23px; flex-shrink: 0; }
+.tog input { opacity: 0; width: 0; height: 0; }
+.tog-sl { position: absolute; inset: 0; background: rgba(255,255,255,.1); border-radius: 23px; cursor: pointer; transition: .2s; }
+.tog-sl::before { content:''; position: absolute; width: 17px; height: 17px;
+  left: 3px; top: 3px; background: rgba(240,234,255,.55); border-radius: 50%; transition: .2s; }
+.tog input:checked + .tog-sl { background: rgba(255,157,226,.32); }
+.tog input:checked + .tog-sl::before { transform: translateX(19px); background: var(--pink); }
+
+/* BUDGET PREF */
+.mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 6px; }
+.mg-opt { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08); border-radius: 11px; padding: 9px 11px;
+  cursor: pointer; transition: all .15s; -webkit-user-select: none; user-select: none; }
+.mg-opt.sel { background: rgba(255,157,226,.1); border-color: rgba(255,157,226,.3); }
+.mg-e { font-size: 1.1rem; }
+.mg-l { font-size: .82rem; font-weight: 700; color: rgba(240,234,255,.6); }
+.mg-opt.sel .mg-l { color: var(--pink); }
+
+/* MENU LIST */
+.menu-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.mi { display: flex; align-items: center; gap: 9px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 10px 12px;
+  transition: all .15s; }
+.mi.off { opacity: .38; }
+.mi-emoji { font-size: 1.3rem; width: 32px; text-align: center; flex-shrink: 0; }
+.mi-info { flex: 1; min-width: 0; }
+.mi-name { font-size: .87rem; font-weight: 700; }
+.mi-tags { font-size: .68rem; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.mi-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.mi-tog { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 4px 9px; font-size: .68rem; color: var(--dim); cursor: pointer; transition: all .15s; }
+.mi-tog.on { background: rgba(255,157,226,.1); border-color: rgba(255,157,226,.25); color: var(--pink); }
+.mi-edit { background: transparent; border: 1px solid rgba(100,180,255,.2); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(100,180,255,.5); cursor: pointer; font-size: .78rem; }
+.mi-edit:active { background: rgba(100,180,255,.1); color: #85e0ff; }
+.mi-del { background: transparent; border: 1px solid rgba(255,80,80,.18); border-radius: 7px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,100,100,.4); cursor: pointer; font-size: .78rem; }
+.mi-del:active { background: rgba(255,80,80,.1); color: #ff6464; }
+
+/* ADD / EDIT FORM */
+.add-form { background: rgba(255,255,255,.03); border: 1px dashed rgba(255,255,255,.13);
+  border-radius: 13px; padding: 13px; margin-top: 6px; }
+.af-title { font-size: .78rem; font-weight: 700; color: var(--dim); margin-bottom: 10px; }
+.af-row { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+.fi { flex: 1; min-width: 70px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px; padding: 9px 11px; color: #f0eaff !important; font-family: 'Pretendard', sans-serif;
+  font-size: .84rem; outline: none; transition: border .2s; -webkit-appearance: none;
+  -webkit-text-fill-color: #f0eaff !important; }
+.fi option { background: #1a1530 !important; color: #f0eaff !important; }
+.fi::placeholder { color: var(--dim); }
+.fi:focus { border-color: rgba(255,157,226,.4); }
+.fi.fe { width: 54px; min-width: 54px; flex: none; text-align: center; font-size: 1.1rem; }
+.fi.fw { width: 100%; flex: none; }
+.add-action-row { display: flex; gap: 7px; margin-bottom: 0; }
+.ab { background: linear-gradient(135deg,rgba(255,157,226,.2),rgba(255,206,133,.2));
+  border: 1px solid rgba(255,157,226,.28); border-radius: 9px; padding: 9px 14px;
+  color: var(--pink); font-family: 'Pretendard', sans-serif; font-size: .84rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap; flex: 1; }
+.ab:active { filter: brightness(1.1); }
+.ab.cancel { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); color: var(--sub); }
+
+.cnt-badge { background: rgba(255,157,226,.13); border-radius: 20px; padding: 3px 9px;
+  font-size: .72rem; color: var(--pink); font-weight: 700; }
+
+/* SAVE BAR */
+.save-bar { position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px);
+  left: 50%; transform: translateX(-50%); background: rgba(18,13,32,.96);
+  border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px; backdrop-filter: blur(14px);
+  z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s;
+  white-space: nowrap; }
+.save-bar.show { opacity: 1; pointer-events: auto; }
+.sb-txt { font-size: .78rem; color: var(--sub); }
+.sb-btn { background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 9px; padding: 7px 16px; font-family: 'Pretendard', sans-serif;
+  font-size: .84rem; color: #1a0a2e; cursor: pointer; }
+
+/* MODAL */
+.modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 400;
+  display: none; align-items: flex-end; justify-content: center;
+  padding: 0 0 calc(var(--nav-h) + env(safe-area-inset-bottom)) 0; }
+.modal-ov.open { display: flex; }
+.modal-box { background: #14102a !important; border: 1px solid rgba(255,255,255,.12); border-radius: 20px 20px 0 0;
+  padding: 20px 18px calc(20px + env(safe-area-inset-bottom)); width: 100%;
+  max-width: 480px; animation: slideUp .25s ease; }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.mb-title { font-family: 'Pretendard', sans-serif; font-size: 1.15rem; margin-bottom: 3px; }
+.mb-sub { font-size: .78rem; color: var(--sub); margin-bottom: 14px; }
+.mb-ta { width: 100%; background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px; padding: 10px 13px; color: #f0eaff !important; font-family: 'Pretendard', sans-serif;
+  font-size: .87rem; outline: none; resize: none; margin-bottom: 12px; -webkit-appearance: none;
+  -webkit-text-fill-color: #f0eaff !important; }
+.mb-ta:focus { border-color: rgba(255,157,226,.4); }
+.mb-btns { display: flex; gap: 8px; }
+.mb-ok { flex: 1; background: linear-gradient(135deg,var(--pink),var(--gold)); border: none;
+  border-radius: 11px; padding: 13px; font-family: 'Pretendard', sans-serif; font-size: 1rem; color: #1a0a2e; cursor: pointer; }
+.mb-cancel { flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px; padding: 13px; font-family: 'Pretendard', sans-serif; font-size: 1rem; color: var(--sub); cursor: pointer; }
+
+/* EDIT MENU MODAL */
+.edit-modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 450;
+  display: none; align-items: flex-end; }
+.edit-modal-ov.open { display: flex; }
+.edit-modal-box { background: #14102a !important; border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px 20px 0 0; padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+  width: 100%; max-width: 480px; margin: 0 auto; animation: slideUp .25s ease;
+  max-height: 85vh; overflow-y: auto; }
+.em-title { font-family: 'Pretendard', sans-serif; font-size: 1.15rem; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px; }
+.em-close { background: rgba(255,255,255,.08); border: none; border-radius: 8px;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  color: var(--sub); cursor: pointer; margin-left: auto; font-size: 1rem; }
+
+/* TOAST */
+.toast { position: fixed; top: calc(env(safe-area-inset-top) + 16px); left: 50%;
+  transform: translateX(-50%) translateY(-6px); background: rgba(22,16,42,.96);
+  border: 1px solid rgba(255,157,226,.3); border-radius: 11px; padding: 9px 18px;
+  font-size: .82rem; color: var(--pink); backdrop-filter: blur(12px);
+  z-index: 500; opacity: 0; transition: all .22s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
+<div class="stars"></div>
 
-<!-- Header -->
-<div class="hdr">
-  <div class="hdr-icon">🍊</div>
-  <div>
-    <div class="hdr-title">제주 여행 플래너</div>
-    <div class="hdr-sub" id="hdr-sub">일정을 만들어보세요</div>
-  </div>
-  <div class="hdr-right">
-    <button class="hdr-btn" id="share-btn" onclick="shareURL()">🔗</button>
-    <button class="hdr-btn" onclick="exportTxt()">📤</button>
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <div class="logo-text">2PMK</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MENU SETTINGS MODAL -->
+<div class="edit-modal-ov" id="menu-settings-modal">
+  <div class="edit-modal-box" style="max-height:80vh;display:flex;flex-direction:column;">
+    <div class="em-title">
+      <span>⚙ 메뉴 설정</span>
+      <button class="em-close" onclick="closeMenuSettings()">✕</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--sub);margin-bottom:12px;">켜고 끄면 추천 목록에서 제외돼요</p>
+    <div id="menu-settings-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
   </div>
 </div>
 
-<!-- Day tabs -->
-<div class="day-bar" id="day-bar"></div>
-
-<!-- View toggle -->
-<div class="view-toggle">
-  <div class="view-btn active" id="btn-list" onclick="setView('list')">📋 목록</div>
-  <div class="view-btn" id="btn-map" onclick="setView('map')">📍 지도</div>
-</div>
-
-<!-- Content -->
-<div class="content">
-  <div class="map-wrap" id="map-wrap">
-    <button class="map-fullscreen-btn" onclick="toggleMapFullscreen()" title="전체화면">⛶</button>
-    <button class="map-exit-btn" onclick="toggleMapFullscreen()">✕ 닫기</button>
-    <svg id="map-svg" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="map-tooltip" id="tooltip"></div>
-    <div class="map-empty-msg" id="map-empty">장소를 추가하면<br>지도에 표시됩니다</div>
-    <div class="map-info" id="map-info">
-      <button class="map-info-close" onclick="closeInfo()">×</button>
-      <div class="map-info-name" id="info-name"></div>
-      <div class="map-info-meta" id="info-meta"></div>
+<!-- NOTE MODAL (bottom sheet) -->
+<div class="modal-ov" id="note-modal">
+  <div class="modal-box">
+    <p class="mb-title" id="modal-menu-title"></p>
+    <p class="mb-sub">한 마디 남기고 싶으면 적어봐요 (선택)</p>
+    <textarea class="mb-ta" id="modal-note" rows="3" placeholder="예: 반반무마니로 시켰는데 맛있었음 😋"></textarea>
+    <div class="mb-btns">
+      <button class="mb-cancel" onclick="closeNoteModal()">취소</button>
+      <button class="mb-ok" onclick="confirmEat()">기록할게! ✓</button>
     </div>
   </div>
-  <div class="list-wrap show" id="list-wrap"></div>
 </div>
 
-<!-- FAB group -->
-<div class="fab-group">
-  <button class="fab-sub" onclick="openDBSheet()" title="장소 DB 보기">🗂️</button>
-  <button class="fab" onclick="openSheet()">＋</button>
-</div>
-
-<!-- Sheet overlay -->
-<div class="sheet-overlay" id="overlay" onclick="closeAll()"></div>
-
-<!-- DB browser sheet -->
-<div class="db-sheet" id="db-sheet">
-  <div class="db-sheet-head">
-    <div class="sheet-handle"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div class="sheet-title" style="margin-bottom:0">📍 장소 DB <span style="font-size:12px;color:var(--text3);font-weight:400" id="db-count"></span></div>
-      <button onclick="closeDBSheet()" style="background:none;border:none;font-size:22px;color:var(--text3);cursor:pointer;padding:4px;">×</button>
+<!-- EDIT MENU MODAL -->
+<div class="edit-modal-ov" id="edit-modal">
+  <div class="edit-modal-box">
+    <div class="em-title">
+      <span id="edit-modal-title">메뉴 수정</span>
+      <button class="em-close" onclick="closeEditModal()">✕</button>
     </div>
-    <input class="db-sheet-search" id="db-sheet-search" placeholder="장소 검색..." oninput="renderDBList()" autocomplete="off"/>
-    <div class="db-region-tabs" id="db-region-tabs"></div>
-  </div>
-  <div class="db-list" id="db-list"></div>
-</div>
-
-<!-- Bottom sheet -->
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">장소 추가</div>
-
-  <div class="field-row">
-    <div class="field-label">장소 이름</div>
-    <div class="db-search-wrap">
-      <input class="inp" id="inp-name" placeholder="이름 입력 또는 검색" oninput="onNameInput(this.value)" autocomplete="off"/>
-      <div class="db-results" id="db-results"></div>
+    <div class="af-row">
+      <input class="fi fe" id="edit-emoji" placeholder="🍔" maxlength="2">
+      <input class="fi" id="edit-name" placeholder="메뉴 이름">
     </div>
-  </div>
-
-  <div class="field-row">
-    <div class="field-label">카테고리</div>
-    <div class="cat-grid" id="cat-grid">
-      <div class="cat-opt sel" data-cat="관광" onclick="selCat(this)">🏔 관광</div>
-      <div class="cat-opt" data-cat="맛집" onclick="selCat(this)">🍜 맛집</div>
-      <div class="cat-opt" data-cat="카페" onclick="selCat(this)">☕ 카페</div>
-      <div class="cat-opt" data-cat="숙소" onclick="selCat(this)">🏨 숙소</div>
-      <div class="cat-opt" data-cat="쇼핑" onclick="selCat(this)">🛍 쇼핑</div>
-      <div class="cat-opt" data-cat="액티비티" onclick="selCat(this)">🏄 액티비티</div>
+    <div class="af-row">
+      <input class="fi fw" id="edit-desc" placeholder="한 줄 설명">
+    </div>
+    <div class="af-row">
+      <input class="fi fw" id="edit-tags" placeholder="태그 (쉼표 구분: 매운맛,든든함)">
+    </div>
+    <div class="af-row" style="margin-bottom:14px;">
+      <select class="fi" id="edit-mood" style="flex:1;">
+        <option value="any">🤷 아무 때나</option>
+        <option value="spicy">🌶️ 매운맛</option>
+        <option value="sweet">🍬 달달함</option>
+        <option value="meat">🥩 고기류</option>
+        <option value="simple">🥡 간단하게</option>
+      </select>
+      <select class="fi" id="edit-temp" style="flex:1;">
+        <option value="any">🌡️ 온도 무관</option>
+        <option value="hot">🔥 따뜻함</option>
+        <option value="cold">❄️ 차가움</option>
+      </select>
+    </div>
+    <div class="add-action-row">
+      <button class="ab cancel" onclick="closeEditModal()">취소</button>
+      <button class="ab" onclick="saveMenuEdit()">저장하기 ✓</button>
     </div>
   </div>
+</div>
 
-  <div class="field-row">
-    <div class="field-label">방문 시간</div>
-    <input class="inp" id="inp-time" placeholder="09:00" type="time" />
-  </div>
-  <div class="field-row">
-    <div class="field-label">메모</div>
-    <input class="inp" id="inp-memo" placeholder="간단 메모" />
-  </div>
-
-  <div class="sheet-row">
-    <button class="btn-sheet btn-confirm" onclick="addPlace()">추가</button>
-    <button class="btn-sheet btn-cancel" onclick="closeSheet()">취소</button>
+<!-- LADDER MODAL -->
+<div class="edit-modal-ov" id="ladder-modal">
+  <div class="edit-modal-box" style="max-height:90vh;">
+    <div class="em-title">
+      <span>🪜 사다리타기</span>
+      <button class="em-close" onclick="closeLadder()">✕</button>
+    </div>
+    <div id="ladder-setup" style="display:block;">
+      <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px;">현재 추천 메뉴 포함 후보를 입력하세요 (2~4개)</p>
+      <div id="ladder-inputs" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <button onclick="addLadderItem()" style="width:100%;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);border-radius:10px;padding:9px;color:var(--sub);font-family:'Pretendard',sans-serif;font-size:.82rem;cursor:pointer;margin-bottom:14px;">+ 후보 추가</button>
+      <div class="add-action-row">
+        <button class="ab cancel" onclick="closeLadder()">취소</button>
+        <button class="ab" onclick="startLadder()">사다리 타기</button>
+      </div>
+    </div>
+    <div id="ladder-game" style="display:none;">
+      <div id="ladder-num-btns" style="display:none;margin-bottom:10px;"></div>
+      <canvas id="ladder-canvas" style="width:100%;border-radius:12px;display:block;"></canvas>
+      <p id="ladder-result-text" style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--text);margin:14px 0 4px;display:none;"></p>
+      <p id="ladder-result-sub" style="text-align:center;font-size:.78rem;color:var(--sub);margin-bottom:14px;display:none;"></p>
+      <div class="add-action-row" id="ladder-done-btns" style="display:none;">
+        <button class="ab cancel" onclick="closeLadder()">닫기</button>
+        <button class="ab" onclick="confirmLadderResult()">이걸로 먹자!</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<script id="sdb">
-/* 저장된 상태 - 저장 버튼 클릭 시 자동 업데이트됩니다 */
-const _SAVED_STATE = null;
-</script>
+<!-- ===== GAME PAGE ===== -->
+<div class="page active" id="page-game">
+  <div class="game-wrap">
+    <div class="game-header">
+      <p class="game-title">🍽️ 오늘 뭐먹지?</p>
+      <p class="game-sub">지금 당장 먹고 싶은 걸 찾아드려요</p>
+    </div>
+    <div class="card" style="position:relative;">
+      <button onclick="openMenuSettings()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:4px 9px;font-size:.72rem;color:rgba(255,255,255,.45);font-family:'Pretendard',sans-serif;cursor:pointer;z-index:2;">⚙ 메뉴 설정</button>
+      <!-- 추천 버튼 -->
+      <div id="pick-section">
+        <div style="text-align:center;padding:10px 0 18px;">
+          <div id="idle-emoji" style="font-size:3.5rem;margin-bottom:10px;opacity:.5;">🍽️</div>
+          <p style="font-family:'Pretendard',sans-serif;font-size:1.1rem;color:var(--sub);margin-bottom:4px;">오늘 뭐 먹을까요?</p>
+          <p style="font-size:.76rem;color:var(--dim);">버튼을 누르면 바로 추천해드려요</p>
+        </div>
+        <button class="gen-btn" style="font-size:1.15rem;padding:16px;margin-bottom:10px;border-radius:16px;" onclick="pickRandom()">🎲 메뉴 뽑기!</button>
+        <div class="roulette-wrap" id="roulette-wrap" style="display:none;">
+          <div class="spin-ring spinning" id="spin-emoji">🍜</div>
+          <p class="spin-name" id="spin-name">고르는 중...</p>
+        </div>
+      </div>
+      <div class="result-area" id="result-area" style="display:none;">
+        <p class="res-name" id="res-name"></p>
+        <p class="res-desc" id="res-desc"></p>
+        <div class="res-tags" id="res-tags"></div>
+        <button class="eat-btn" id="eat-btn" onclick="openNoteModal()">바로 먹자!</button>
+        <button class="again-btn" onclick="restart()" style="margin-top:8px;">다른 거 볼래</button>
+        <button class="ladder-btn" onclick="openLadder()" style="margin-top:8px;">못 고르겠어, 사다리 타자</button>
+        <p class="tip" id="tip">맛있게 드세요 🌙</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HISTORY PAGE ===== -->
+<div class="page" id="page-history">
+  <div class="hist-wrap">
+    <div class="hist-top">
+      <p class="hist-title">📅 기록장</p>
+      <p class="hist-sub">메뉴와 로또 번호를 한곳에서</p>
+    </div>
+    <div style="display:flex;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:14px;padding:5px;margin-bottom:18px;">
+      <button class="mode-tab active" id="htab-food" onclick="setHistTab('food',this)" style="flex:1;">🍽️<br>메뉴 기록</button>
+      <button class="mode-tab"        id="htab-lotto" onclick="setHistTab('lotto',this)" style="flex:1;">🎱<br>로또 번호</button>
+    </div>
+    <div id="hist-body"></div>
+    <div id="hist-lotto-body" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ===== LOTTO PAGE ===== -->
+<div class="page" id="page-lotto">
+  <div class="lotto-wrap">
+    <div class="lotto-header">
+      <p class="lotto-title">🎱 로또 번호 추출기</p>
+      <p class="lotto-sub">행운의 번호를 뽑아보세요</p>
+    </div>
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setLottoMode('basic',this)">🎲<br>순수<br>랜덤</button>
+      <button class="mode-tab" onclick="setLottoMode('balanced',this)">⚖️<br>균형<br>조건</button>
+      <button class="mode-tab" onclick="setLottoMode('smart',this)">🧠<br>패턴<br>회피</button>
+    </div>
+    <!-- MODE DESC -->
+    <div class="mode-desc" id="lotto-mode-desc"></div>
+    <!-- BALL STAGE -->
+    <div class="ball-stage" id="ball-stage">
+      <div class="ball-placeholder" id="ball-placeholder">
+        <div class="ball-ph"></div><div class="ball-ph"></div><div class="ball-ph"></div>
+        <div class="ball-ph"></div><div class="ball-ph"></div><div class="ball-ph"></div>
+      </div>
+      <div class="analysis-row" id="analysis-row" style="display:none;"></div>
+    </div>
+    <!-- BUTTONS -->
+    <button class="gen-btn" onclick="generateSingle()">🎱 번호 추출하기</button>
+    <button class="gen-multi-btn" onclick="generateMulti()">📋 5세트 한꺼번에 뽑기</button>
+    <!-- MULTI SETS -->
+    <div class="multi-sets" id="multi-sets" style="display:none;"></div>
+    <!-- SAVE BTN -->
+    <button class="lotto-save-btn" id="lotto-save-btn" style="display:none;" onclick="saveLottoNumbers()">📌 이 번호 저장하기</button>
+    <!-- HISTORY -->
+    <div class="lt-divider"></div>
+    <div class="lh-section">
+      <p class="lh-title">📂 저장된 번호</p>
+      <div class="lh-list" id="lh-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bot-nav">
+  <button class="bot-nav-btn active" id="nav-game" onclick="goPage('game',this)">
+    <span class="nav-icon">🍽️</span>추천
+  </button>
+  <button class="bot-nav-btn" id="nav-lotto" onclick="goPage('lotto',this)">
+    <span class="nav-icon">🎱</span>로또
+  </button>
+  <button class="bot-nav-btn" id="nav-history" onclick="goPage('history',this)">
+    <span class="nav-icon">📅</span>기록
+  </button>
+</nav>
+
 
 <script>
-// ══════════════════════════════════════════════
-const JEJU_DB = {
-  // 공항/항구
-  '제주국제공항':   [126.493,33.511,'제주시'], '제주항':        [126.527,33.527,'제주시'],
-  '성산항':        [126.924,33.472,'동부'],   '서귀포항':      [126.563,33.246,'서귀포'],
-  '화순항':        [126.318,33.234,'서부'],   '한림항':        [126.262,33.415,'서부'],
-  // 동부
-  '성산일출봉':    [126.942,33.458,'동부'],   '우도':          [126.952,33.502,'동부'],
-  '섭지코지':      [126.924,33.440,'동부'],   '광치기해변':    [126.906,33.455,'동부'],
-  '종달리해변':    [126.898,33.519,'동부'],   '김녕해수욕장':  [126.756,33.554,'동부'],
-  '월정리해변':    [126.796,33.555,'동부'],   '함덕해수욕장':  [126.670,33.543,'동부'],
-  '비자림':        [126.812,33.484,'동부'],   '만장굴':        [126.772,33.528,'동부'],
-  '성읍민속마을':  [126.807,33.435,'동부'],   '표선해비치해변':[126.840,33.323,'동부'],
-  '신천리해변':    [126.888,33.303,'동부'],   '섭지코지유채꽃밭':[126.925,33.442,'동부'],
-  '산굼부리':      [126.727,33.459,'동부'],   '다랑쉬오름':    [126.840,33.468,'동부'],
-  '용눈이오름':    [126.851,33.452,'동부'],   '아부오름':      [126.718,33.445,'동부'],
-  '거문오름':      [126.727,33.490,'동부'],   '에코랜드':      [126.681,33.461,'동부'],
-  '제주허브동산':  [126.824,33.428,'동부'],   '우도땅콩아이스크림':[126.953,33.503,'동부'],
-  // 서부
-  '협재해수욕장':  [126.239,33.394,'서부'],   '금능해수욕장':  [126.248,33.385,'서부'],
-  '한림공원':      [126.265,33.404,'서부'],   '애월해안도로':  [126.314,33.462,'서부'],
-  '곽지해수욕장':  [126.280,33.462,'서부'],   '이호테우해변':  [126.443,33.496,'서부'],
-  '새별오름':      [126.356,33.409,'서부'],   '저지오름':      [126.185,33.355,'서부'],
-  '수월봉':        [126.166,33.296,'서부'],   '차귀도':        [126.153,33.316,'서부'],
-  '신창풍차해안':  [126.167,33.342,'서부'],   '항몽유적지':    [126.264,33.396,'서부'],
-  '오설록티뮤지엄':[126.290,33.305,'서부'],   '신화월드':      [126.253,33.303,'서부'],
-  '카멜리아힐':    [126.368,33.277,'서부'],
-  // 남부(서귀포)
-  '중문해수욕장':  [126.416,33.244,'서귀포'], '천제연폭포':    [126.429,33.253,'서귀포'],
-  '천지연폭포':    [126.558,33.249,'서귀포'], '정방폭포':      [126.567,33.243,'서귀포'],
-  '외돌개':        [126.539,33.235,'서귀포'], '서귀포매일올레시장':[126.561,33.250,'서귀포'],
-  '제주올레7코스': [126.390,33.245,'서귀포'], '박수기정':      [126.296,33.233,'서귀포'],
-  '산방산':        [126.312,33.240,'서귀포'], '용머리해안':    [126.305,33.234,'서귀포'],
-  '송악산':        [126.296,33.218,'서귀포'], '새연교':        [126.563,33.243,'서귀포'],
-  '이중섭거리':    [126.558,33.250,'서귀포'],
-  // 중산간/한라산
-  '한라산':        [126.529,33.362,'중산간'], '한라산백록담':  [126.529,33.362,'중산간'],
-  '사려니숲길':    [126.645,33.401,'중산간'], '절물자연휴양림':[126.594,33.457,'중산간'],
-  '1100고지습지':  [126.429,33.362,'중산간'], '어리목':        [126.468,33.390,'중산간'],
-  '영실':          [126.474,33.343,'중산간'], '성판악':        [126.601,33.385,'중산간'],
-  // 제주시
-  '동문시장':      [126.531,33.512,'제주시'], '서문시장':      [126.517,33.511,'제주시'],
-  '올레시장':      [126.511,33.499,'제주시'], '제주목관아':    [126.519,33.513,'제주시'],
-  '삼성혈':        [126.520,33.506,'제주시'], '용두암':        [126.508,33.518,'제주시'],
-  '도두봉':        [126.465,33.511,'제주시'], '국립제주박물관':[126.508,33.494,'제주시'],
-  '넥슨컴퓨터박물관':[126.479,33.493,'제주시'],'제주돌문화공원':[126.600,33.467,'제주시'],
-};
-
-// DB_NAMES (장소 이름 배열 - 검색 자동완성용)
-const DB_NAMES = Object.keys(JEJU_DB);
-
-// ══════════════════════════════════════════════
-// SVG 좌표 변환  lon: 126.12~127.00  lat: 33.08~33.62
-// ══════════════════════════════════════════════
-const MAP = {minLon:126.12,maxLon:127.00,minLat:33.08,maxLat:33.62,W:500,H:340,PAD:30};
-function toSVG(lon,lat){
-  const x = MAP.PAD + (lon-MAP.minLon)/(MAP.maxLon-MAP.minLon)*(MAP.W-MAP.PAD*2);
-  const y = MAP.H-MAP.PAD - (lat-MAP.minLat)/(MAP.maxLat-MAP.minLat)*(MAP.H-MAP.PAD*2);
-  return [Math.round(x*10)/10, Math.round(y*10)/10];
-}
-
-function getCoord(name){
-  if(JEJU_DB[name]) return toSVG(JEJU_DB[name][0], JEJU_DB[name][1]);
-  const h=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
-  return [190+(h*47%200), 110+(h*73%110)];
-}
-
-// ══════════════════════════════════════════════
-// State  (초기값 - _SAVED_STATE가 있으면 덮어씀)
-// ══════════════════════════════════════════════
-const CAT_EMOJI={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
-let days=[
-  {id:1,label:'1일차',places:[]},
+// ============ DEFAULT DATA ============
+const DEFAULT_MENUS = [
+  {id:1,  name:"치킨",          emoji:"🍗", desc:"바삭한 황금빛 치킨! 야식의 영원한 왕.",              tags:["국민야식","맥주안주","배달가능"], mood:"meat", temp:"hot",  enabled:true, custom:false},
+  {id:2,  name:"피자",          emoji:"🍕", desc:"쭉 늘어나는 치즈의 유혹. 혼자도 여럿도 정답.",        tags:["여럿이","배달가능","든든함"],     mood:"sweet",temp:"hot",  enabled:true, custom:false},
+  {id:3,  name:"짜장면",        emoji:"🍜", desc:"달콤 짭짤한 춘장 소스. 중식 배달의 클래식.",          tags:["중식","빠름","혼자야식"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:4,  name:"짬뽕",          emoji:"🍲", desc:"칼칼한 국물이 속을 확 풀어주는 중식 소울푸드.",        tags:["중식","매운맛","국물"],           mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:5,  name:"탕수육",        emoji:"🥩", desc:"바삭한 튀김에 새콤달콤 소스. 부먹vs찍먹 선택의 시간.", tags:["중식","튀김","여럿이"],           mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:6,  name:"떡볶이",        emoji:"🌶️", desc:"매콤달콤한 국민 간식. 포장마차 감성 한 입.",          tags:["분식","매운맛","저렴"],           mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:7,  name:"순대",          emoji:"🌭", desc:"쫄깃하고 고소한 순대. 떡볶이 국물에 찍으면 완벽.",    tags:["분식","저렴","포장마차"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:8,  name:"튀김",          emoji:"🍤", desc:"바삭바삭 고소한 튀김 한 봉지. 간식의 정석.",          tags:["분식","저렴","간식"],             mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:10, name:"김밥",          emoji:"🍱", desc:"한 줄 김밥의 소박한 행복. 든든하고 깔끔하게.",        tags:["분식","저렴","혼자야식"],         mood:"simple",temp:"any",  enabled:true, custom:false},
+  {id:11, name:"족발",          emoji:"🦵", desc:"쫄깃쫄깃 족발 한 접시. 소주 한 잔 곁들이면 천국.",   tags:["안주용","여럿이","든든함"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:12, name:"보쌈",          emoji:"🥬", desc:"수육에 김치, 굴, 쌈장까지. 입안에서 퍼지는 조화.",    tags:["안주용","여럿이","든든함"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:13, name:"삼겹살",        emoji:"🥓", desc:"불판 위에서 지글지글. 상추쌈에 된장 한 숟갈.",        tags:["고기","여럿이","소주메이트"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:14, name:"곱창",          emoji:"🍢", desc:"불 향 가득한 곱창 한 접시. 야식 고수들의 선택.",      tags:["안주용","특별한야식","불맛"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:15, name:"마라탕",        emoji:"🫕", desc:"얼얼하고 중독적인 마라 향. 한 번 빠지면 못 나온다.",  tags:["중식","매운맛","중독주의"],       mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:16, name:"마라샹궈",      emoji:"🍳", desc:"볶음 마라의 진수. 재료를 골라서 내 입맛대로.",        tags:["중식","매운맛","든든함"],         mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:17, name:"쌀국수",        emoji:"🍜", desc:"고소하고 깔끔한 쌀국수 한 그릇. 국물이 진짜.",        tags:["동남아","국물","가볍게"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:19, name:"초밥",          emoji:"🍣", desc:"입안에서 녹는 신선한 초밥. 오늘은 좀 고급지게.",      tags:["일식","고급","혼자야식"],         mood:"sweet", temp:"cold", enabled:true, custom:false},
+  {id:20, name:"회/사시미",     emoji:"🐟", desc:"싱싱한 회 한 접시. 소주와의 조합은 말할 필요도 없다.",tags:["일식","안주용","고급"],           mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:21, name:"라멘",          emoji:"🍜", desc:"진한 돈코츠 국물의 일본식 라멘. 야식 프리미엄.",      tags:["일식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:22, name:"돈까스",        emoji:"🍱", desc:"바삭한 돈까스에 소스 듬뿍. 고기 한 판의 행복.",       tags:["일식","든든함","혼자야식"],       mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:23, name:"햄버거",        emoji:"🍔", desc:"두툼한 패티에 소스가 뚝뚝. 패스트푸드의 제왕.",       tags:["패스트푸드","배달가능","든든함"], mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:24, name:"샌드위치",      emoji:"🥪", desc:"가볍고 든든한 샌드위치. 건강한 야식이 필요할 때.",    tags:["가볍게","혼자야식","빠름"],       mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:25, name:"타코",          emoji:"🌮", desc:"또르티야에 고기와 살사. 멕시칸 감성으로 기분 전환.",   tags:["멕시칸","퓨전","특별한야식"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:26, name:"부리또",        emoji:"🌯", desc:"꽉 채운 속재료의 포만감. 한 손에 쏙 들어오는 야식.",   tags:["멕시칸","든든함","혼자야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:27, name:"찜닭",          emoji:"🍗", desc:"간장 양념에 촉촉하게 쪄낸 닭. 당면까지 있으면 완벽.", tags:["한식","든든함","여럿이"],         mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:28, name:"닭발",          emoji:"🦶", desc:"맵고 쫄깃한 닭발. 매운맛 마니아를 위한 극강 선택.",   tags:["매운맛","안주용","자극적"],       mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:29, name:"불닭",          emoji:"🔥", desc:"불같이 매운 불닭. 땀 뻘뻘 흘리며 먹는 쾌감.",         tags:["매운맛","자극적","혼자야식"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:30, name:"갈비찜",        emoji:"🍖", desc:"부드럽게 익은 갈비에 달콤한 양념. 집밥 같은 포근함.",  tags:["한식","든든함","여럿이"],         mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:31, name:"순대국밥",      emoji:"🍲", desc:"뜨끈한 국물에 속이 확 풀리는 국밥. 해장도 되는 메뉴.",tags:["한식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:32, name:"설렁탕",        emoji:"🍲", desc:"뽀얀 사골 국물의 정석. 밥 말아 한 그릇이면 천하태평.",tags:["한식","국물","든든함"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:33, name:"부대찌개",      emoji:"🥘", desc:"햄, 소시지, 라면이 모인 용광로 찌개. 여럿이 먹어야 제맛.",tags:["한식","매운맛","여럿이"],     mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:34, name:"김치찌개",      emoji:"🥘", desc:"칼칼한 김치찌개 한 그릇. 돼지고기 듬뿍이면 금상첨화.",tags:["한식","매운맛","든든함"],         mood:"spicy", temp:"hot",  enabled:true, custom:false},
+  {id:35, name:"된장찌개",      emoji:"🥘", desc:"구수한 된장 향이 퍼지는 집밥 느낌. 뚝배기째로.",     tags:["한식","국물","혼자야식"],         mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:36, name:"해물파전",      emoji:"🥞", desc:"바삭하고 쫄깃한 해물파전. 막걸리 한 잔 곁들이면 완벽.",tags:["한식","안주용","비오는날"],      mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:37, name:"감자전",        emoji:"🥞", desc:"노릇노릇 바삭한 감자전. 간단하지만 의외로 중독성 있음.",tags:["한식","저렴","간식"],           mood:"simple",temp:"hot",  enabled:true, custom:false},
+  {id:38, name:"편의점 도시락", emoji:"🍱", desc:"가성비 최강 편의점 픽. 빠르고 저렴하게 해결.",        tags:["간단","저렴","혼자야식"],         mood:"simple",temp:"any",  enabled:true, custom:false},
+  {id:40, name:"냉면",          emoji:"🫙", desc:"새콤하고 시원한 냉면 한 그릇. 더운 날 최고의 선택.",  tags:["한식","시원함","여름야식"],       mood:"simple",temp:"cold", enabled:true, custom:false},
+  {id:42, name:"비빔냉면",      emoji:"🌶️", desc:"매콤 새콤달콤 비빔냉면. 쭉쭉 들어가는 면발.",        tags:["한식","매운맛","여름야식"],       mood:"spicy", temp:"cold", enabled:true, custom:false},
+  {id:47, name:"닭강정",        emoji:"🍗", desc:"달콤매콤 바삭한 닭강정. 치킨이 질릴 때 찾게 되는 맛.",tags:["치킨류","달달함","배달가능"],     mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:48, name:"양념치킨",      emoji:"🍗", desc:"빨간 양념 가득한 달콤매콤 치킨. 밥이랑 먹으면 두 그릇.",tags:["치킨류","달달함","국민야식"],   mood:"sweet", temp:"hot",  enabled:true, custom:false},
+  {id:49, name:"후라이드치킨",  emoji:"🍗", desc:"고소한 튀김향 가득 후라이드. 맥주 한 캔과 환상궁합.",  tags:["치킨류","안주용","국민야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:50, name:"쫄면",          emoji:"🌶️", desc:"쫄깃하고 매콤한 쫄면 한 그릇. 분식의 숨겨진 강자.",  tags:["분식","매운맛","저렴"],           mood:"spicy", temp:"cold", enabled:true, custom:false},
+  {id:51, name:"갈비탕",        emoji:"🍖", desc:"진하고 깊은 갈비 국물 한 그릇. 뼈까지 발라먹는 행복.", tags:["한식","국물","든든함"],           mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:52, name:"케밥",          emoji:"🥙", desc:"육즙 가득 고기에 채소와 소스. 이국적인 한 끼.",        tags:["퓨전","든든함","특별한야식"],     mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:53, name:"등뼈찜",        emoji:"🦴", desc:"푹 고아낸 등뼈에 감자까지. 뼈 발라먹는 재미가 있는 메뉴.",tags:["한식","든든함","여럿이"],      mood:"meat",  temp:"hot",  enabled:true, custom:false},
+  {id:54, name:"화채",          emoji:"🍹", desc:"달콤하고 시원한 화채 한 그릇. 더운 날 입가심으로 딱.", tags:["한식","시원함","달달함"],         mood:"sweet", temp:"cold", enabled:true, custom:false},
 ];
-let activeDayId=1;
-let nextId=1;
-let nextDayId=2;
-// _SAVED_STATE 복원 (PC에서 저장한 파일 다시 열 때)
-if(typeof _SAVED_STATE !== 'undefined' && _SAVED_STATE){
-  days = _SAVED_STATE.days || days;
-  activeDayId = _SAVED_STATE.activeDayId || days[0].id;
-  nextId = _SAVED_STATE.nextId || 100;
-  nextDayId = _SAVED_STATE.nextDayId || days.length+1;
+const DEFAULT_SETTINGS={showRunnerUp:false,showRndBtn:true,excludeDisabled:true,budgetPref:"any"};
+
+let menus=[], settings={}, history=[], isDirty=false, nextId=100;
+let currentResultMenu=null, editingMenuId=null;
+
+function loadState(){
+  try{
+    const sm=localStorage.getItem("ys_menus"),ss=localStorage.getItem("ys_settings"),sh=localStorage.getItem("ys_history");
+    menus=sm?JSON.parse(sm):JSON.parse(JSON.stringify(DEFAULT_MENUS));
+    settings=ss?JSON.parse(ss):{...DEFAULT_SETTINGS};
+    history=sh?JSON.parse(sh):[];
+    nextId=Math.max(...menus.map(m=>m.id),99)+1;
+  }catch(e){menus=JSON.parse(JSON.stringify(DEFAULT_MENUS));settings={...DEFAULT_SETTINGS};history=[];}
 }
-let curView='list';
-let selCatVal='관광';
-let touchStartY=0;
-
-// ══════════════════════════════════════════════
-// Render
-// ══════════════════════════════════════════════
-function getDay(id){return days.find(d=>d.id===id);}
-function getActive(){return getDay(activeDayId);}
-
-function autoSave(){
-  try { localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId})); } catch(e){}
+function saveState(){
+  localStorage.setItem("ys_menus",JSON.stringify(menus));
+  localStorage.setItem("ys_settings",JSON.stringify(settings));
+  localStorage.setItem("ys_history",JSON.stringify(history));
 }
 
-function renderAll(){
-  renderDayBar();
-  renderList();
-  renderMap();
-  updateSub();
-  autoSave();
+// ============ NAV ============
+function goPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bot-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  (btn||document.getElementById('nav-'+name)).classList.add('active');
+  if(name==='history') { currentHistTab='food'; setHistTabUI('food'); renderHistory(); }
+  if(name==='lotto') initLottoPage();
+  window.scrollTo(0,0);
 }
 
-function updateSub(){
-  const d=getActive();
-  const total=days.reduce((s,d)=>s+d.places.length,0);
-  document.getElementById('hdr-sub').textContent=`${days.length}일 일정 · 총 ${total}곳`;
+// ============ NOTE MODAL ============
+function openNoteModal(){
+  if(!currentResultMenu) return;
+  document.getElementById('modal-menu-title').textContent=currentResultMenu.emoji+' '+currentResultMenu.name;
+  document.getElementById('modal-note').value='';
+  document.getElementById('note-modal').classList.add('open');
+}
+function closeNoteModal(){ document.getElementById('note-modal').classList.remove('open'); }
+function confirmEat(){
+  const note=document.getElementById('modal-note').value.trim();
+  const now=new Date();
+  history.unshift({id:Date.now(),menuId:currentResultMenu.id,name:currentResultMenu.name,
+    emoji:currentResultMenu.emoji,note,ts:now.getTime(),
+    dateStr:fmtDate(now),timeStr:fmtTime(now)});
+  saveState(); closeNoteModal();
+  const eb=document.getElementById('eat-btn');
+  eb.textContent='✓ 냠냠 기록됐어요!'; eb.classList.add('eaten'); eb.disabled=true;
+  document.getElementById('tip').textContent='기록 탭에서 메뉴 히스토리를 확인해봐요 📅';
+  showToast('메뉴 기록 완료! '+currentResultMenu.emoji);
+}
+function fmtDate(d){const dy=['일','월','화','수','목','금','토'];return`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dy[d.getDay()]})`;}
+function fmtTime(d){const h=d.getHours(),m=d.getMinutes(),ap=h<12?'오전':'오후',hh=h%12||12;return`${ap} ${hh}:${String(m).padStart(2,'0')}`;}
+function fmtMK(ts){const d=new Date(ts);return`${d.getFullYear()}년 ${d.getMonth()+1}월`;}
+
+// ============ EDIT MENU MODAL ============
+function openEditModal(id){
+  const m=menus.find(m=>m.id===id); if(!m) return;
+  editingMenuId=id;
+  document.getElementById('edit-modal-title').textContent='✏️ '+m.name+' 수정';
+  document.getElementById('edit-emoji').value=m.emoji;
+  document.getElementById('edit-name').value=m.name;
+  document.getElementById('edit-desc').value=m.desc;
+  document.getElementById('edit-tags').value=m.tags.join(', ');
+  document.getElementById('edit-mood').value=m.mood;
+  document.getElementById('edit-temp').value=m.temp;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){ document.getElementById('edit-modal').classList.remove('open'); editingMenuId=null; }
+function saveMenuEdit(){
+  const m=menus.find(m=>m.id===editingMenuId); if(!m) return;
+  const name=document.getElementById('edit-name').value.trim();
+  if(!name){showToast('이름을 입력해주세요!');return;}
+  m.emoji=document.getElementById('edit-emoji').value.trim()||m.emoji;
+  m.name=name;
+  m.desc=document.getElementById('edit-desc').value.trim()||m.desc;
+  const tr=document.getElementById('edit-tags').value.trim();
+  m.tags=tr?tr.split(',').map(t=>t.trim()).filter(Boolean):m.tags;
+  m.mood=document.getElementById('edit-mood').value;
+  m.temp=document.getElementById('edit-temp').value;
+  saveState(); closeEditModal(); renderMenuList(); updateMenuCnt();
+  showToast(`'${name}' 수정 완료! ✓`);
 }
 
-const DAY_COLORS = [
-  '#d4845a', // 코랄 오렌지
-  '#5b8fd4', // 스카이 블루
-  '#7aba7a', // 세이지 그린
-  '#c47db8', // 라벤더
-  '#e0aa3e', // 골든 옐로
-  '#5bbcb8', // 틸 민트
-  '#e07090', // 로즈핑크
-  '#8b78d0', // 퍼플
-];
+// ============ HISTORY ============
 
-function getDayColor(idx){ return DAY_COLORS[idx % DAY_COLORS.length]; }
+// ============ HISTORY TABS ============
+let currentHistTab = 'food';
 
-function renderDayBar(){
-  const bar=document.getElementById('day-bar');
-  bar.innerHTML='';
-  days.forEach((d,idx)=>{
-    const color = getDayColor(idx);
-    const t=document.createElement('div');
-    t.className='day-tab'+(d.id===activeDayId?' active':'');
-    t.innerHTML=`${d.label}<button class="day-tab-x" ontouchend="delDay(event,${d.id})" onclick="delDay(event,${d.id})">✕</button>`;
-    t.onclick=e=>{if(e.target.closest('.day-tab-x'))return;activeDayId=d.id;renderAll();};
-    if(d.id===activeDayId){
-      t.style.color = color;
-      t.style.borderBottomColor = color;
-    }
-    bar.appendChild(t);
-  });
-  const add=document.createElement('button');
-  add.className='day-add-btn';
-  add.textContent='+';
-  add.title='일차 추가';
-  add.onclick=addDay;
-  bar.appendChild(add);
+function setHistTab(tab, btn) {
+  currentHistTab = tab;
+  setHistTabUI(tab);
+  if (tab === 'food') {
+    document.getElementById('hist-body').style.display = 'block';
+    document.getElementById('hist-lotto-body').style.display = 'none';
+    renderHistory();
+  } else {
+    document.getElementById('hist-body').style.display = 'none';
+    document.getElementById('hist-lotto-body').style.display = 'block';
+    renderLottoHistoryInRecord();
+  }
 }
 
-const NUM_COLORS = ['#e07a5f','#3d85c8','#6aab6a','#c47db8','#e0aa3e','#5bbcb8','#e07090','#8b78d0'];
+function setHistTabUI(tab) {
+  const foodBtn = document.getElementById('htab-food');
+  const lottoBtn = document.getElementById('htab-lotto');
+  if (!foodBtn || !lottoBtn) return;
+  foodBtn.classList.toggle('active', tab === 'food');
+  lottoBtn.classList.toggle('active', tab === 'lotto');
+}
 
-function renderList(){
-  const wrap=document.getElementById('list-wrap');
-  const d=getActive();
-  if(!d||d.places.length===0){
-    wrap.innerHTML=`<div class="empty-card"><div class="ei">📍</div><p>아직 장소가 없어요<br>＋ 버튼으로 추가해보세요</p></div>`;
+function ballColorInline(n) {
+  if (n<=10) return 'linear-gradient(145deg,#f5d76e,#e8a000)';
+  if (n<=20) return 'linear-gradient(145deg,#6ea8f5,#2563d4)';
+  if (n<=30) return 'linear-gradient(145deg,#f08080,#c0392b)';
+  if (n<=40) return 'linear-gradient(145deg,#7be8a0,#1a9c47)';
+  return 'linear-gradient(145deg,#b0b0c8,#606080)';
+}
+
+function renderLottoHistoryInRecord() {
+  const el = document.getElementById('hist-lotto-body');
+  if (!lottoHistory || lottoHistory.length === 0) {
+    el.innerHTML = `<div class="hist-empty">
+      <span class="he-emoji">🎱</span>
+      <p class="he-text">저장된 로또 번호가 없어요</p>
+      <p class="he-hint">로또 탭에서 번호를 뽑고 저장해보세요</p>
+    </div>`;
     return;
   }
-  wrap.innerHTML='';
-  d.places.forEach((p,i)=>{
-    if(i>0){
-      const prev=d.places[i-1];
-      let dur='';
-      if(prev.time&&p.time){const m=tdiff(prev.time,p.time);if(m>0)dur=fmtDur(m);}
-      const conn=document.createElement('div');
-      conn.className='connector';
-      conn.innerHTML=`<div class="conn-line"></div>${dur?`<div class="conn-dur">🚗 ${dur}</div>`:''}`;
-      wrap.appendChild(conn);
-    }
-    const el=document.createElement('div');
-    el.className='place-card';
-    el.innerHTML=`
-      <div class="place-num" style="background:${NUM_COLORS[i%NUM_COLORS.length]}">${i+1}</div>
-      <div class="place-body">
-        <div class="place-name">${p.name}</div>
-        <div class="place-row">
-          <span class="cat-badge b${p.cat}">${CAT_EMOJI[p.cat]} ${p.cat}</span>
-          ${p.time?`<span class="place-time">🕐 ${p.time}</span>`:''}
+
+  const modeLabel = {basic:'순수 랜덤', balanced:'균형 조건', smart:'패턴 회피'};
+  const modeColor = {basic:'rgba(133,224,255,.15)', balanced:'rgba(123,232,160,.12)', smart:'rgba(255,157,226,.12)'};
+  const modeBorder = {basic:'rgba(133,224,255,.25)', balanced:'rgba(123,232,160,.25)', smart:'rgba(255,157,226,.25)'};
+  const modeTextColor = {basic:'#85e0ff', balanced:'#7be8a0', smart:'#ff9de2'};
+
+  // stats
+  const total = lottoHistory.reduce((s,e)=>s+e.nums.length, 0);
+  const modeCount = {};
+  lottoHistory.forEach(e=>{ modeCount[e.mode]=(modeCount[e.mode]||0)+1; });
+  const topMode = Object.entries(modeCount).sort((a,b)=>b[1]-a[1])[0];
+
+  let html = `<div class="stat-row" style="margin-bottom:18px;">
+    <div class="stat-card"><p class="stat-num">${lottoHistory.length}</p><p class="stat-lbl">저장 횟수</p></div>
+    <div class="stat-card"><p class="stat-num">${total}</p><p class="stat-lbl">총 세트</p></div>
+    ${topMode ? `<div class="stat-card"><p class="stat-num" style="font-size:.9rem;line-height:1.2;">${modeLabel[topMode[0]]||topMode[0]}</p><p class="stat-lbl">자주 쓴 모드</p></div>` : ''}
+  </div>`;
+
+  // group by month
+  const monthGroups = {};
+  lottoHistory.forEach(e => {
+    const mk = fmtMK(e.ts);
+    if (!monthGroups[mk]) monthGroups[mk] = [];
+    monthGroups[mk].push(e);
+  });
+
+  html += '<div>';
+  Object.entries(monthGroups).forEach(([month, entries]) => {
+    html += `<div class="tl-month">${month}</div>`;
+    entries.forEach(e => {
+      const bg = modeColor[e.mode] || 'rgba(255,255,255,.04)';
+      const bd = modeBorder[e.mode] || 'rgba(255,255,255,.1)';
+      const tc = modeTextColor[e.mode] || 'var(--sub)';
+      html += `<div style="background:${bg};border:1px solid ${bd};border-radius:14px;padding:13px 14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <span style="font-size:.7rem;font-weight:700;color:${tc};background:${bg};border:1px solid ${bd};border-radius:10px;padding:2px 8px;">${modeLabel[e.mode]||e.mode}</span>
+            <span style="font-size:.65rem;color:var(--dim);margin-left:6px;">${e.dateStr}</span>
+          </div>
+          <button class="lh-del" onclick="delLottoEntryFromRecord(${e.id})" style="width:26px;height:26px;">✕</button>
         </div>
-        ${p.memo?`<div class="place-memo">${p.memo}</div>`:''}
-      </div>
-      <div class="place-order-btns">
-        <button class="order-btn" onclick="movePlace(${d.id},${p.id},-1)" ${i===0?'disabled':''}>▲</button>
-        <button class="order-btn" onclick="movePlace(${d.id},${p.id},1)" ${i===d.places.length-1?'disabled':''}>▼</button>
-      </div>
-      <button class="place-del" onclick="delPlace(${d.id},${p.id})">✕</button>
-    `;
-    wrap.appendChild(el);
-  });
-}
-
-// ══════════════════════════════════════════════
-// Map render — 여행 가이드 일러스트 스타일
-// ══════════════════════════════════════════════
-const CAT_COLOR={관광:'#2a9d6e',맛집:'#d85a30',카페:'#b07010',숙소:'#1560a0',쇼핑:'#6040c0',액티비티:'#b03060'};
-const CAT_ICON={관광:'🏔',맛집:'🍜',카페:'☕',숙소:'🏨',쇼핑:'🛍',액티비티:'🏄'};
-
-function renderMap(){
-  const svg=document.getElementById('map-svg');
-  svg.innerHTML='';
-  // 핀치줌/팬용 루트 그룹
-  const mapRoot=document.createElementNS('http://www.w3.org/2000/svg','g');
-  mapRoot.id='map-root';
-  const d=getActive();
-  document.getElementById('map-empty').style.display=(!d||d.places.length===0)?'block':'none';
-  if(!d||d.places.length===0) return;
-
-  const ns='http://www.w3.org/2000/svg';
-  function mk(tag,attrs,txt){
-    const e=document.createElementNS(ns,tag);
-    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-    if(txt!=null) e.textContent=txt;
-    return e;
-  }
-
-  // ── 배경: 파스텔 바다 그라디언트 ──
-  const defs=mk('defs',{});
-  // 바다 그라디언트
-  const seaGrad=mk('linearGradient',{id:'seaGrad',x1:'0%',y1:'0%',x2:'100%',y2:'100%'});
-  seaGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#b8dff0'}));
-  seaGrad.appendChild(mk('stop',{offset:'100%','stop-color':'#8ecae6'}));
-  defs.appendChild(seaGrad);
-  // 섬 그라디언트
-  const islandGrad=mk('linearGradient',{id:'islandGrad',x1:'0%',y1:'0%',x2:'0%',y2:'100%'});
-  islandGrad.appendChild(mk('stop',{offset:'0%','stop-color':'#d4edaa'}));
-  islandGrad.appendChild(mk('stop',{offset:'100%','stop-color':'#b8d98a'}));
-  defs.appendChild(islandGrad);
-  // 드롭섀도 필터
-  const filt=mk('filter',{id:'dropshadow',x:'-20%',y:'-20%',width:'140%',height:'140%'});
-  const fe=mk('feDropShadow',{dx:'0',dy:'2',stdDeviation:'3','flood-color':'rgba(0,0,0,0.22)'});
-  filt.appendChild(fe);
-  defs.appendChild(filt);
-  // 마커 글로우
-  const glow=mk('filter',{id:'glow'});
-  glow.appendChild(mk('feGaussianBlur',{stdDeviation:'2',result:'coloredBlur'}));
-  const feMerge=mk('feMerge',{});
-  feMerge.appendChild(mk('feMergeNode',{in:'coloredBlur'}));
-  feMerge.appendChild(mk('feMergeNode',{in:'SourceGraphic'}));
-  glow.appendChild(feMerge);
-  defs.appendChild(glow);
-  svg.appendChild(defs);
-
-  // 바다 배경
-  mapRoot.appendChild(mk('rect',{width:500,height:340,fill:'url(#seaGrad)'}));
-
-  // 바다 물결 텍스처 (가로 웨이브 라인들)
-  for(let wy=30;wy<340;wy+=22){
-    const wave=mk('path',{
-      d:`M0,${wy} Q62,${wy-5} 125,${wy} Q187,${wy+5} 250,${wy} Q312,${wy-5} 375,${wy} Q437,${wy+5} 500,${wy}`,
-      fill:'none',stroke:'rgba(255,255,255,0.28)','stroke-width':'1'
-    });
-    mapRoot.appendChild(wave);
-  }
-
-  // ── 제주도 해안선 (더 정밀한 포인트 ~65개) ──
-  const coastLL=[
-    [126.148,33.395],[126.153,33.360],[126.162,33.330],[126.175,33.305],
-    [126.195,33.280],[126.215,33.262],[126.248,33.250],[126.278,33.242],
-    [126.305,33.232],[126.340,33.225],[126.375,33.220],[126.410,33.218],
-    [126.448,33.216],[126.490,33.215],[126.528,33.214],[126.568,33.216],
-    [126.605,33.220],[126.645,33.228],[126.678,33.235],[126.710,33.248],
-    [126.742,33.262],[126.772,33.278],[126.800,33.298],[126.826,33.318],
-    [126.848,33.338],[126.868,33.360],[126.886,33.382],[126.900,33.406],
-    [126.912,33.428],[126.924,33.450],[126.932,33.468],[126.938,33.485],
-    [126.938,33.502],[126.928,33.518],[126.912,33.530],[126.892,33.536],
-    [126.868,33.538],[126.838,33.538],[126.805,33.542],[126.770,33.548],
-    [126.735,33.554],[126.698,33.558],[126.660,33.560],[126.622,33.560],
-    [126.582,33.558],[126.542,33.558],[126.502,33.558],[126.463,33.555],
-    [126.424,33.548],[126.388,33.545],[126.350,33.542],[126.318,33.538],
-    [126.288,33.530],[126.262,33.518],[126.238,33.505],[126.218,33.490],
-    [126.200,33.472],[126.185,33.452],[126.172,33.432],[126.160,33.415],
-    [126.148,33.395],
-  ];
-  const coastPath = coastLL.map(([lo,la],i)=>{
-    const [x,y]=toSVG(lo,la);
-    return (i===0?`M${x},${y}`:`L${x},${y}`);
-  }).join(' ')+'Z';
-
-  // 섬 그림자
-  mapRoot.appendChild(mk('path',{d:coastPath,fill:'rgba(0,0,0,0.12)',transform:'translate(4,6)',filter:'url(#dropshadow)'}));
-  // 섬 본체
-  mapRoot.appendChild(mk('path',{d:coastPath,fill:'url(#islandGrad)',stroke:'#8aaf5a','stroke-width':'1.8','stroke-linejoin':'round'}));
-
-  // 해안가 안쪽 테두리 (얕은 바다 효과)
-  mapRoot.appendChild(mk('path',{d:coastPath,fill:'none',stroke:'rgba(140,200,120,0.4)','stroke-width':'4','stroke-linejoin':'round'}));
-
-  // ── 내부 지형 디테일 ──
-  // 한라산 — 겹쳐쌓인 산 모양
-  const [hx,hy]=toSVG(126.529,33.362);
-  // 산 그림자
-  mapRoot.appendChild(mk('ellipse',{cx:hx+3,cy:hy+4,rx:28,ry:12,fill:'rgba(0,0,0,0.1)'}));
-  // 산 레이어3 (가장 뒤)
-  mapRoot.appendChild(mk('path',{d:`M${hx-32},${hy+8} Q${hx-10},${hy-28} ${hx+2},${hy-34} Q${hx+14},${hy-28} ${hx+36},${hy+8}Z`,fill:'#7ab850',opacity:'0.6'}));
-  // 산 레이어2
-  mapRoot.appendChild(mk('path',{d:`M${hx-26},${hy+8} Q${hx-8},${hy-24} ${hx+1},${hy-32} Q${hx+12},${hy-24} ${hx+28},${hy+8}Z`,fill:'#5e9840'}));
-  // 산 레이어1 (앞)
-  mapRoot.appendChild(mk('path',{d:`M${hx-20},${hy+8} Q${hx-4},${hy-18} ${hx},${hy-28} Q${hx+6},${hy-18} ${hx+22},${hy+8}Z`,fill:'#4a8030'}));
-  // 눈 덮인 봉우리
-  mapRoot.appendChild(mk('path',{d:`M${hx-5},${hy-24} Q${hx},${hy-30} ${hx+5},${hy-24} Q${hx},${hy-22} ${hx-5},${hy-24}Z`,fill:'white',opacity:'0.85'}));
-  // 한라산 레이블
-  const hLabel=mk('text',{x:hx,y:hy+20,'text-anchor':'middle','font-size':'9','font-weight':'700',fill:'#3a6020','letter-spacing':'-0.3'});
-  hLabel.textContent='한라산 ▲1950m';
-  mapRoot.appendChild(hLabel);
-
-  // 숲/녹지 힌트 (중산간)
-  [[126.64,33.40],[126.72,33.47],[126.59,33.43],[126.80,33.48]].forEach(([lo,la])=>{
-    const [tx,ty]=toSVG(lo,la);
-    const tree=mk('text',{x:tx,y:ty,'text-anchor':'middle','font-size':'11',opacity:'0.45'});
-    tree.textContent='🌲';
-    mapRoot.appendChild(tree);
-  });
-
-  // 바다 텍스트 장식
-  const seaText=mk('text',{x:55,y:290,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
-  seaText.textContent='제주 바다';
-  mapRoot.appendChild(seaText);
-  const seaText2=mk('text',{x:410,y:40,'font-size':'9',fill:'rgba(30,90,140,0.5)','font-style':'italic','letter-spacing':'1'});
-  seaText2.textContent='동쪽 바다';
-  mapRoot.appendChild(seaText2);
-
-  // 제주시·서귀포 지명
-  const [jjx,jjy]=toSVG(126.530,33.508);
-  const jLabel=mk('text',{x:jjx,y:jjy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
-  jLabel.textContent='제주시';
-  mapRoot.appendChild(jLabel);
-  const [sgx,sgy]=toSVG(126.558,33.252);
-  const sgLabel=mk('text',{x:sgx,y:sgy,'text-anchor':'middle','font-size':'8.5','font-weight':'600',fill:'#4a6030',opacity:'0.75'});
-  sgLabel.textContent='서귀포시';
-  mapRoot.appendChild(sgLabel);
-
-  // 우도 소섬
-  const [udx,udy]=toSVG(126.955,33.502);
-  mapRoot.appendChild(mk('ellipse',{cx:udx,cy:udy,rx:9,ry:6,fill:'#c2d990',stroke:'#8aaf5a','stroke-width':'1'}));
-  const udL=mk('text',{x:udx,y:udy+1,'text-anchor':'middle','font-size':'6','font-weight':'600',fill:'#3a5a20'});
-  udL.textContent='우도';
-  mapRoot.appendChild(udL);
-
-  // ── 나침반 (여행 가이드 스타일) ──
-  const compass=mk('g',{transform:'translate(470,26)'});
-  compass.appendChild(mk('circle',{cx:0,cy:0,r:18,fill:'rgba(255,255,255,0.9)',stroke:'#c8a96a','stroke-width':'1.5'}));
-  compass.appendChild(mk('circle',{cx:0,cy:0,r:15,fill:'none',stroke:'#e8d090','stroke-width':'0.8'}));
-  // 방위 눈금
-  ['N','E','S','W'].forEach((dir,i)=>{
-    const ang=i*90*(Math.PI/180);
-    const lx=Math.sin(ang)*10, ly=-Math.cos(ang)*10;
-    const t=mk('text',{x:lx,y:ly+3.5,'text-anchor':'middle','font-size':'6','font-weight':'700',fill:dir==='N'?'#c84030':'#5a4020'});
-    t.textContent=dir;
-    compass.appendChild(t);
-  });
-  // 나침반 바늘
-  compass.appendChild(mk('polygon',{points:'0,-12 -2.5,0 0,3 2.5,0',fill:'#c84030'}));
-  compass.appendChild(mk('polygon',{points:'0,12 -2.5,0 0,-3 2.5,0',fill:'#8a9aaa'}));
-  compass.appendChild(mk('circle',{cx:0,cy:0,r:2.5,fill:'#fff',stroke:'#999','stroke-width':'0.8'}));
-  mapRoot.appendChild(compass);
-
-  // ── 일차 레이블 배지 ──
-  const dayBadge=mk('g',{transform:'translate(14,14)'});
-  dayBadge.appendChild(mk('rect',{x:0,y:0,width:52,height:20,rx:10,fill:'#2a9d6e'}));
-  const dayTxt=mk('text',{x:26,y:14,'text-anchor':'middle','font-size':'10','font-weight':'700',fill:'white'});
-  dayTxt.textContent=`${d.label}`;
-  dayBadge.appendChild(dayTxt);
-  mapRoot.appendChild(dayBadge);
-
-  // ── 경로 곡선 (손그림 느낌) ──
-  const places=d.places;
-  const coords=places.map(p=>getCoord(p.name));
-
-  for(let i=0;i<coords.length-1;i++){
-    const [ax,ay]=coords[i],[bx,by]=coords[i+1];
-    // 살짝 꺾이는 자연스러운 커브
-    const cpx=(ax+bx)/2+((ay-by)*0.18), cpy=(ay+by)/2+((bx-ax)*0.18);
-    // 경로 배경 (두꺼운 흰선)
-    mapRoot.appendChild(mk('path',{
-      d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
-      fill:'none',stroke:'rgba(255,255,255,0.7)','stroke-width':'4','stroke-linecap':'round'
-    }));
-    // 경로 본선 (점선)
-    mapRoot.appendChild(mk('path',{
-      d:`M${ax},${ay} Q${cpx},${cpy} ${bx},${by}`,
-      fill:'none',stroke:'#e07040','stroke-width':'2','stroke-dasharray':'6,4','stroke-linecap':'round',opacity:'0.85'
-    }));
-    // 중간 화살표
-    const mt=0.5;
-    const qx=(1-mt)*(1-mt)*ax+2*(1-mt)*mt*cpx+mt*mt*bx;
-    const qy=(1-mt)*(1-mt)*ay+2*(1-mt)*mt*cpy+mt*mt*by;
-    const ang2=Math.atan2(by-ay,bx-ax)*180/Math.PI;
-    const arrow=mk('polygon',{
-      points:'0,-3 6,0 0,3',fill:'#e07040',opacity:'0.85',
-      transform:`translate(${qx},${qy}) rotate(${ang2})`
-    });
-    mapRoot.appendChild(arrow);
-  }
-
-  // ── 마커: 말풍선 스티커 스타일 ──
-  places.forEach((p,i)=>{
-    const [px,py]=coords[i];
-    const color=CAT_COLOR[p.cat]||'#888';
-    const g=mk('g',{style:'cursor:pointer'});
-
-    // 핀 그림자
-    g.appendChild(mk('ellipse',{cx:px+1,cy:py+2,rx:5,ry:2.5,fill:'rgba(0,0,0,0.2)'}));
-
-    // 핀 몸체 — 여행 가이드 스타일 (동그란 머리 + 뾰족한 아래)
-    const pinPath=`M${px},${py} C${px-4},${py-3} ${px-7},${py-10} ${px-7},${py-16} A7,7 0 1,1 ${px+7},${py-16} C${px+7},${py-10} ${px+4},${py-3} ${px},${py}Z`;
-    g.appendChild(mk('path',{d:pinPath,fill:color,filter:'url(#glow)'}));
-    // 핀 하이라이트
-    g.appendChild(mk('ellipse',{cx:px-2,cy:py-19,rx:2,ry:1.4,fill:'rgba(255,255,255,0.4)'}));
-    // 번호 배지
-    g.appendChild(mk('circle',{cx:px,cy:py-16,r:5.5,fill:'white'}));
-    const numT=mk('text',{x:px,y:py-13,'text-anchor':'middle','font-size':'6','font-weight':'700',fill:color});
-    numT.textContent=i+1;
-    g.appendChild(numT);
-
-    g.addEventListener('click',()=>showInfo(p,i));
-    g.addEventListener('touchstart',e=>{e.stopPropagation();showInfo(p,i);},{passive:true});
-    mapRoot.appendChild(g);
-  });
-
-  // ── 장소 이름 말풍선 라벨 ──
-  places.forEach((p,i)=>{
-    const [px,py]=coords[i];
-    const name=p.name.length>7?p.name.slice(0,7)+'…':p.name;
-    const w=name.length*7+16;
-    // 말풍선 위치: 핀 위
-    const lx=px, ly=py-26;
-    const g=mk('g',{});
-    // 배경 말풍선
-    g.appendChild(mk('rect',{x:lx-w/2,y:ly-11,width:w,height:15,rx:7,fill:'rgba(255,255,255,0.92)',stroke:'rgba(0,0,0,0.1)','stroke-width':'0.8'}));
-    // 말풍선 꼬리
-    g.appendChild(mk('polygon',{points:`${lx-3},${ly+4} ${lx+3},${ly+4} ${lx},${ly+8}`,fill:'rgba(255,255,255,0.92)'}));
-    const lbl=mk('text',{x:lx,y:ly,'text-anchor':'middle','font-size':'7.5','font-weight':'600',fill:'#2a2a2a'});
-    lbl.textContent=name;
-    g.appendChild(lbl);
-    mapRoot.appendChild(g);
-  });
-
-  svg.appendChild(mapRoot);
-
-  // ── 핀치줌 & 드래그 팬 ──
-  let mapScale=1, mapTx=0, mapTy=0;
-  let isPanning=false, lastPanX=0, lastPanY=0;
-  let lastDist=0;
-
-  function applyTransform(){
-    mapRoot.setAttribute('transform',`translate(${mapTx},${mapTy}) scale(${mapScale})`);
-  }
-
-  // 터치: 핀치줌 + 단일손가락 팬
-  svg.addEventListener('touchstart',e=>{
-    if(e.touches.length===2){
-      lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-    } else if(e.touches.length===1){
-      isPanning=true;
-      lastPanX=e.touches[0].clientX;
-      lastPanY=e.touches[0].clientY;
-    }
-  },{passive:true});
-
-  svg.addEventListener('touchmove',e=>{
-    const isFs=document.getElementById('map-wrap').classList.contains('fullscreen');
-    if(isFs) return;
-    if(e.touches.length===2){
-      e.preventDefault();
-      const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-      if(lastDist>0){
-        const ratio=dist/lastDist;
-        const newScale=Math.min(Math.max(mapScale*ratio,0.6),5);
-        const rect=svg.getBoundingClientRect();
-        const cx=((e.touches[0].clientX+e.touches[1].clientX)/2-rect.left)*(500/rect.width);
-        const cy=((e.touches[0].clientY+e.touches[1].clientY)/2-rect.top)*(340/rect.height);
-        mapTx=cx-(cx-mapTx)*(newScale/mapScale);
-        mapTy=cy-(cy-mapTy)*(newScale/mapScale);
-        mapScale=newScale;
-        applyTransform();
-      }
-      lastDist=dist;
-      isPanning=false;
-    } else if(e.touches.length===1 && isPanning){
-      const dx=(e.touches[0].clientX-lastPanX)*(500/svg.getBoundingClientRect().width);
-      const dy=(e.touches[0].clientY-lastPanY)*(340/svg.getBoundingClientRect().height);
-      mapTx+=dx; mapTy+=dy;
-      lastPanX=e.touches[0].clientX;
-      lastPanY=e.touches[0].clientY;
-      applyTransform();
-    }
-  },{passive:false});
-
-  svg.addEventListener('touchend',e=>{
-    if(e.touches.length===0) isPanning=false;
-    lastDist=0;
-  },{passive:true});
-
-  // 더블탭으로 리셋
-  let lastTap=0;
-  svg.addEventListener('touchend',e=>{
-    const now=Date.now();
-    if(now-lastTap<300){mapScale=1;mapTx=0;mapTy=0;applyTransform();}
-    lastTap=now;
-  },{passive:true});
-
-  // 마우스 휠 줌 (데스크탑)
-  svg.addEventListener('wheel',e=>{
-    e.preventDefault();
-    const rect=svg.getBoundingClientRect();
-    const cx=(e.clientX-rect.left)*(500/rect.width);
-    const cy=(e.clientY-rect.top)*(340/rect.height);
-    const ratio=e.deltaY<0?1.12:0.9;
-    const newScale=Math.min(Math.max(mapScale*ratio,0.6),5);
-    mapTx=cx-(cx-mapTx)*(newScale/mapScale);
-    mapTy=cy-(cy-mapTy)*(newScale/mapScale);
-    mapScale=newScale;
-    applyTransform();
-  },{passive:false});
-}
-
-// ══════════════════════════════════════════════
-// Info panel
-// ══════════════════════════════════════════════
-function showInfo(p,i){
-  const panel=document.getElementById('map-info');
-  document.getElementById('info-name').textContent=`${i+1}. ${p.name}`;
-  const inDB=!!JEJU_DB[p.name];
-  document.getElementById('info-meta').innerHTML=
-    `<span class="cat-badge b${p.cat}">${CAT_EMOJI[p.cat]} ${p.cat}</span>`+
-    (p.time?`<span>🕐 ${p.time}</span>`:'')+
-    (p.memo?`<span style="color:var(--text2)">${p.memo}</span>`:'')+
-    `<span style="color:var(--text3);font-size:10px">${inDB?'📍 정확한 위치':'📍 근사 위치'}</span>`;
-  panel.classList.add('show');
-}
-function closeInfo(){document.getElementById('map-info').classList.remove('show');}
-
-// ══════════════════════════════════════════════
-// Map fullscreen
-// ══════════════════════════════════════════════
-function toggleMapFullscreen(){
-  const wrap = document.getElementById('map-wrap');
-  const isFs = wrap.classList.toggle('fullscreen');
-  document.body.style.overflow = isFs ? 'hidden' : '';
-
-  setTimeout(()=>{
-    const svg = document.getElementById('map-svg');
-    if(isFs){
-      const screenW = window.innerWidth;
-      const screenH = window.innerHeight;
-      // rotate(90deg) 후 지도 가로=screenH, 세로=screenW
-      const vw = Math.round(340 * screenH / screenW);
-      svg.setAttribute('viewBox', `0 0 ${vw} 340`);
-    } else {
-      svg.setAttribute('viewBox','0 0 500 340');
-    }
-    renderMap();
-  }, 60);
-}
-
-// 전체화면 중 ESC/뒤로가기
-window.addEventListener('resize',()=>{
-  const wrap=document.getElementById('map-wrap');
-  if(!wrap.classList.contains('fullscreen')) return;
-  const svg=document.getElementById('map-svg');
-  const vw=Math.round(340*window.innerHeight/window.innerWidth);
-  svg.setAttribute('viewBox',`0 0 ${vw} 340`);
-  renderMap();
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){
-    const wrap=document.getElementById('map-wrap');
-    if(wrap.classList.contains('fullscreen')) toggleMapFullscreen();
-  }
-});
-
-// ══════════════════════════════════════════════
-// View toggle
-// ══════════════════════════════════════════════
-function setView(v){
-  curView=v;
-  document.getElementById('map-wrap').classList.toggle('show',v==='map');
-  document.getElementById('list-wrap').classList.toggle('show',v==='list');
-  document.getElementById('btn-map').classList.toggle('active',v==='map');
-  document.getElementById('btn-list').classList.toggle('active',v==='list');
-  if(v==='map') renderMap();
-}
-
-// ══════════════════════════════════════════════
-// Day management
-// ══════════════════════════════════════════════
-function addDay(){
-  const id=nextDayId++;
-  days.push({id,label:`${id}일차`,places:[]});
-  activeDayId=id;
-  renderAll();
-  // scroll tab into view
-  setTimeout(()=>{const bar=document.getElementById('day-bar');bar.scrollLeft=bar.scrollWidth;},50);
-}
-function delDay(e,id){
-  e.stopPropagation();
-  e.preventDefault();
-  if(days.length<=1){showConfirmModal('1일차는 삭제할 수 없어요',null);return;}
-  const d=getDay(id);
-  showConfirmModal(
-    `${d.label}을 삭제할까요?`,
-    ()=>{
-      days=days.filter(d=>d.id!==id);
-      if(activeDayId===id) activeDayId=days[0].id;
-      renderAll();
-    }
-  );
-}
-
-function showConfirmModal(msg, onConfirm){
-  document.getElementById('confirm-modal')?.remove();
-  const modal=document.createElement('div');
-  modal.id='confirm-modal';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;';
-  modal.innerHTML=`
-    <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 20px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:480px;">
-      <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 20px;"></div>
-      <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:24px;">${msg}</div>
-      <div style="display:flex;gap:10px;">
-        ${onConfirm ? `<button onclick="document.getElementById('confirm-modal').remove()" style="flex:1;padding:14px;background:#f0ece5;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#666;cursor:pointer;">취소</button>
-        <button id="confirm-ok" style="flex:1;padding:14px;background:#e53935;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#fff;cursor:pointer;">삭제</button>`
-        : `<button onclick="document.getElementById('confirm-modal').remove()" style="flex:1;padding:14px;background:#0f7a61;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#fff;cursor:pointer;">확인</button>`}
-      </div>
-    </div>
-  `;
-  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
-  document.body.appendChild(modal);
-  if(onConfirm){
-    document.getElementById('confirm-ok').addEventListener('click',()=>{
-      modal.remove();
-      onConfirm();
-    });
-  }
-}
-
-// ══════════════════════════════════════════════
-// Place management
-// ══════════════════════════════════════════════
-function delPlace(dayId,placeId){
-  const d=getDay(dayId);
-  if(!d)return;
-  d.places=d.places.filter(p=>p.id!==placeId);
-  renderAll();
-}
-
-function movePlace(dayId,placeId,dir){
-  const d=getDay(dayId);
-  if(!d)return;
-  const idx=d.places.findIndex(p=>p.id===placeId);
-  if(idx<0)return;
-  const newIdx=idx+dir;
-  if(newIdx<0||newIdx>=d.places.length)return;
-  const tmp=d.places[idx];
-  d.places[idx]=d.places[newIdx];
-  d.places[newIdx]=tmp;
-  renderAll();
-}
-
-function addPlace(){
-  const name=document.getElementById('inp-name').value.trim();
-  if(!name){document.getElementById('inp-name').focus();return;}
-  const d=getActive();
-  if(!d)return;
-  d.places.push({id:nextId++,name,cat:selCatVal,time:document.getElementById('inp-time').value,memo:document.getElementById('inp-memo').value.trim()});
-  closeSheet();
-  if(curView==='map') renderMap(); else renderList();
-  updateSub();
-  renderDayBar();
-}
-
-// ══════════════════════════════════════════════
-// DB Browser
-// ══════════════════════════════════════════════
-const REGIONS = ['전체','제주시','동부','서부','서귀포','중산간'];
-const REGION_EMOJI = {'전체':'🗺','제주시':'🏙','동부':'🌅','서부':'🌊','서귀포':'🏔','중산간':'🌿'};
-let dbActiveRegion = '전체';
-
-function openDBSheet(){
-  document.getElementById('overlay').classList.add('show');
-  document.getElementById('db-sheet').classList.add('show');
-  renderDBRegionTabs();
-  renderDBList();
-  setTimeout(()=>document.getElementById('db-sheet-search').focus(), 300);
-}
-function closeDBSheet(){
-  document.getElementById('overlay').classList.remove('show');
-  document.getElementById('db-sheet').classList.remove('show');
-  document.getElementById('db-sheet-search').value='';
-  dbActiveRegion='전체';
-}
-function closeAll(){
-  closeSheet();
-  closeDBSheet();
-}
-
-function renderDBRegionTabs(){
-  const wrap = document.getElementById('db-region-tabs');
-  wrap.innerHTML = REGIONS.map(r=>
-    `<div class="db-rtab${r===dbActiveRegion?' active':''}" onclick="setDBRegion('${r}')">${REGION_EMOJI[r]} ${r}</div>`
-  ).join('');
-}
-function setDBRegion(r){
-  dbActiveRegion=r;
-  renderDBRegionTabs();
-  renderDBList();
-}
-
-function renderDBList(){
-  const q = (document.getElementById('db-sheet-search').value||'').trim();
-  const list = document.getElementById('db-list');
-  const all = Object.entries(JEJU_DB);
-  const filtered = all.filter(([name, info])=>{
-    const regionOk = dbActiveRegion==='전체' || info[2]===dbActiveRegion;
-    const searchOk = !q || name.includes(q);
-    return regionOk && searchOk;
-  });
-  document.getElementById('db-count').textContent = `(${filtered.length}곳)`;
-  if(filtered.length===0){
-    list.innerHTML=`<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">검색 결과가 없어요</div>`;
-    return;
-  }
-  // 지역별 그룹
-  const groups = {};
-  filtered.forEach(([name,info])=>{
-    const r = info[2];
-    if(!groups[r]) groups[r]=[];
-    groups[r].push(name);
-  });
-  const regionOrder = ['제주시','동부','서부','서귀포','중산간'];
-  let html = '';
-  (dbActiveRegion==='전체' ? regionOrder : [dbActiveRegion]).forEach(r=>{
-    if(!groups[r]||groups[r].length===0) return;
-    html += `<div style="font-size:11px;font-weight:600;color:var(--text3);padding:8px 4px 5px;letter-spacing:0.3px;">${REGION_EMOJI[r]} ${r}</div>`;
-    groups[r].forEach(name=>{
-      const already = getActive()?.places.some(p=>p.name===name);
-      html += `<div class="db-item" onclick="addFromDB('${name}')">
-        <div class="db-pin" style="background:var(--teal2);color:var(--teal)">📍</div>
-        <div class="db-item-name">${name}</div>
-        <div class="db-item-add">${already?'✓':'+'}</div>
+        ${e.nums.map((nums, si) => `
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:${si<e.nums.length-1?'8px':'0'};">
+            ${e.nums.length > 1 ? `<span style="font-size:.65rem;color:var(--dim);width:14px;flex-shrink:0;">${['A','B','C','D','E'][si]}</span>` : ''}
+            <div style="display:flex;gap:5px;flex-wrap:wrap;">
+              ${nums.map(n=>`<div style="width:34px;height:34px;border-radius:50%;background:${ballColorInline(n)};display:flex;align-items:center;justify-content:center;font-family:'Pretendard',sans-serif;font-size:.78rem;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);">${n}</div>`).join('')}
+            </div>
+            <button onclick="copyNums('${nums.join(', ')}')" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:3px 8px;font-size:.65rem;color:var(--sub);cursor:pointer;flex-shrink:0;margin-left:auto;">복사</button>
+          </div>`).join('')}
       </div>`;
     });
   });
-  list.innerHTML = html;
+  html += '</div>';
+  el.innerHTML = html;
 }
 
-function addFromDB(name){
-  const d = getActive();
-  if(!d) return;
-  // 이미 있으면 표시만
-  if(d.places.some(p=>p.name===name)){
-    const items = document.querySelectorAll('.db-item');
-    items.forEach(el=>{ if(el.querySelector('.db-item-name')?.textContent===name) el.style.opacity='0.5'; });
+function delLottoEntryFromRecord(id) {
+  lottoHistory = lottoHistory.filter(e => e.id !== id);
+  saveLottoState();
+  renderLottoHistoryInRecord();
+  // 로또탭 히스토리도 갱신
+  if (document.getElementById('page-lotto').classList.contains('active')) {
+    renderLottoHistory();
+  }
+}
+
+function renderHistory(){
+  const body=document.getElementById('hist-body');
+  if(history.length===0){
+    body.innerHTML=`<div class="hist-empty"><p class="he-text">아직 기록이 없어요</p><p class="he-hint">추천 받은 뒤 "이걸로 먹을래!" 버튼을 눌러봐요</p></div>`;
     return;
   }
-  d.places.push({id:nextId++, name, cat:'관광', time:'', memo:''});
-  renderAll();
-  renderDBList(); // refresh checkmarks
-}
-
-function onNameInput(val){
-  const box=document.getElementById('db-results');
-  const q=val.trim();
-  if(!q){box.classList.remove('show');box.innerHTML='';return;}
-  const matches=DB_NAMES.filter(n=>n.includes(q)).slice(0,8);
-  if(matches.length===0){box.classList.remove('show');return;}
-  box.innerHTML=matches.map(n=>`
-    <div class="db-result-item" onclick="pickDB('${n}')">
-      <span class="db-result-pin">📍 DB</span>
-      <span class="db-result-name">${n}</span>
-    </div>
-  `).join('');
-  box.classList.add('show');
-}
-
-function pickDB(name){
-  document.getElementById('inp-name').value=name;
-  document.getElementById('db-results').classList.remove('show');
-  document.getElementById('db-results').innerHTML='';
-}
-
-function openSheet(){
-  document.getElementById('overlay').classList.add('show');
-  document.getElementById('sheet').classList.add('show');
-  setTimeout(()=>document.getElementById('inp-name').focus(),300);
-}
-function closeSheet(){
-  document.getElementById('overlay').classList.remove('show');
-  document.getElementById('sheet').classList.remove('show');
-  document.getElementById('inp-name').value='';
-  document.getElementById('inp-time').value='';
-  document.getElementById('inp-memo').value='';
-  document.getElementById('db-results').classList.remove('show');
-  document.getElementById('db-results').innerHTML='';
-}
-function selCat(el){
-  document.querySelectorAll('.cat-opt').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
-  selCatVal=el.dataset.cat;
-}
-
-// ══════════════════════════════════════════════
-// Utils
-// ══════════════════════════════════════════════
-function tdiff(a,b){
-  const [ah,am]=a.split(':').map(Number),[bh,bm]=b.split(':').map(Number);
-  return(bh*60+bm)-(ah*60+am);
-}
-function fmtDur(m){
-  if(m<60)return `${m}분`;
-  const h=Math.floor(m/60),mm=m%60;
-  return h+'시간'+(mm?` ${mm}분`:'');
-}
-
-// ══════════════════════════════════════════════
-// URL 인코딩/디코딩 (공유 핵심)
-// ══════════════════════════════════════════════
-function stateToURL(){
-  const data = {d: days, a: activeDayId, n: nextId, nd: nextDayId};
-  const json = JSON.stringify(data);
-  // 압축: btoa + encodeURIComponent
-  try {
-    const compressed = btoa(unescape(encodeURIComponent(json)));
-    return compressed;
-  } catch(e){ return null; }
-}
-
-function urlToState(encoded){
-  try {
-    const json = decodeURIComponent(escape(atob(encoded)));
-    const data = JSON.parse(json);
-    if(data.d && data.d.length > 0){
-      days = data.d;
-      activeDayId = data.a || days[0].id;
-      nextId = data.n || 100;
-      nextDayId = data.nd || days.length + 1;
-      return true;
-    }
-  } catch(e){}
-  return false;
-}
-
-// ══════════════════════════════════════════════
-// ══════════════════════════════════════════════
-// 공유 URL 생성 & 복사
-// ══════════════════════════════════════════════
-async function shareURL(){
-  const btn = document.getElementById('share-btn');
-  const encoded = stateToURL();
-  if(!encoded){ alert('공유 데이터 생성 실패'); return; }
-
-  const url = location.href.split('#')[0] + '#' + encoded;
-
-  // 1순위: Web Share API (모바일 네이티브 공유창)
-  if(navigator.share){
-    try {
-      await navigator.share({
-        title: '제주 여행 플래너',
-        text: `${days.length}일 제주 여행 일정 공유해요 🌿`,
-        url: url
-      });
-      showBtnConfirm(btn, '✅', '🔗 공유');
-      return;
-    } catch(e){
-      if(e.name === 'AbortError') return; // 사용자가 취소
-    }
-  }
-
-  // 2순위: 클립보드 복사
-  try {
-    await navigator.clipboard.writeText(url);
-    showBtnConfirm(btn, '📋 복사됨!', '🔗 공유');
-    showToast('링크가 클립보드에 복사됐어요 📋');
-  } catch(e){
-    // 3순위: 수동 복사 모달
-    showShareModal(url);
-  }
-}
-
-function showShareModal(url){
-  // 기존 모달 제거
-  document.getElementById('share-modal')?.remove();
-  const modal = document.createElement('div');
-  modal.id = 'share-modal';
-  modal.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;
-    display:flex;align-items:flex-end;justify-content:center;
-  `;
-  modal.innerHTML = `
-    <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:480px;">
-      <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 18px;"></div>
-      <div style="font-size:16px;font-weight:700;margin-bottom:6px;">🔗 일정 공유하기</div>
-      <div style="font-size:12px;color:#888;margin-bottom:10px;">링크를 길게 눌러 전체 선택하거나, 복사 버튼을 눌러주세요</div>
-      <textarea id="share-url-input" readonly
-        style="width:100%;height:72px;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:11px;color:#444;background:#f8f8f8;outline:none;resize:none;word-break:break-all;line-height:1.5;font-family:monospace;"
-        onclick="this.select()">${url}</textarea>
-      <button onclick="copyShareURL()" style="width:100%;margin-top:8px;padding:12px;background:#8a6e4b;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">📋 링크 복사</button>
-      <button onclick="document.getElementById('share-modal').remove()"
-        style="width:100%;margin-top:8px;padding:12px;background:#f0ece5;border:none;border-radius:10px;font-size:14px;color:#666;cursor:pointer;">닫기</button>
-    </div>
-  `;
-  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
-  document.body.appendChild(modal);
-}
-
-function copyShareURL(){
-  const el = document.getElementById('share-url-input');
-  const url = el.value;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>{
-      showToast('링크가 복사됐어요 📋');
-      setTimeout(()=>document.getElementById('share-modal')?.remove(), 800);
-    }).catch(()=>{ el.select(); document.execCommand('copy'); });
-  } else {
-    el.select();
-    document.execCommand('copy');
-    showToast('링크가 복사됐어요 📋');
-    setTimeout(()=>document.getElementById('share-modal')?.remove(), 800);
-  }
-}
-
-function showBtnConfirm(btn, confirmText, originalText){
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  const showTime = confirmText.includes('✅');
-  btn.textContent = showTime ? `${confirmText} ${hh}:${mm}` : confirmText;
-  setTimeout(()=>{ btn.textContent = originalText; }, 2000);
-}
-
-// 하위호환: 기존 showSaveConfirm 유지
-function showSaveConfirm(btn){
-  showBtnConfirm(btn, '✅', '💾 저장');
-}
-
-function showToast(msg, duration=2800){
-  const t = document.createElement('div');
-  t.style.cssText = `
-    position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));left:50%;
-    transform:translateX(-50%) translateY(8px);opacity:0;
-    background:rgba(20,20,20,0.88);color:#fff;padding:10px 18px;border-radius:20px;
-    font-size:12px;z-index:300;white-space:nowrap;pointer-events:none;
-    transition:opacity .2s,transform .2s;
-  `;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(()=>{
-    t.style.opacity='1';
-    t.style.transform='translateX(-50%) translateY(0)';
+  // stats
+  const favMap={};
+  history.forEach(e=>{favMap[e.name]=(favMap[e.name]||0)+1;});
+  const favSorted=Object.entries(favMap).sort((a,b)=>b[1]-a[1]);
+  const top=favSorted[0];
+  let html=`<div class="stat-row">
+    <div class="stat-card"><p class="stat-num">${history.length}</p><p class="stat-lbl">총 기록</p></div>
+    <div class="stat-card"><p class="stat-num">${Object.keys(favMap).length}</p><p class="stat-lbl">종류</p></div>
+    ${top?`<div class="stat-card"><p class="stat-num" style="font-size:1.1rem;">${menus.find(m=>m.name===top[0])?.emoji||'🍽️'}</p><p class="stat-lbl">최애</p></div>`:''}
+  </div>`;
+  // favorites scroll
+  html+=`<div class="fav-scroll">`;
+  favSorted.slice(0,8).forEach(([name,cnt],i)=>{
+    const m=menus.find(m=>m.name===name);
+    html+=`<div class="fav-chip ${i===0?'top':''}"><span class="fc-e">${m?.emoji||'🍽️'}</span><span class="fc-n">${name}</span><span class="fc-c">${cnt}회</span></div>`;
   });
-  setTimeout(()=>{
-    t.style.opacity='0';
-    t.style.transform='translateX(-50%) translateY(8px)';
-    setTimeout(()=>t.remove(), 300);
-  }, duration);
-}
-
-// Ctrl+S 단축키
-document.addEventListener('keydown', e=>{
-  if((e.ctrlKey||e.metaKey) && e.key==='s'){
-    e.preventDefault();
-    shareURL();
-  }
-  if(e.key==='Enter' && document.activeElement.closest('.sheet')) addPlace();
-  if(e.key==='Escape') closeAll();
-});
-
-// ══════════════════════════════════════════════
-// 앱 시작: URL hash → localStorage → 기본값 순서로 복원
-// ══════════════════════════════════════════════
-function loadFromStorage(){
-  // 1순위: URL hash (공유 링크로 열었을 때)
-  const hash = location.hash.slice(1);
-  if(hash && urlToState(hash)){
-    // URL로 복원 성공 → localStorage도 덮어쓰기
-    try { localStorage.setItem('jeju_planner_data', JSON.stringify({days, activeDayId, nextId, nextDayId})); } catch(e){}
-    showToast('📤 공유받은 일정을 불러왔어요!', 3200);
-    return true;
-  }
-  // 2순위: localStorage
-  try {
-    const saved = localStorage.getItem('jeju_planner_data');
-    if(!saved) return false;
-    const d = JSON.parse(saved);
-    if(d.days && d.days.length > 0){
-      days = d.days;
-      activeDayId = d.activeDayId || days[0].id;
-      nextId = d.nextId || 100;
-      nextDayId = d.nextDayId || days.length+1;
-      return true;
-    }
-  } catch(e){}
-  return false;
-}
-
-// Export
-function exportTxt(){
-  let t='🍊 제주 여행 플래너\n'+'─'.repeat(28)+'\n\n';
-  days.forEach(d=>{
-    t+=`${d.label}\n`;
-    d.places.forEach((p,i)=>{
-      t+=`  ${i+1}. [${p.cat}] ${p.name}`;
-      if(p.time)t+=` (${p.time})`;
-      if(p.memo)t+=` - ${p.memo}`;
-      t+='\n';
+  html+=`</div>`;
+  // heat (60 days)
+  const hm={};
+  history.forEach(e=>{const d=new Date(e.ts);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;hm[k]=(hm[k]||0)+1;});
+  html+=`<div class="heat-wrap"><p class="heat-label">🔥 최근 60일 빈도</p><div class="heat-grid">`;
+  const now=new Date();
+  for(let i=59;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;const c=hm[k]||0;html+=`<div class="hc ${c===0?'':c===1?'h1':c===2?'h2':'h3'}" title="${d.getMonth()+1}/${d.getDate()} ${c}회"></div>`;}
+  html+=`</div></div>`;
+  // timeline
+  const mGroups={};
+  history.forEach(e=>{const mk=fmtMK(e.ts);if(!mGroups[mk])mGroups[mk]=[];mGroups[mk].push(e);});
+  html+=`<div>`;
+  Object.entries(mGroups).forEach(([month,entries])=>{
+    html+=`<div class="tl-month">${month}</div>`;
+    const dGroups={};
+    entries.forEach(e=>{if(!dGroups[e.dateStr])dGroups[e.dateStr]=[];dGroups[e.dateStr].push(e);});
+    Object.entries(dGroups).forEach(([day,des])=>{
+      html+=`<div class="tl-day"><div class="tl-day-hd"><div class="tl-dot"></div><span class="tl-day-lbl">${day}</span><span class="tl-day-cnt">${des.length}개</span></div><div class="tl-entries">`;
+      des.forEach(e=>{html+=`<div class="tl-entry" id="te-${e.id}"><div class="te-emoji">${e.emoji}</div><div class="te-body"><p class="te-name">${e.name}</p><p class="te-time">${e.timeStr}</p>${e.note?`<p class="te-note">"${e.note}"</p>`:''}</div><button class="te-del" onclick="delEntry(${e.id})">✕</button></div>`;});
+      html+=`</div></div>`;
     });
-    t+='\n';
   });
-  const a=document.createElement('a');
-  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(t);
-  a.download='제주여행플래너.txt';
-  a.click();
+  html+=`</div>`;
+  body.innerHTML=html;
+}
+function delEntry(id){
+  history=history.filter(e=>e.id!==id);
+  saveState(); renderHistory();
 }
 
-// Init
-loadFromStorage();
-renderAll();
+// ============ SETTINGS ============
+
+
+
+
+
+
+
+
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ============ RANDOM PICK ============
+function getActive() { return settings.excludeDisabled ? menus.filter(m=>m.enabled) : menus; }
+
+function pickRandom() {
+  const active = getActive();
+  if (active.length === 0) { showToast('활성화된 메뉴가 없어요!'); return; }
+
+  // 룰렛 애니메이션
+  document.getElementById('pick-section').style.display = 'block';
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'none';
+  const rw = document.getElementById('roulette-wrap');
+  rw.style.display = 'block';
+  const se = document.getElementById('spin-emoji');
+  const sn = document.getElementById('spin-name');
+  se.classList.add('spinning');
+  se.textContent = '🍽️';
+  sn.textContent = '';
+  sn.style.cssText = '';
+
+  let cnt = 0; const max = 24;
+  if (window._rlv) clearInterval(window._rlv);
+  window._rlv = setInterval(() => {
+    const r = active[Math.floor(Math.random() * active.length)];
+    se.textContent = r.emoji;
+    cnt++;
+    if (cnt >= max) {
+      clearInterval(window._rlv);
+      const fin = active[Math.floor(Math.random() * active.length)];
+      currentResultMenu = fin;
+      se.classList.remove('spinning');
+      se.textContent = fin.emoji;
+      setTimeout(() => showResult(fin), 400);
+    }
+  }, 55);
+}
+
+function showResult(menu) {
+  document.getElementById('pick-section').style.display = 'none';
+  document.getElementById('roulette-wrap').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'block';
+
+  const ra = document.getElementById('result-area');
+  ra.style.display = 'block';
+  ra.style.opacity = '0';
+
+  const nameEl = document.getElementById('res-name');
+  const descEl = document.getElementById('res-desc');
+  const tagsEl = document.getElementById('res-tags');
+
+  nameEl.textContent = menu.name;
+  descEl.textContent = menu.desc;
+  tagsEl.innerHTML = menu.tags.map(t=>`<span class="tag">#${t}</span>`).join('');
+  nameEl.classList.remove('blast');
+  descEl.classList.remove('show');
+  tagsEl.classList.remove('show');
+
+  // 1) 영역 페이드인
+  ra.style.transition = 'opacity .15s';
+  ra.style.opacity = '1';
+
+  // 2) 이름 팡
+  void nameEl.offsetWidth;
+  nameEl.classList.add('blast');
+
+  // 3) 설명+태그 딜레이
+  setTimeout(() => { descEl.classList.add('show'); tagsEl.classList.add('show'); }, 420);
+
+  const eb = document.getElementById('eat-btn');
+  eb.textContent = '바로 먹자!';
+  eb.classList.remove('eaten');
+  eb.disabled = false;
+  document.getElementById('tip').textContent = '맛있게 드세요 🌙';
+}
+
+function restart() {
+  currentResultMenu = null;
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('pick-section').style.display = 'block';
+  document.getElementById('roulette-wrap').style.display = 'none';
+  document.getElementById('idle-emoji').style.display = 'block';
+  document.getElementById('idle-emoji').style.opacity = '.5';
+}
+
+let rlv = null;
+
+
+// ============ LOTTO ============
+let lottoMode = 'basic';
+let lastSingleNums = null;
+let lottoHistory = [];
+
+try {
+  const _lh = localStorage.getItem('ys_lotto');
+  lottoHistory = _lh ? JSON.parse(_lh) : [];
+} catch(e) { lottoHistory = []; }
+
+function saveLottoState() {
+  localStorage.setItem('ys_lotto', JSON.stringify(lottoHistory));
+}
+
+const MODE_DESC = {
+  basic:    [{i:'🎲',t:'1~45 중 6개를 완전 무작위로 추출합니다.'},{i:'📊',t:'중복 제거 후 오름차순 정렬합니다.'}],
+  balanced: [{i:'⚖️',t:'홀짝 비율: 3:3 우선, 2:4 / 4:2 허용'},{i:'📦',t:'5개 구간(1~10, 11~20, 21~30, 31~40, 41~45) 골고루 분산'},{i:'🚫',t:'특정 구간 3개 이상 몰림 방지'}],
+  smart:    [{i:'🧠',t:'균형 조건 + 패턴 회피 적용'},{i:'🚫',t:'1~31만 사용 패턴 회피'},{i:'🔗',t:'연속번호 4개 이상 제외'},{i:'🔢',t:'같은 끝자리 3개 이상 제외'},{i:'📐',t:'5,10,15… 등차수열 패턴 제외'}],
+};
+
+function setLottoMode(mode, btn) {
+  lottoMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderModeDesc();
+  resetBallStage();
+}
+
+function resetBallStage() {
+  document.getElementById('ball-placeholder').style.display = 'flex';
+  document.getElementById('analysis-row').style.display = 'none';
+  document.getElementById('analysis-row').innerHTML = '';
+  document.getElementById('multi-sets').style.display = 'none';
+  document.getElementById('multi-sets').innerHTML = '';
+  document.getElementById('lotto-save-btn').style.display = 'none';
+  lastSingleNums = null;
+  const stage = document.getElementById('ball-stage');
+  const existing = stage.querySelector('.balls-row');
+  if (existing) existing.remove();
+}
+
+function renderModeDesc() {
+  const rows = MODE_DESC[lottoMode] || [];
+  document.getElementById('lotto-mode-desc').innerHTML =
+    rows.map(r=>`<div class="md-row"><span class="md-icon">${r.i}</span><span class="md-text">${r.t}</span></div>`).join('');
+}
+
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function basicRandom() {
+  const pool = Array.from({length:45},(_,i)=>i+1);
+  const res = [];
+  while(res.length<6){ const i=randInt(0,pool.length-1); res.push(pool.splice(i,1)[0]); }
+  return res.sort((a,b)=>a-b);
+}
+
+function getZone(n){ return n<=10?0:n<=20?1:n<=30?2:n<=40?3:4; }
+
+function balancedRandom(tries=200){
+  for(let t=0;t<tries;t++){
+    const nums=basicRandom();
+    const odds=nums.filter(n=>n%2!==0).length;
+    if(odds<2||odds>4) continue;
+    const zones=[0,0,0,0,0];
+    nums.forEach(n=>zones[getZone(n)]++);
+    if(zones.some(z=>z>=3)) continue;
+    return nums;
+  }
+  return basicRandom();
+}
+
+function hasLongConsec(nums){ let s=1; for(let i=1;i<nums.length;i++){ if(nums[i]===nums[i-1]+1){s++;if(s>=4)return true;}else s=1;} return false; }
+function hasEndCluster(nums){ const f={}; nums.forEach(n=>{const e=n%10;f[e]=(f[e]||0)+1;}); return Object.values(f).some(v=>v>=3); }
+function isArith(nums){ for(let i=0;i<nums.length-2;i++){ const d=nums[i+1]-nums[i]; if(d<=0||d>10)continue; let c=2; for(let j=i+2;j<nums.length;j++){if(nums[j]===nums[j-1]+d)c++;} if(c>=4)return true;} return false; }
+function hasLowBias(nums){ return nums.every(n=>n<=31); }
+
+function smartRandom(tries=500){
+  for(let t=0;t<tries;t++){
+    const nums=balancedRandom(50);
+    if(!nums)continue;
+    if(hasLongConsec(nums))continue;
+    if(hasEndCluster(nums))continue;
+    if(isArith(nums))continue;
+    if(hasLowBias(nums))continue;
+    return nums;
+  }
+  return balancedRandom(200)||basicRandom();
+}
+
+function generate(mode){
+  if(mode==='basic') return basicRandom();
+  if(mode==='balanced') return balancedRandom();
+  return smartRandom();
+}
+
+function analyzeNums(nums){
+  const tags=[];
+  const odds=nums.filter(n=>n%2!==0).length;
+  tags.push({cls:odds===3?'good':'warn', txt:`홀${odds}:짝${6-odds}`});
+  const zones=[0,0,0,0,0]; nums.forEach(n=>zones[getZone(n)]++);
+  const covered=zones.filter(z=>z>0).length;
+  tags.push({cls:covered>=4?'good':covered>=3?'warn':'bad', txt:`${covered}구간`});
+  if(hasLongConsec(nums)) tags.push({cls:'bad',txt:'연속4+'});
+  else tags.push({cls:'good',txt:'연속없음'});
+  if(hasEndCluster(nums)) tags.push({cls:'bad',txt:'끝수몰림'});
+  else tags.push({cls:'good',txt:'끝수분산'});
+  const high=nums.filter(n=>n>=32).length;
+  tags.push({cls:high>=2?'good':high===1?'warn':'bad', txt:`고번호${high}개`});
+  return tags;
+}
+
+function ballColor(n){ return n<=10?'b1':n<=20?'b2':n<=30?'b3':n<=40?'b4':'b5'; }
+function ballColorInline(n){
+  if(n<=10)return 'linear-gradient(145deg,#f5d76e,#e8a000)';
+  if(n<=20)return 'linear-gradient(145deg,#6ea8f5,#2563d4)';
+  if(n<=30)return 'linear-gradient(145deg,#f08080,#c0392b)';
+  if(n<=40)return 'linear-gradient(145deg,#7be8a0,#1a9c47)';
+  return 'linear-gradient(145deg,#b0b0c8,#606080)';
+}
+
+function renderBalls(nums, small=false){
+  const cls = small ? 'ms-ball' : 'ball';
+  return nums.map((n,i)=>`<div class="${cls} ${ballColor(n)}" style="animation-delay:${i*0.07}s">${n}</div>`).join('');
+}
+
+function generateSingle(){
+  const nums=generate(lottoMode);
+  lastSingleNums=nums;
+  const stage=document.getElementById('ball-stage');
+  const ex=stage.querySelector('.balls-row');
+  if(ex)ex.remove();
+  document.getElementById('ball-placeholder').style.display='none';
+  const row=document.createElement('div');
+  row.className='balls-row';
+  row.innerHTML=renderBalls(nums);
+  stage.insertBefore(row, stage.querySelector('.analysis-row'));
+  const ar=document.getElementById('analysis-row');
+  ar.innerHTML=analyzeNums(nums).map(t=>`<span class="a-tag ${t.cls}">${t.txt}</span>`).join('');
+  ar.style.display='flex';
+  document.getElementById('multi-sets').style.display='none';
+  document.getElementById('multi-sets').innerHTML='';
+  document.getElementById('lotto-save-btn').style.display='block';
+}
+
+function generateMulti(){
+  const sets=[];
+  for(let i=0;i<5;i++) sets.push(generate(lottoMode));
+  lastSingleNums=sets;
+  const stage=document.getElementById('ball-stage');
+  const ex=stage.querySelector('.balls-row');
+  if(ex)ex.remove();
+  document.getElementById('ball-placeholder').style.display='flex';
+  document.getElementById('analysis-row').style.display='none';
+  const ms=document.getElementById('multi-sets');
+  ms.style.display='flex';
+  ms.innerHTML=sets.map((nums,i)=>`
+    <div class="multi-set">
+      <div class="ms-head">
+        <span class="ms-label">${['A','B','C','D','E'][i]}세트 · ${nums.join(', ')}</span>
+        <button class="ms-copy" onclick="copyNums('${nums.join(', ')}')">복사</button>
+      </div>
+      <div class="ms-balls">${renderBalls(nums,true)}</div>
+    </div>`).join('');
+  document.getElementById('lotto-save-btn').style.display='block';
+}
+
+function copyNums(txt){
+  navigator.clipboard?.writeText(txt).then(()=>showToast('복사됐어요! 📋')).catch(()=>showToast(txt));
+}
+
+function saveLottoNumbers(){
+  if(!lastSingleNums) return;
+  const isMulti=Array.isArray(lastSingleNums[0]);
+  lottoHistory.unshift({
+    id:Date.now(), mode:lottoMode, ts:Date.now(),
+    dateStr:fmtDate(new Date()),
+    nums: isMulti ? lastSingleNums : [lastSingleNums],
+  });
+  saveLottoState();
+  renderLottoHistory();
+  showToast('저장됐어요 📌');
+  document.getElementById('lotto-save-btn').style.display='none';
+  lastSingleNums=null;
+}
+
+function delLottoEntry(id){
+  lottoHistory=lottoHistory.filter(e=>e.id!==id);
+  saveLottoState();
+  renderLottoHistory();
+}
+
+function renderLottoHistory(){
+  const el=document.getElementById('lh-list');
+  if(!el) return;
+  if(lottoHistory.length===0){
+    el.innerHTML=`<div class="lh-empty"><span class="lh-empty-e">🎱</span><p class="lh-empty-t">저장된 번호가 없어요</p></div>`;
+    return;
+  }
+  const modeLabel={basic:'랜덤',balanced:'균형',smart:'스마트'};
+  el.innerHTML=lottoHistory.map(e=>`
+    <div class="lh-item">
+      <div style="flex:1;min-width:0;">
+        ${e.nums.map(nums=>`<div class="lh-item-balls" style="margin-bottom:5px;">${nums.map(n=>`<div class="ms-ball ${ballColor(n)}" style="width:32px;height:32px;font-size:.72rem;">${n}</div>`).join('')}</div>`).join('')}
+        <p style="font-size:.65rem;color:var(--dim);margin-top:2px;">${e.dateStr} · ${modeLabel[e.mode]||e.mode}</p>
+      </div>
+      <button class="lh-del" onclick="delLottoEntry(${e.id})">✕</button>
+    </div>`).join('');
+}
+
+function initLottoPage(){
+  renderModeDesc();
+  renderLottoHistory();
+}
+
+// ============ MENU SETTINGS ============
+function openMenuSettings() {
+  const list = document.getElementById('menu-settings-list');
+  list.innerHTML = menus.filter(m => !m.custom).map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;">
+      <span style="font-size:.9rem;color:${m.enabled ? 'var(--text)' : 'var(--dim)'};">${m.emoji} ${m.name}</span>
+      <label style="position:relative;width:38px;height:22px;flex-shrink:0;">
+        <input type="checkbox" ${m.enabled ? 'checked' : ''} onchange="toggleMenu(${m.id},this.checked)"
+          style="opacity:0;width:0;height:0;position:absolute;">
+        <span style="position:absolute;inset:0;background:${m.enabled ? 'var(--pink)' : 'rgba(255,255,255,.12)'};border-radius:11px;transition:all .2s;cursor:pointer;"></span>
+        <span style="position:absolute;top:3px;left:${m.enabled ? '19px' : '3px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:all .2s;pointer-events:none;"></span>
+      </label>
+    </div>`).join('');
+  document.getElementById('menu-settings-modal').classList.add('open');
+}
+
+function toggleMenu(id, enabled) {
+  const m = menus.find(m => m.id === id);
+  if (m) { m.enabled = enabled; saveState(); }
+  // 토글 스위치 색/위치 즉시 갱신
+  openMenuSettings();
+}
+
+function closeMenuSettings() {
+  document.getElementById('menu-settings-modal').classList.remove('open');
+}
+
+// ============ LADDER ============
+let ladderItems = [];
+let ladderWinner = null;
+
+function openLadder() {
+  ladderItems = [];
+  ladderWinner = null;
+  document.getElementById('ladder-setup').style.display = 'block';
+  document.getElementById('ladder-game').style.display = 'none';
+  document.getElementById('ladder-modal').classList.add('open');
+
+  // 현재 추천 메뉴 + 랜덤 2개 후보 기본 세팅
+  const active = getActive();
+  const base = currentResultMenu ? currentResultMenu.name : '';
+  const others = active.filter(m => m.name !== base).sort(() => Math.random() - .5).slice(0, 2).map(m => m.name);
+  const defaults = base ? [base, ...others] : others.slice(0,3);
+
+  const cont = document.getElementById('ladder-inputs');
+  cont.innerHTML = '';
+  defaults.forEach(name => addLadderItem(name));
+}
+
+function addLadderItem(val = '') {
+  const items = document.getElementById('ladder-inputs');
+  if (items.children.length >= 4) { showToast('최대 4개까지 가능해요!'); return; }
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:7px;align-items:center;';
+  div.innerHTML = `
+    <input class="fi" style="flex:1;" placeholder="후보 이름" value="${val}" maxlength="12">
+    <button onclick="this.parentNode.remove()" style="background:transparent;border:1px solid rgba(255,80,80,.2);border-radius:7px;width:28px;height:28px;color:rgba(255,100,100,.5);cursor:pointer;font-size:.8rem;flex-shrink:0;">✕</button>`;
+  items.appendChild(div);
+}
+
+function closeLadder() {
+  document.getElementById('ladder-modal').classList.remove('open');
+}
+
+function startLadder() {
+  const inputs = document.querySelectorAll('#ladder-inputs input');
+  ladderItems = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+  if (ladderItems.length < 2) { showToast('후보를 2개 이상 입력해주세요!'); return; }
+
+  document.getElementById('ladder-setup').style.display = 'none';
+  document.getElementById('ladder-game').style.display = 'block';
+  document.getElementById('ladder-result-text').style.display = 'none';
+  document.getElementById('ladder-result-sub').style.display = 'none';
+  document.getElementById('ladder-done-btns').style.display = 'none';
+
+  drawLadder();
+}
+
+function drawLadder() {
+  const canvas = document.getElementById('ladder-canvas');
+  const n = ladderItems.length;
+  const W = canvas.parentElement.clientWidth - 2;
+  const ROW = 8;
+  const H = 300;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const colW = W / (n + 1);
+  const rowH = (H - 60) / (ROW + 1);
+  const topY = 24, botY = H - 24;
+
+  const cols = Array.from({length: n}, (_, i) => colW * (i + 1));
+
+  // 가로줄 생성
+  const rungs = [];
+  for (let r = 1; r <= ROW; r++) {
+    const used = new Set();
+    const shuffled = Array.from({length: n-1}, (_,i)=>i).sort(()=>Math.random()-.5);
+    for (const c of shuffled) {
+      if (!used.has(c) && !used.has(c-1) && !used.has(c+1)) {
+        if (Math.random() < 0.55) { rungs.push({r, c}); used.add(c); }
+      }
+    }
+  }
+
+  // 모든 번호의 도착 메뉴 미리 계산 (메뉴 섞기)
+  const shuffledMenus = [...ladderItems].sort(() => Math.random() - .5);
+  // 각 출발 번호(0~n-1)가 어디 도착하는지 계산
+  const destOf = Array.from({length: n}, (_, startCol) => {
+    let col = startCol;
+    for (let r = 1; r <= ROW; r++) {
+      if (rungs.find(rg => rg.r === r && rg.c === col)) col++;
+      else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) col--;
+    }
+    return col;
+  });
+  // destOf[i] = i번 출발 → destOf[i]번 열 도착
+  // 하단에 shuffledMenus를 배치: 열 destOf[i]에 shuffledMenus[i] 표시
+  const bottomLabel = Array(n).fill('');
+  destOf.forEach((dest, start) => { bottomLabel[dest] = shuffledMenus[start]; });
+
+  // 저장
+  canvas._cols = cols; canvas._topY = topY; canvas._botY = botY;
+  canvas._rowH = rowH; canvas._rungs = rungs; canvas._ROW = ROW;
+  canvas._destOf = destOf; canvas._bottomLabel = bottomLabel;
+
+  // 기본 사다리 그리기
+  renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
+
+  // 상단 번호 버튼 생성
+  const btnArea = document.getElementById('ladder-num-btns');
+  btnArea.innerHTML = '';
+  btnArea.style.display = 'flex';
+  btnArea.style.justifyContent = 'space-around';
+  btnArea.style.marginBottom = '10px';
+  for (let i = 0; i < n; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = `${i+1}번`;
+    btn.style.cssText = `flex:1;margin:0 4px;padding:9px 0;background:rgba(133,224,255,.1);border:1.5px solid rgba(133,224,255,.35);border-radius:10px;color:#85e0ff;font-family:'Pretendard',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;`;
+    btn.onclick = () => chooseLadderNum(i);
+    btnArea.appendChild(btn);
+  }
+}
+
+function renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+
+  // 세로선
+  cols.forEach(x => {
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, botY); ctx.stroke();
+  });
+
+  // 가로줄
+  rungs.forEach(({r, c}) => {
+    const y = topY + r * rowH;
+    ctx.strokeStyle = 'rgba(133,224,255,0.45)';
+    ctx.beginPath(); ctx.moveTo(cols[c], y); ctx.lineTo(cols[c+1], y); ctx.stroke();
+  });
+
+  // 하단 메뉴 이름
+  ctx.font = 'bold 12px Pretendard, sans-serif';
+  ctx.textAlign = 'center';
+  bottomLabel.forEach((name, i) => {
+    ctx.fillStyle = 'rgba(255,206,133,0.85)';
+    const label = name.length > 5 ? name.slice(0,5)+'…' : name;
+    ctx.fillText(label, cols[i], botY + 16);
+  });
+}
+
+function chooseLadderNum(startIdx) {
+  const canvas = document.getElementById('ladder-canvas');
+  const ctx = canvas.getContext('2d');
+  const {_cols:cols, _topY:topY, _botY:botY, _rowH:rowH, _rungs:rungs, _ROW:ROW, _destOf:destOf, _bottomLabel:bottomLabel} = canvas;
+  const n = ladderItems.length;
+
+  // 버튼 비활성화
+  document.querySelectorAll('#ladder-num-btns button').forEach((b,i) => {
+    b.style.opacity = i === startIdx ? '1' : '0.3';
+    b.style.pointerEvents = 'none';
+    if (i === startIdx) b.style.background = 'rgba(255,157,226,0.25)';
+    if (i === startIdx) b.style.borderColor = '#ff9de2';
+    if (i === startIdx) b.style.color = '#ff9de2';
+  });
+
+  // 경로 계산
+  const path = [{col: startIdx, y: topY}];
+  let col = startIdx;
+  for (let r = 1; r <= ROW; r++) {
+    const y = topY + r * rowH;
+    if (rungs.find(rg => rg.r === r && rg.c === col)) col++;
+    else if (col > 0 && rungs.find(rg => rg.r === r && rg.c === col-1)) col--;
+    path.push({col, y});
+  }
+  path.push({col, y: botY});
+
+  ladderWinner = bottomLabel[col];
+
+  // 애니메이션
+  renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
+  let step = 0;
+  const total = path.length - 1;
+
+  function frame() {
+    renderLadderBase(ctx, cols, topY, botY, rowH, rungs, n, bottomLabel);
+
+    // 진행 경로 그리기
+    ctx.strokeStyle = 'rgba(255,157,226,0.85)';
+    ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let i = 0; i <= Math.min(step+1, total); i++) {
+      const x = cols[path[i].col];
+      i === 0 ? ctx.moveTo(x, path[i].y) : ctx.lineTo(x, path[i].y);
+    }
+    ctx.stroke();
+
+    if (step >= total) {
+      // 도착 원
+      ctx.fillStyle = '#ff9de2';
+      ctx.beginPath();
+      ctx.arc(cols[path[total].col], botY, 6, 0, Math.PI*2);
+      ctx.fill();
+
+      // 결과 표시
+      document.getElementById('ladder-result-text').textContent = `🎉 ${ladderWinner}`;
+      document.getElementById('ladder-result-sub').textContent = '사다리 결과! 이걸로 드실래요?';
+      document.getElementById('ladder-result-text').style.display = 'block';
+      document.getElementById('ladder-result-sub').style.display = 'block';
+      document.getElementById('ladder-done-btns').style.display = 'flex';
+      return;
+    }
+    step++;
+    setTimeout(frame, 110);
+  }
+  frame();
+}
+
+function confirmLadderResult() {
+  if (!ladderWinner) return;
+  const found = menus.find(m => m.name === ladderWinner);
+  if (found) {
+    currentResultMenu = found;
+    showResult(found);
+  }
+  closeLadder();
+  openNoteModal();
+}
+
+// ============ INIT ============
+loadState();
 </script>
 </body>
 </html>
