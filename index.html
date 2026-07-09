@@ -5,8 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>제주 여행 플래너</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -20,6 +18,10 @@
   --accent:#e0672c;
   --accent2:#2f6f68;
   --accent-bg:#fde8db;
+  --time-red:#c8422c;
+  --next-blue:#2f6fa0;
+  --next-blue-bg:#dfeaf4;
+  --hdr-bg:#d8ebe0;
   --radius:14px;
   --shadow:0 3px 14px rgba(22,48,44,0.08);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -30,51 +32,51 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Pretendard',sans-serif;
   color:var(--ink);font-size:14px;display:flex;flex-direction:column;overflow:hidden;
 }
-.num{font-family:'Fraunces',Georgia,serif;font-variant-numeric:tabular-nums;}
+.num{font-variant-numeric:tabular-nums;}
 
 /* ── Header ── */
 .hdr{
-  padding:calc(14px + var(--safe-top)) 18px 14px;
-  display:flex;align-items:center;gap:12px;flex-shrink:0;
-  background:var(--ink);color:#fff;position:relative;
+  padding:calc(9px + var(--safe-top)) 16px 9px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:var(--hdr-bg);color:var(--ink);position:relative;
 }
 .hdr::after{
-  content:'';position:absolute;left:0;right:0;bottom:-1px;height:10px;
-  background-image:radial-gradient(circle at 8px 0, transparent 7px, var(--ink) 7.5px);
-  background-size:16px 10px;background-repeat:repeat-x;
+  content:'';position:absolute;left:0;right:0;bottom:-1px;height:8px;
+  background-image:radial-gradient(circle at 8px 0, transparent 6px, var(--hdr-bg) 6.5px);
+  background-size:16px 8px;background-repeat:repeat-x;
 }
-.hdr-plane{font-size:20px;transform:rotate(90deg);flex-shrink:0;opacity:0.9;}
+.hdr-plane{font-size:17px;transform:rotate(90deg);flex-shrink:0;opacity:0.9;}
 .hdr-text{flex:1;min-width:0;}
-.hdr-title{font-family:'Fraunces',Georgia,serif;font-size:18px;font-weight:600;letter-spacing:-0.2px;}
-.hdr-sub{font-size:11.5px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.hdr-title{font-size:15.5px;font-weight:600;letter-spacing:-0.2px;}
+.hdr-sub{font-size:10.5px;color:var(--ink2);margin-top:1px;}
 .hdr-export{
-  background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:#fff;
-  font-size:11.5px;padding:7px 11px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
+  background:rgba(22,48,44,0.08);border:1px solid rgba(22,48,44,0.16);color:var(--ink);
+  font-size:10.5px;padding:5px 9px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
 }
-.hdr-export:active{background:rgba(255,255,255,0.24);}
+.hdr-export:active{background:rgba(22,48,44,0.16);}
 .hdr-copy{
-  background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);color:#fff;
-  font-size:11.5px;padding:7px 11px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
+  background:rgba(22,48,44,0.08);border:1px solid rgba(22,48,44,0.16);color:var(--ink);
+  font-size:10.5px;padding:5px 9px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
 }
-.hdr-copy:active{background:rgba(255,255,255,0.24);}
+.hdr-copy:active{background:rgba(22,48,44,0.16);}
 
 /* ── Day tabs (boarding-pass stubs) ── */
 .tabs-row{
-  display:flex;gap:8px;padding:14px 14px 4px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;
+  display:flex;gap:7px;padding:10px 14px 4px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;
   background:var(--paper);
 }
 .tabs-row::-webkit-scrollbar{display:none;}
 .tab{
   position:relative;flex-shrink:0;background:var(--card);border:1px solid var(--line);
-  border-radius:11px;padding:8px 14px;cursor:pointer;min-width:88px;
+  border-radius:10px;padding:5px 11px;cursor:pointer;min-width:76px;
   box-shadow:0 1px 3px rgba(22,48,44,0.05);
 }
 .tab.active{border-color:var(--accent2);background:var(--accent2);box-shadow:var(--shadow);}
-.tab-day{font-size:9.5px;letter-spacing:1px;color:var(--ink3);font-weight:700;}
+.tab-day{font-size:8.5px;letter-spacing:1px;color:var(--ink3);font-weight:700;}
 .tab.active .tab-day{color:rgba(255,255,255,0.7);}
-.tab-date{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--ink);margin-top:1px;}
+.tab-date{font-size:13px;font-weight:600;color:var(--ink);margin-top:0;}
 .tab.active .tab-date{color:#fff;}
-.tab-count{font-size:9.5px;color:var(--ink3);margin-top:1px;}
+.tab-count{font-size:8.5px;color:var(--ink3);margin-top:0;}
 .tab.active .tab-count{color:rgba(255,255,255,0.65);}
 .tab-x{
   position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
@@ -89,17 +91,35 @@ body{
 .tab-add:active{background:var(--paper2);}
 
 /* ── Day label (editable) ── */
-.day-label-row{padding:14px 18px 2px;display:flex;align-items:baseline;gap:8px;flex-shrink:0;}
+.day-label-row{padding:10px 18px 2px;display:flex;align-items:baseline;gap:8px;flex-shrink:0;}
 .day-label-input{
-  font-family:'Fraunces',Georgia,serif;font-size:19px;font-weight:600;border:none;background:none;
+  font-size:19px;font-weight:600;border:none;background:none;
   color:var(--ink);flex:1;min-width:0;padding:2px 0;border-bottom:1.5px solid transparent;
 }
 .day-label-input:focus{outline:none;border-bottom-color:var(--accent2);}
 .day-meta{font-size:11.5px;color:var(--ink3);}
 
+/* ── Day note (오늘의 메모) ── */
+.day-note-wrap{padding:8px 18px 0;flex-shrink:0;}
+.day-note-box{
+  background:#fffaea;border:1.75px dashed #e8cf8a;border-radius:12px;
+  padding:9px 12px 10px;position:relative;transform:rotate(-0.3deg);
+  box-shadow:0 2px 8px rgba(179,134,44,0.08);
+}
+.day-note-label{
+  font-size:11.5px;font-weight:700;color:#b3862c;display:flex;align-items:baseline;gap:5px;margin-bottom:4px;
+}
+.day-note-sub{font-size:10px;font-weight:500;color:#c4a05c;}
+.day-note-input{
+  width:100%;box-sizing:border-box;border:none;padding:0;
+  font-size:13px;font-family:inherit;color:var(--ink);background:transparent;resize:none;line-height:1.55;
+}
+.day-note-input:focus{outline:none;}
+.day-note-input::placeholder{color:#c9b273;}
+
 /* ── Timeline ── */
 .timeline-scroll{flex:1;overflow-y:auto;padding:8px 0 calc(90px + var(--safe-bottom));}
-.timeline{position:relative;padding:6px 18px 0 54px;}
+.timeline{position:relative;padding:30px 18px 0 54px;}
 .empty-state{text-align:center;padding:60px 20px;color:var(--ink3);}
 .empty-state .es-icon{font-size:30px;margin-bottom:10px;}
 .empty-state p{font-size:13px;line-height:1.7;}
@@ -116,11 +136,12 @@ body{
 }
 .stop-time{
   position:absolute;left:-160px;top:0;width:96px;text-align:right;
-  font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--ink);
+  font-size:15px;font-weight:600;color:var(--ink);
   display:none;
 }
 .gap-label{
-  font-size:10.5px;color:var(--ink3);padding:2px 0 8px;display:flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:700;color:var(--accent2);background:rgba(47,111,104,0.11);
+  padding:4px 11px;border-radius:20px;margin:2px 0 10px;display:inline-flex;align-items:center;gap:4px;
 }
 
 .card{
@@ -128,8 +149,32 @@ body{
   cursor:pointer;border:1px solid transparent;
 }
 .card:active{border-color:var(--line);}
+.card.done{opacity:0.55;}
+.card.next-up{border-color:var(--next-blue);box-shadow:var(--shadow),0 0 0 2px var(--next-blue-bg);animation:nextPulse 1.8s ease-in-out infinite;}
+@keyframes nextPulse{
+  0%,100%{box-shadow:var(--shadow),0 0 0 2px var(--next-blue-bg);}
+  50%{box-shadow:var(--shadow),0 0 0 5px var(--next-blue-bg),0 0 10px 2px rgba(47,111,160,0.35);}
+}
+.here-walker{
+  position:absolute;left:-50px;top:-24px;font-size:28px;line-height:1;z-index:2;
+  animation:walkerBounce 1.4s ease-in-out infinite;
+}
+@keyframes walkerBounce{
+  0%,100%{transform:scaleX(-1) translateY(0) rotate(4deg);}
+  50%{transform:scaleX(-1) translateY(-5px) rotate(-4deg);}
+}
+.card.done .card-name{text-decoration:line-through;text-decoration-color:var(--ink3);}
+.stop-dot.done{background:currentColor;}
+.check-btn{
+  width:22px;height:22px;border-radius:7px;border:1.75px solid var(--line);background:#fff;
+  color:transparent;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;padding:0;transition:background .15s,border-color .15s,color .15s;
+}
+.check-btn.checked{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.check-btn:active{border-color:var(--accent2);}
+.check-label{font-size:10px;color:var(--ink3);cursor:pointer;flex-shrink:0;}
 .card-top{display:flex;align-items:center;gap:8px;}
-.card-time{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:15px;flex-shrink:0;}
+.card-time{font-weight:600;font-size:15px;flex-shrink:0;color:var(--time-red);}
 .chip{
   font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;flex-shrink:0;
   display:inline-flex;align-items:center;gap:3px;
@@ -141,8 +186,11 @@ body{
 }
 .icon-btn:active{background:var(--paper2);}
 .icon-btn.danger:active{color:var(--accent);background:var(--accent-bg);}
-.card-name{font-size:14.5px;font-weight:600;margin-top:6px;line-height:1.4;}
-.card-memo{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.5;white-space:pre-wrap;}
+.card-name{font-size:14.5px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.4;}
+.card-memo{
+  font-size:12px;color:#8a6a2a;margin-top:7px;line-height:1.5;white-space:pre-wrap;
+  background:#fffaea;border:1.5px dashed #e8cf8a;border-radius:10px;padding:7px 10px;
+}
 
 /* ── Add trigger ── */
 .add-trigger{
@@ -159,20 +207,36 @@ body{
 }
 .composer-row{display:flex;gap:8px;margin-bottom:8px;}
 .composer-row:last-of-type{margin-bottom:0;}
-.f-time{
-  width:92px;flex-shrink:0;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
-  font-size:14px;font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--ink);background:var(--paper);
+.f-time-box{
+  width:128px;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:2px;
+  padding:9px 4px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
 }
+.f-time-box:focus-within{border-color:var(--accent2);background:#fff;}
+.f-time-sel{
+  border:none;background:transparent;font-size:14px;font-weight:600;color:var(--ink);
+  font-family:inherit;text-align:center;cursor:pointer;padding:0;max-width:52px;
+}
+.f-time-sel:focus{outline:none;}
+.f-time-sep{color:var(--ink3);font-weight:600;font-size:13px;}
 .f-name-wrap{flex:1;position:relative;min-width:0;}
 .f-name{
   width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
   font-size:14px;font-family:inherit;color:var(--ink);background:var(--paper);
 }
-.f-time:focus,.f-name:focus,.f-memo:focus{outline:none;border-color:var(--accent2);background:#fff;}
-.f-memo{
-  width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
-  font-size:12.5px;font-family:inherit;color:var(--ink);background:var(--paper);resize:none;
+.f-name:focus{outline:none;border-color:var(--accent2);background:#fff;}
+.memo-box{
+  background:#fffaea;border:1.5px dashed #e8cf8a;border-radius:12px;
+  padding:9px 11px 10px;position:relative;transform:rotate(-0.35deg);
+  width:100%;box-sizing:border-box;
 }
+.memo-label{
+  font-size:10.5px;font-weight:700;color:#b3862c;display:flex;align-items:center;gap:4px;margin-bottom:4px;
+}
+.f-memo{
+  width:100%;border:none;border-radius:0;padding:0;
+  font-size:12.5px;font-family:inherit;color:var(--ink);background:transparent;resize:none;line-height:1.5;
+}
+.f-memo:focus{outline:none;background:transparent;}
 .suggest{
   position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--line);
   border-radius:10px;box-shadow:var(--shadow);max-height:170px;overflow-y:auto;z-index:20;display:none;
@@ -226,6 +290,13 @@ body{
   <div class="day-meta" id="day-meta"></div>
 </div>
 
+<div class="day-note-wrap" id="day-note-wrap">
+  <div class="day-note-box">
+    <div class="day-note-label">📌 오늘의 메모 <span class="day-note-sub">— 꼭 기억해야 할 것들</span></div>
+    <textarea class="day-note-input" id="day-note-input" rows="2" placeholder="예: 렌트카 반납 전 주유하기, 우산 챙기기..." oninput="updateDayNote(this.value)"></textarea>
+  </div>
+</div>
+
 <div class="timeline-scroll" id="timeline-scroll">
   <div class="timeline" id="timeline"></div>
 </div>
@@ -265,7 +336,7 @@ const CAT_LIST = Object.keys(CAT_META);
 // ══════════════════════════════════════════════
 // State
 // ══════════════════════════════════════════════
-let days=[{id:1,label:'1일차',places:[]}];
+let days=[{id:1,label:'1일차',places:[],note:''}];
 let activeDayId=1;
 let nextId=1;
 let nextDayId=2;
@@ -317,7 +388,7 @@ function renderTabs(){
 
 function addDay(){
   const id=nextDayId++;
-  days.push({id,label:'새 날짜',places:[]});
+  days.push({id,label:'새 날짜',places:[],note:''});
   activeDayId=id;
   editingId=null;
   renderAll();
@@ -338,6 +409,12 @@ function renameActiveDay(val){
   renderTabs();
   autoSave();
 }
+function updateDayNote(val){
+  const d=getActive();
+  if(!d)return;
+  d.note=val;
+  autoSave();
+}
 
 // ══════════════════════════════════════════════
 // Render: Timeline
@@ -356,6 +433,7 @@ function renderTimeline(){
   const d=getActive();
   document.getElementById('day-label-input').value=d?d.label:'';
   document.getElementById('day-meta').textContent=d?`${d.places.length}개 일정`:'';
+  document.getElementById('day-note-input').value=d?(d.note||''):'';
 
   const box=document.getElementById('timeline');
   box.innerHTML='';
@@ -364,12 +442,13 @@ function renderTimeline(){
   if(d.places.length===0 && editingId!=='new'){
     box.innerHTML=`<div class="empty-state"><div class="es-icon">🧳</div><p>아직 일정이 없어요<br>아래 버튼으로 첫 일정을 추가해보세요</p></div>`;
   } else {
+    const nextUpId = (d.places.find(p=>!p.done)||{}).id;
     d.places.forEach((p,i)=>{
       if(i>0){
         const prev=d.places[i-1];
         if(prev.time && p.time){
           const m=tdiff(prev.time,p.time);
-          if(m>0) box.appendChild(el(`<div class="gap-label">〰 ${fmtDur(m)} 후</div>`));
+          if(m>0) box.appendChild(el(`<div class="gap-label">⏱ ${fmtDur(m)} 후</div>`));
         }
       }
       const stop=document.createElement('div');
@@ -382,18 +461,18 @@ function renderTimeline(){
       } else {
         stop.innerHTML=`
           <div class="stop-line"></div>
-          <div class="stop-dot" style="color:${meta.fg}"></div>
-          <div class="card" data-id="${p.id}">
+          <div class="stop-dot${p.done?' done':''}" style="color:${meta.fg}"></div>
+          ${p.id===nextUpId?'<div class="here-walker">🚶</div>':''}
+          <div class="card${p.done?' done':''}${p.id===nextUpId?' next-up':''}" data-id="${p.id}">
             <div class="card-top">
-              ${p.time?`<span class="card-time">${p.time}</span>`:`<span class="card-time" style="color:var(--ink3)">--:--</span>`}
-              <span class="chip" style="color:${meta.fg};background:${meta.bg}">${meta.emoji} ${p.cat}</span>
+              ${p.time?`<span class="card-time">⏰ ${p.time}</span>`:`<span class="card-time" style="color:var(--ink3)">⏰ --:--</span>`}
+              <button class="check-btn${p.done?' checked':''}" title="완료 체크" onclick="event.stopPropagation();togglePlaceDone(${d.id},${p.id})">✓</button>
+              ${!p.done?`<span class="check-label" onclick="event.stopPropagation();togglePlaceDone(${d.id},${p.id})">완료</span>`:''}
               <div class="card-actions">
-                <button class="icon-btn" title="위로" onclick="event.stopPropagation();movePlace(${d.id},${p.id},-1)" ${i===0?'disabled style="opacity:.25"':''}>▲</button>
-                <button class="icon-btn" title="아래로" onclick="event.stopPropagation();movePlace(${d.id},${p.id},1)" ${i===d.places.length-1?'disabled style="opacity:.25"':''}>▼</button>
                 <button class="icon-btn danger" title="삭제" onclick="event.stopPropagation();deletePlace(${d.id},${p.id})">✕</button>
               </div>
             </div>
-            <div class="card-name">${escapeHtml(p.name)}</div>
+            <div class="card-name"><span style="color:${meta.fg}">✅</span> ${escapeHtml(p.name)}</div>
             ${p.memo?`<div class="card-memo">${escapeHtml(p.memo)}</div>`:''}
           </div>
         `;
@@ -421,6 +500,7 @@ function renderTimeline(){
   box.appendChild(addStop);
 }
 
+function nowTimeStr(){ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
 function el(html){ const d=document.createElement('div'); d.innerHTML=html; return d.firstElementChild; }
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -433,32 +513,39 @@ function composerNode(p){
   wrap.className='composer';
   wrap.innerHTML=`
     <div class="composer-row">
-      <input class="f-time" id="f-time" type="time" value="${p?p.time||'':''}" />
+      <div class="f-time-box" id="f-time-box">
+        <select class="f-time-sel" id="f-time-h"></select>
+        <span class="f-time-sep">:</span>
+        <select class="f-time-sel" id="f-time-m"></select>
+      </div>
       <div class="f-name-wrap">
         <input class="f-name" id="f-name" placeholder="장소 이름" value="${p?escapeHtml(p.name):''}" autocomplete="off"/>
         <div class="suggest" id="f-suggest"></div>
       </div>
     </div>
-    <div class="cat-row" id="f-cat-row"></div>
     <div class="composer-row">
-      <textarea class="f-memo" id="f-memo" rows="2" placeholder="메모 (예약, 이동시간, 특이사항 등)">${p?escapeHtml(p.memo):''}</textarea>
+      <div class="memo-box">
+        <div class="memo-label">📝 메모</div>
+        <textarea class="f-memo" id="f-memo" rows="2" placeholder="예약, 이동시간, 특이사항 등">${p?escapeHtml(p.memo):''}</textarea>
+      </div>
     </div>
     <div class="composer-btns">
       <button class="btn btn-cancel" onclick="closeComposer()">취소</button>
       <button class="btn btn-save" onclick="saveComposer(${p?p.id:'null'})">${p?'저장':'추가'}</button>
     </div>
   `;
-  const catRow=wrap.querySelector('#f-cat-row');
-  CAT_LIST.forEach(c=>{
-    const meta=CAT_META[c];
-    const b=document.createElement('button');
-    b.type='button';
-    b.className='cat-pick'+(editCat===c?' sel':'');
-    b.style.color=meta.fg;
-    b.textContent=`${meta.emoji} ${c}`;
-    b.onclick=()=>{ editCat=c; catRow.querySelectorAll('.cat-pick').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); };
-    catRow.appendChild(b);
-  });
+  const initTime=(p?(p.time||''):nowTimeStr())||nowTimeStr();
+  const [initH,initM]=initTime.split(':');
+  const hSel=wrap.querySelector('#f-time-h');
+  const mSel=wrap.querySelector('#f-time-m');
+  for(let h=0;h<24;h++){
+    const v=String(h).padStart(2,'0');
+    hSel.innerHTML+=`<option value="${v}"${v===initH?' selected':''}>${v}시</option>`;
+  }
+  for(let m=0;m<60;m++){
+    const v=String(m).padStart(2,'0');
+    mSel.innerHTML+=`<option value="${v}"${v===initM?' selected':''}>${v}분</option>`;
+  }
   const nameInp=wrap.querySelector('#f-name');
   const sugBox=wrap.querySelector('#f-suggest');
   nameInp.addEventListener('input',()=>{
@@ -493,7 +580,7 @@ function saveComposer(id){
   if(!d)return;
   const name=document.getElementById('f-name').value.trim();
   if(!name){ document.getElementById('f-name').focus(); return; }
-  const time=document.getElementById('f-time').value;
+  const time=document.getElementById('f-time-h').value+':'+document.getElementById('f-time-m').value;
   const memo=document.getElementById('f-memo').value.trim();
   if(id===null||id===undefined){
     d.places.push({id:nextId++,name,cat:editCat,time,memo});
@@ -538,13 +625,12 @@ function undoDelete(){
   lastDeleted=null;
   hideToast();
 }
-function movePlace(dayId,placeId,dir){
+function togglePlaceDone(dayId,placeId){
   const d=getDay(dayId);
   if(!d)return;
-  const idx=d.places.findIndex(p=>p.id===placeId);
-  const newIdx=idx+dir;
-  if(newIdx<0||newIdx>=d.places.length)return;
-  const tmp=d.places[idx]; d.places[idx]=d.places[newIdx]; d.places[newIdx]=tmp;
+  const p=d.places.find(pl=>pl.id===placeId);
+  if(!p)return;
+  p.done=!p.done;
   renderAll();
 }
 
@@ -572,10 +658,11 @@ function buildPlanText(){
   t+='─'.repeat(24)+'\n';
   days.forEach(d=>{
     t+=`\n📅 ${d.label||'날짜 미정'}\n`;
+    if(d.note&&d.note.trim()) t+=`📌 오늘의 메모: ${d.note.trim()}\n`;
     if(d.places.length===0){ t+='  (일정 없음)\n'; return; }
     d.places.forEach(p=>{
       const meta=CAT_META[p.cat]||CAT_META['관광'];
-      t+=`${p.time?p.time:'--:--'}  ${meta.emoji} ${p.name}`;
+      t+=`${p.done?'✅':'▫️'} ${p.time?p.time:'--:--'}  ${meta.emoji} ${p.name}`;
       if(p.memo) t+=`\n        ↳ ${p.memo}`;
       t+='\n';
     });
