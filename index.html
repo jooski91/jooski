@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -103,11 +104,17 @@ body{
 .day-note-label{
   font-size:11.5px;font-weight:700;color:#b3862c;display:flex;align-items:baseline;gap:5px;margin-bottom:4px;
 }
+.day-note-toggle{
+  margin-left:auto;background:none;border:none;color:#c4a05c;font-size:10px;font-weight:700;
+  cursor:pointer;font-family:inherit;padding:2px 4px;
+}
+.day-note-toggle:active{color:#a5721f;}
 .day-note-date{color:#a5721f;font-weight:700;}
 .day-note-sub{font-size:10px;font-weight:500;color:#c4a05c;}
 .day-note-input{
   width:100%;box-sizing:border-box;border:none;padding:0;
   font-size:13px;font-family:inherit;color:var(--ink);background:transparent;resize:none;line-height:1.55;
+  overflow:hidden;
 }
 .day-note-input:focus{outline:none;}
 .day-note-input::placeholder{color:#c9b273;}
@@ -184,7 +191,7 @@ body{
 
 .card{
   background:var(--card);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);
-  cursor:pointer;border:1px solid transparent;
+  border:1px solid transparent;
 }
 .card:active{border-color:var(--line);}
 .card.done{opacity:0.55;}
@@ -211,7 +218,7 @@ body{
   content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
   border:4px solid transparent;border-top-color:var(--next-blue);
 }
-.walker-emoji{font-size:40px;line-height:1;animation:walkerBounce 1.4s ease-in-out infinite;}
+.walker-emoji{font-size:45px;line-height:1;animation:walkerBounce 1.4s ease-in-out infinite;}
 @keyframes walkerBounce{
   0%,100%{transform:scaleX(-1) translateY(0) rotate(4deg);}
   50%{transform:scaleX(-1) translateY(-5px) rotate(-4deg);}
@@ -311,6 +318,16 @@ body{
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
 .toast-undo{color:#ffd4ba;font-weight:700;cursor:pointer;background:none;border:none;font-size:12.5px;font-family:inherit;}
+
+/* ── Scroll-to-current FAB ── */
+.fab-now{
+  position:fixed;right:14px;bottom:calc(24px + var(--safe-bottom));z-index:150;
+  display:none;align-items:center;gap:6px;background:#fff;color:var(--next-blue);
+  border:2px solid var(--next-blue);border-radius:24px;padding:9px 13px;font-size:12.5px;font-weight:700;
+  font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(47,111,160,0.4);
+}
+.fab-now.show{display:flex;}
+.fab-now:active{background:var(--next-blue-bg);}
 </style>
 </head>
 <body>
@@ -354,8 +371,11 @@ body{
 
 <div class="day-note-wrap" id="day-note-wrap">
   <div class="day-note-box">
-    <div class="day-note-label">📌 오늘의 메모<span class="day-note-date" id="day-note-date"></span></div>
-    <textarea class="day-note-input" id="day-note-input" rows="2" placeholder="예: 렌트카 반납 전 주유하기, 우산 챙기기..." oninput="updateDayNote(this.value)"></textarea>
+    <div class="day-note-label">
+      📌 오늘의 메모<span class="day-note-date" id="day-note-date"></span>
+      <button class="day-note-toggle" id="day-note-toggle" onclick="toggleDayNote()" type="button">펼쳐보기 ▾</button>
+    </div>
+    <textarea class="day-note-input" id="day-note-input" rows="1" placeholder="예: 렌트카 반납 전 주유하기, 우산 챙기기..." oninput="updateDayNote(this.value)"></textarea>
   </div>
 </div>
 
@@ -367,6 +387,8 @@ body{
   <span id="toast-msg"></span>
   <button class="toast-undo" id="toast-undo" onclick="undoDelete()">되돌리기</button>
 </div>
+
+<button class="fab-now" id="fab-now" onclick="scrollToCurrent()">🏃 현재 일정</button>
 
 <script id="sdb">
 /* 저장된 상태 - 자동 저장됩니다 */
@@ -454,6 +476,7 @@ function renderTabs(){
     el.onclick=()=>{
       if(d.id===activeDayId){ openDayDatePicker(d.id); return; }
       activeDayId=d.id; editingId=null; renderAll();
+      setTimeout(scrollToCurrent,80);
     };
     wrap.appendChild(el);
   });
@@ -584,6 +607,18 @@ function updateDayNote(val){
   d.note=val;
   autoSave();
 }
+let dayNoteExpanded=false;
+function toggleDayNote(){
+  dayNoteExpanded=!dayNoteExpanded;
+  applyDayNoteExpandState();
+}
+function applyDayNoteExpandState(){
+  const ta=document.getElementById('day-note-input');
+  const btn=document.getElementById('day-note-toggle');
+  if(!ta||!btn)return;
+  ta.rows = dayNoteExpanded ? 5 : 1;
+  btn.textContent = dayNoteExpanded ? '접기 ▴' : '펼쳐보기 ▾';
+}
 
 // ══════════════════════════════════════════════
 // Render: Timeline
@@ -602,6 +637,7 @@ function renderTimeline(){
   const d=getActive();
   if(d) applyAutoDone(d);
   document.getElementById('day-note-input').value=d?(d.note||''):'';
+  applyDayNoteExpandState();
   const noteDateEl=document.getElementById('day-note-date');
   if(noteDateEl){
     const iso=d?(d.date||guessDateFromLabel(d.label)):'';
@@ -640,6 +676,7 @@ function renderTimeline(){
               ${p.time?`<span class="card-time">⏰ ${p.time}</span>`:`<span class="card-time" style="color:var(--ink3)">⏰ --:--</span>`}
               ${p.done?`<span class="check-label" style="color:var(--accent2);font-weight:700;">✓ 완료</span>`:''}
               <div class="card-actions">
+                <button class="icon-btn" title="수정" onclick="event.stopPropagation();openEdit(${p.id})">✏️</button>
                 <button class="icon-btn danger" title="삭제" onclick="event.stopPropagation();deletePlace(${d.id},${p.id})">✕</button>
               </div>
             </div>
@@ -647,7 +684,6 @@ function renderTimeline(){
             ${p.memo?`<div class="card-memo">${escapeHtml(p.memo)}</div>`:''}
           </div>
         `;
-        stop.querySelector('.card').onclick=()=>openEdit(p.id);
       }
       box.appendChild(stop);
     });
@@ -676,6 +712,9 @@ function renderTimeline(){
   </div>`);
   box.appendChild(walkerDiv);
   positionWalker();
+
+  const fab=document.getElementById('fab-now');
+  if(fab) fab.classList.toggle('show', !!(d && d.places.length>0 && editingId===null));
 }
 
 // ══════════════════════════════════════════════
@@ -733,6 +772,18 @@ function positionWalker(){
   walker.style.display='flex';
   walker.style.top=top+'px';
   if(timeEl) timeEl.textContent=nowTimeStr();
+}
+function scrollToCurrent(){
+  const scrollBox=document.getElementById('timeline-scroll');
+  const track=document.getElementById('timeline');
+  if(!scrollBox||!track) return;
+  const nextCard=track.querySelector('.card.next-up');
+  const target=nextCard || track.querySelector('.card');
+  if(!target){ scrollBox.scrollTo({top:0,behavior:'smooth'}); return; }
+  const scrollRect=scrollBox.getBoundingClientRect();
+  const targetRect=target.getBoundingClientRect();
+  const offset=(targetRect.top - scrollRect.top) - (scrollBox.clientHeight*0.3);
+  scrollBox.scrollTo({top: scrollBox.scrollTop + offset, behavior:'smooth'});
 }
 let clockTimer=null;
 function startClock(){
@@ -967,6 +1018,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(!getActive()) activeDayId=days[0].id;
   renderAll();
   startClock();
+  setTimeout(scrollToCurrent,150);
 });
 </script>
 </body>
