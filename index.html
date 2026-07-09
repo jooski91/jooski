@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -36,27 +37,27 @@ body{
 
 /* ── Header ── */
 .hdr{
-  padding:calc(9px + var(--safe-top)) 16px 9px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  padding:calc(6px + var(--safe-top)) 14px 6px;
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
   background:var(--hdr-bg);color:var(--ink);position:relative;
 }
 .hdr::after{
-  content:'';position:absolute;left:0;right:0;bottom:-1px;height:8px;
-  background-image:radial-gradient(circle at 8px 0, transparent 6px, var(--hdr-bg) 6.5px);
-  background-size:16px 8px;background-repeat:repeat-x;
+  content:'';position:absolute;left:0;right:0;bottom:-1px;height:6px;
+  background-image:radial-gradient(circle at 8px 0, transparent 4.5px, var(--hdr-bg) 5px);
+  background-size:16px 6px;background-repeat:repeat-x;
 }
-.hdr-plane{font-size:17px;transform:rotate(90deg);flex-shrink:0;opacity:0.9;}
+.hdr-plane{font-size:14px;transform:rotate(90deg);flex-shrink:0;opacity:0.9;}
 .hdr-text{flex:1;min-width:0;}
-.hdr-title{font-size:15.5px;font-weight:600;letter-spacing:-0.2px;}
-.hdr-sub{font-size:10.5px;color:var(--ink2);margin-top:1px;}
+.hdr-title{font-size:13px;font-weight:600;letter-spacing:-0.2px;}
+.hdr-sub{font-size:9px;color:var(--ink2);margin-top:0px;}
 .hdr-export{
   background:rgba(22,48,44,0.08);border:1px solid rgba(22,48,44,0.16);color:var(--ink);
-  font-size:10.5px;padding:5px 9px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
+  font-size:9.5px;padding:4px 8px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
 }
 .hdr-export:active{background:rgba(22,48,44,0.16);}
 .hdr-copy{
   background:rgba(22,48,44,0.08);border:1px solid rgba(22,48,44,0.16);color:var(--ink);
-  font-size:10.5px;padding:5px 9px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
+  font-size:9.5px;padding:4px 8px;border-radius:20px;cursor:pointer;font-family:inherit;flex-shrink:0;
 }
 .hdr-copy:active{background:rgba(22,48,44,0.16);}
 
@@ -81,23 +82,16 @@ body{
 .tab-x{
   position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
   background:var(--ink3);color:#fff;font-size:10px;border:2px solid var(--paper);
-  display:none;align-items:center;justify-content:center;cursor:pointer;
+  display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;
 }
-.tab:hover .tab-x{display:flex;}
+.tab.active .tab-x{display:flex;background:rgba(255,255,255,0.85);color:var(--accent2);}
+.tab-x:active{background:var(--accent);color:#fff;}
 .tab-add{
   flex-shrink:0;width:44px;border:1.5px dashed var(--line);border-radius:11px;
   background:none;color:var(--ink3);font-size:18px;cursor:pointer;font-family:inherit;
 }
 .tab-add:active{background:var(--paper2);}
 
-/* ── Day label (editable) ── */
-.day-label-row{padding:10px 18px 2px;display:flex;align-items:baseline;gap:8px;flex-shrink:0;}
-.day-label-input{
-  font-size:19px;font-weight:600;border:none;background:none;
-  color:var(--ink);flex:1;min-width:0;padding:2px 0;border-bottom:1.5px solid transparent;
-}
-.day-label-input:focus{outline:none;border-bottom-color:var(--accent2);}
-.day-meta{font-size:11.5px;color:var(--ink3);}
 
 /* ── Day note (오늘의 메모) ── */
 .day-note-wrap{padding:8px 18px 0;flex-shrink:0;}
@@ -109,6 +103,7 @@ body{
 .day-note-label{
   font-size:11.5px;font-weight:700;color:#b3862c;display:flex;align-items:baseline;gap:5px;margin-bottom:4px;
 }
+.day-note-date{color:#a5721f;font-weight:700;}
 .day-note-sub{font-size:10px;font-weight:500;color:#c4a05c;}
 .day-note-input{
   width:100%;box-sizing:border-box;border:none;padding:0;
@@ -116,6 +111,49 @@ body{
 }
 .day-note-input:focus{outline:none;}
 .day-note-input::placeholder{color:#c9b273;}
+
+/* ── Custom date-picker modal ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(22,48,44,0.45);z-index:300;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.date-modal{
+  background:#fff;border-radius:16px;padding:14px 16px 16px;width:min(300px,100%);
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+.dm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.dm-title{font-size:14.5px;font-weight:700;color:var(--ink);}
+.dm-nav{
+  width:28px;height:28px;border-radius:8px;border:none;background:var(--paper2);color:var(--ink);
+  font-size:15px;cursor:pointer;font-family:inherit;
+}
+.dm-nav:active{background:var(--line);}
+.dm-weekdays{
+  display:grid;grid-template-columns:repeat(7,1fr);text-align:center;
+  font-size:10.5px;color:var(--ink3);font-weight:700;margin-bottom:4px;
+}
+.dm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.dm-cell{
+  aspect-ratio:1;border:none;background:none;border-radius:8px;font-size:12.5px;
+  color:var(--ink);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;
+}
+.dm-cell:active{background:var(--paper2);}
+.dm-cell.sel{background:var(--accent2);color:#fff;font-weight:700;}
+.dm-cell.dm-empty{cursor:default;}
+.dm-actions{display:flex;justify-content:flex-end;margin-top:10px;}
+.dm-cancel{
+  background:none;border:none;color:var(--ink3);font-size:12.5px;cursor:pointer;
+  font-family:inherit;padding:6px 10px;
+}
+
+/* ── Confirm modal ── */
+.confirm-modal{
+  background:#fff;border-radius:16px;padding:20px 18px 16px;width:min(280px,100%);
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);text-align:center;
+}
+.confirm-modal-msg{font-size:13.5px;color:var(--ink);line-height:1.6;margin-bottom:16px;}
+.confirm-modal-btns{display:flex;gap:8px;}
+.confirm-modal-btns .btn{flex:1;}
 
 /* ── Timeline ── */
 .timeline-scroll{flex:1;overflow-y:auto;padding:8px 0 calc(90px + var(--safe-bottom));}
@@ -155,25 +193,29 @@ body{
   0%,100%{box-shadow:var(--shadow),0 0 0 2px var(--next-blue-bg);}
   50%{box-shadow:var(--shadow),0 0 0 5px var(--next-blue-bg),0 0 10px 2px rgba(47,111,160,0.35);}
 }
-.here-walker{
-  position:absolute;left:-50px;top:-24px;font-size:28px;line-height:1;z-index:2;
-  animation:walkerBounce 1.4s ease-in-out infinite;
+.card.done .card-name{text-decoration:line-through;text-decoration-color:var(--ink3);}
+.stop-dot.done{background:currentColor;}
+.card-top{display:flex;align-items:center;gap:8px;}
+
+/* ── Walker (자동 진행 타임라인 캐릭터) ── */
+.walker{
+  position:absolute;left:4px;width:48px;display:flex;flex-direction:column;
+  align-items:center;gap:3px;transform:translateY(-50%);z-index:6;pointer-events:none;
+  transition:top .8s cubic-bezier(.4,0,.2,1);
 }
+.walker-time{
+  position:relative;font-size:9.5px;font-weight:700;color:#fff;background:var(--next-blue);
+  padding:2px 6px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 6px rgba(47,111,160,.35);
+}
+.walker-time::after{
+  content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
+  border:4px solid transparent;border-top-color:var(--next-blue);
+}
+.walker-emoji{font-size:26px;line-height:1;animation:walkerBounce 1.4s ease-in-out infinite;}
 @keyframes walkerBounce{
   0%,100%{transform:scaleX(-1) translateY(0) rotate(4deg);}
   50%{transform:scaleX(-1) translateY(-5px) rotate(-4deg);}
 }
-.card.done .card-name{text-decoration:line-through;text-decoration-color:var(--ink3);}
-.stop-dot.done{background:currentColor;}
-.check-btn{
-  width:22px;height:22px;border-radius:7px;border:1.75px solid var(--line);background:#fff;
-  color:transparent;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;padding:0;transition:background .15s,border-color .15s,color .15s;
-}
-.check-btn.checked{background:var(--accent2);border-color:var(--accent2);color:#fff;}
-.check-btn:active{border-color:var(--accent2);}
-.check-label{font-size:10px;color:var(--ink3);cursor:pointer;flex-shrink:0;}
-.card-top{display:flex;align-items:center;gap:8px;}
 .card-time{font-weight:600;font-size:15px;flex-shrink:0;color:var(--time-red);}
 .chip{
   font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;flex-shrink:0;
@@ -285,14 +327,34 @@ body{
 
 <div class="tabs-row" id="tabs-row"></div>
 
-<div class="day-label-row">
-  <input class="day-label-input" id="day-label-input" oninput="renameActiveDay(this.value)" placeholder="날짜 라벨 (예: 7/9(목))"/>
-  <div class="day-meta" id="day-meta"></div>
+<div class="modal-overlay" id="date-modal-overlay">
+  <div class="date-modal" id="date-modal">
+    <div class="dm-header">
+      <button class="dm-nav" onclick="dmChangeMonth(-1)">‹</button>
+      <div class="dm-title" id="dm-title"></div>
+      <button class="dm-nav" onclick="dmChangeMonth(1)">›</button>
+    </div>
+    <div class="dm-weekdays"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+    <div class="dm-grid" id="dm-grid"></div>
+    <div class="dm-actions">
+      <button class="dm-cancel" onclick="closeDateModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal-overlay">
+  <div class="confirm-modal">
+    <div class="confirm-modal-msg" id="confirm-modal-msg"></div>
+    <div class="confirm-modal-btns">
+      <button class="btn btn-cancel" onclick="closeConfirmModal()">취소</button>
+      <button class="btn btn-save" style="background:var(--accent);" id="confirm-modal-ok">삭제</button>
+    </div>
+  </div>
 </div>
 
 <div class="day-note-wrap" id="day-note-wrap">
   <div class="day-note-box">
-    <div class="day-note-label">📌 오늘의 메모 <span class="day-note-sub">— 꼭 기억해야 할 것들</span></div>
+    <div class="day-note-label">📌 오늘의 메모<span class="day-note-date" id="day-note-date"></span></div>
     <textarea class="day-note-input" id="day-note-input" rows="2" placeholder="예: 렌트카 반납 전 주유하기, 우산 챙기기..." oninput="updateDayNote(this.value)"></textarea>
   </div>
 </div>
@@ -347,6 +409,19 @@ if(typeof _SAVED_STATE!=='undefined' && _SAVED_STATE){
   nextId=_SAVED_STATE.nextId||100;
   nextDayId=_SAVED_STATE.nextDayId||days.length+1;
 }
+// 로컬스토리지에 저장된 내용이 있으면 항상 그것을 최신 상태로 우선 사용
+try{
+  const savedLS=localStorage.getItem('jeju_planner_v2');
+  if(savedLS){
+    const s=JSON.parse(savedLS);
+    if(s && Array.isArray(s.days) && s.days.length){
+      days=s.days;
+      activeDayId=s.activeDayId||days[0].id;
+      nextId=s.nextId||nextId;
+      nextDayId=s.nextDayId||nextDayId;
+    }
+  }
+}catch(e){}
 
 let editingId=null;   // null | 'new' | placeId  → 어떤 카드가 편집 폼으로 열려있는지
 let editCat='관광';
@@ -362,6 +437,7 @@ function autoSave(){
 // ══════════════════════════════════════════════
 // Render: Day tabs
 // ══════════════════════════════════════════════
+let pickerDayId=null;
 function renderTabs(){
   const wrap=document.getElementById('tabs-row');
   wrap.innerHTML='';
@@ -371,11 +447,14 @@ function renderTabs(){
     el.className='tab'+(d.id===activeDayId?' active':'');
     el.innerHTML=`
       <div class="tab-day">DAY ${days.indexOf(d)+1}</div>
-      <div class="tab-date">${short||'날짜 없음'}</div>
+      <div class="tab-date">${short||'날짜 없음'}${d.id===activeDayId?' <span style="opacity:.55;font-size:9px;">✎</span>':''}</div>
       <div class="tab-count">${d.places.length}곳</div>
       ${days.length>1?`<div class="tab-x" onclick="event.stopPropagation();deleteDay(${d.id})">×</div>`:''}
     `;
-    el.onclick=()=>{ activeDayId=d.id; editingId=null; renderAll(); };
+    el.onclick=()=>{
+      if(d.id===activeDayId){ openDayDatePicker(d.id); return; }
+      activeDayId=d.id; editingId=null; renderAll();
+    };
     wrap.appendChild(el);
   });
   const add=document.createElement('button');
@@ -386,28 +465,118 @@ function renderTabs(){
   wrap.appendChild(add);
 }
 
+let dmYear=null, dmMonth=null, dmSelectedIso='';
+function openDayDatePicker(dayId){
+  const d=getDay(dayId);
+  if(!d) return;
+  pickerDayId=dayId;
+  const iso=d.date||guessDateFromLabel(d.label);
+  const base=iso?new Date(iso+'T00:00:00'):new Date();
+  dmYear=base.getFullYear();
+  dmMonth=base.getMonth();
+  dmSelectedIso=iso||'';
+  renderDateModal();
+  document.getElementById('date-modal-overlay').style.display='flex';
+}
+function closeDateModal(){
+  document.getElementById('date-modal-overlay').style.display='none';
+}
+function dmChangeMonth(delta){
+  dmMonth+=delta;
+  if(dmMonth<0){ dmMonth=11; dmYear--; }
+  if(dmMonth>11){ dmMonth=0; dmYear++; }
+  renderDateModal();
+}
+function renderDateModal(){
+  document.getElementById('dm-title').textContent=`${dmYear}년 ${dmMonth+1}월`;
+  const grid=document.getElementById('dm-grid');
+  grid.innerHTML='';
+  const firstDow=new Date(dmYear,dmMonth,1).getDay();
+  const daysInMonth=new Date(dmYear,dmMonth+1,0).getDate();
+  for(let i=0;i<firstDow;i++){
+    grid.appendChild(el('<div class="dm-cell dm-empty"></div>'));
+  }
+  for(let day=1;day<=daysInMonth;day++){
+    const iso=`${dmYear}-${String(dmMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='dm-cell'+(iso===dmSelectedIso?' sel':'');
+    cell.textContent=day;
+    cell.onclick=()=>{ dmSelectedIso=iso; onDayDateChange(iso); closeDateModal(); };
+    grid.appendChild(cell);
+  }
+}
+document.getElementById('date-modal-overlay')?.addEventListener('click',(e)=>{
+  if(e.target.id==='date-modal-overlay') closeDateModal();
+});
+
+// ══════════════════════════════════════════════
+// 커스텀 확인 모달 (네이티브 confirm() 대체)
+// ══════════════════════════════════════════════
+let confirmModalCallback=null;
+function openConfirmModal(msg,onConfirm){
+  confirmModalCallback=onConfirm;
+  document.getElementById('confirm-modal-msg').textContent=msg;
+  document.getElementById('confirm-modal-overlay').style.display='flex';
+}
+function closeConfirmModal(){
+  document.getElementById('confirm-modal-overlay').style.display='none';
+  confirmModalCallback=null;
+}
+document.getElementById('confirm-modal-ok')?.addEventListener('click',()=>{
+  const cb=confirmModalCallback;
+  closeConfirmModal();
+  if(cb) cb();
+});
+document.getElementById('confirm-modal-overlay')?.addEventListener('click',(e)=>{
+  if(e.target.id==='confirm-modal-overlay') closeConfirmModal();
+});
+
 function addDay(){
   const id=nextDayId++;
   days.push({id,label:'새 날짜',places:[],note:''});
   activeDayId=id;
   editingId=null;
   renderAll();
-  setTimeout(()=>{ const inp=document.getElementById('day-label-input'); inp.focus(); inp.select(); },50);
+  setTimeout(()=>openDayDatePicker(id),50);
 }
 function deleteDay(id){
   if(days.length<=1)return;
-  if(!confirm('이 날짜와 모든 일정을 삭제할까요?'))return;
-  days=days.filter(d=>d.id!==id);
-  if(activeDayId===id) activeDayId=days[0].id;
-  editingId=null;
-  renderAll();
+  const d=getDay(id);
+  openConfirmModal(`'${d?d.label||'이 날짜':'이 날짜'}'와(과) 모든 일정을 삭제할까요?`,()=>{
+    days=days.filter(dd=>dd.id!==id);
+    if(activeDayId===id) activeDayId=days[0].id;
+    editingId=null;
+    renderAll();
+  });
 }
-function renameActiveDay(val){
-  const d=getActive();
+const WEEKDAYS_KO=['일','월','화','수','목','금','토'];
+function formatDateLabel(iso){
+  if(!iso) return '';
+  const dt=new Date(iso+'T00:00:00');
+  if(isNaN(dt.getTime())) return '';
+  return `${dt.getMonth()+1}/${dt.getDate()}(${WEEKDAYS_KO[dt.getDay()]})`;
+}
+function formatMemoDateLabel(iso){
+  if(!iso) return '';
+  const dt=new Date(iso+'T00:00:00');
+  if(isNaN(dt.getTime())) return '';
+  const yy=String(dt.getFullYear()).slice(-2);
+  return `${yy}/${dt.getMonth()+1}/${dt.getDate()}(${WEEKDAYS_KO[dt.getDay()]})`;
+}
+function guessDateFromLabel(label){
+  if(!label) return '';
+  const m=/^(\d{1,2})\/(\d{1,2})/.exec(label.trim());
+  if(!m) return '';
+  const year=new Date().getFullYear();
+  return `${year}-${String(m[1]).padStart(2,'0')}-${String(m[2]).padStart(2,'0')}`;
+}
+function onDayDateChange(val){
+  const d=getDay(pickerDayId)||getActive();
   if(!d)return;
-  d.label=val;
-  renderTabs();
-  autoSave();
+  d.date=val;
+  d.label=formatDateLabel(val)||d.label;
+  renderAll();
 }
 function updateDayNote(val){
   const d=getActive();
@@ -431,9 +600,13 @@ function fmtDur(m){
 
 function renderTimeline(){
   const d=getActive();
-  document.getElementById('day-label-input').value=d?d.label:'';
-  document.getElementById('day-meta').textContent=d?`${d.places.length}개 일정`:'';
+  if(d) applyAutoDone(d);
   document.getElementById('day-note-input').value=d?(d.note||''):'';
+  const noteDateEl=document.getElementById('day-note-date');
+  if(noteDateEl){
+    const iso=d?(d.date||guessDateFromLabel(d.label)):'';
+    noteDateEl.textContent = iso ? ` - ${formatMemoDateLabel(iso)}` : '';
+  }
 
   const box=document.getElementById('timeline');
   box.innerHTML='';
@@ -461,13 +634,11 @@ function renderTimeline(){
       } else {
         stop.innerHTML=`
           <div class="stop-line"></div>
-          <div class="stop-dot${p.done?' done':''}" style="color:${meta.fg}"></div>
-          ${p.id===nextUpId?'<div class="here-walker">🚶</div>':''}
+          <div class="stop-dot${p.done?' done':''}" data-time="${p.time||''}" style="color:${meta.fg}"></div>
           <div class="card${p.done?' done':''}${p.id===nextUpId?' next-up':''}" data-id="${p.id}">
             <div class="card-top">
               ${p.time?`<span class="card-time">⏰ ${p.time}</span>`:`<span class="card-time" style="color:var(--ink3)">⏰ --:--</span>`}
-              <button class="check-btn${p.done?' checked':''}" title="완료 체크" onclick="event.stopPropagation();togglePlaceDone(${d.id},${p.id})">✓</button>
-              ${!p.done?`<span class="check-label" onclick="event.stopPropagation();togglePlaceDone(${d.id},${p.id})">완료</span>`:''}
+              ${p.done?`<span class="check-label" style="color:var(--accent2);font-weight:700;">✓ 완료</span>`:''}
               <div class="card-actions">
                 <button class="icon-btn danger" title="삭제" onclick="event.stopPropagation();deletePlace(${d.id},${p.id})">✕</button>
               </div>
@@ -498,6 +669,80 @@ function renderTimeline(){
     addStop.appendChild(btn);
   }
   box.appendChild(addStop);
+
+  const walkerDiv=el(`<div class="walker" id="walker" style="display:none">
+    <div class="walker-time" id="walker-time"></div>
+    <div class="walker-emoji">🚶</div>
+  </div>`);
+  box.appendChild(walkerDiv);
+  positionWalker();
+}
+
+// ══════════════════════════════════════════════
+// 자동 완료 & 타임라인 워커(시간에 맞춰 내려오는 캐릭터)
+// ══════════════════════════════════════════════
+function nowMinutes(){ const n=new Date(); return n.getHours()*60+n.getMinutes(); }
+function timeToMinutes(t){
+  if(!t) return null;
+  const m=/^(\d{1,2}):(\d{2})$/.exec(t);
+  if(!m) return null;
+  return Number(m[1])*60+Number(m[2]);
+}
+function applyAutoDone(d){
+  const now=nowMinutes();
+  let changed=false;
+  d.places.forEach(p=>{
+    const t=timeToMinutes(p.time);
+    const shouldDone = t!==null && now>=t;
+    if(!!p.done!==shouldDone){ p.done=shouldDone; changed=true; }
+  });
+  if(changed) autoSave();
+  return changed;
+}
+function positionWalker(){
+  const track=document.getElementById('timeline');
+  const walker=document.getElementById('walker');
+  const timeEl=document.getElementById('walker-time');
+  if(!track||!walker) return;
+  const d=getActive();
+  const pts=[...track.querySelectorAll('.stop-dot[data-time]')]
+    .map(dotEl=>({el:dotEl,t:timeToMinutes(dotEl.dataset.time)}))
+    .filter(pt=>pt.t!==null);
+  if(!d || pts.length===0){ walker.style.display='none'; return; }
+
+  const now=nowMinutes();
+  const trackRect=track.getBoundingClientRect();
+  const yOf=(pEl)=>{
+    const r=pEl.getBoundingClientRect();
+    return (r.top - trackRect.top) + r.height/2;
+  };
+
+  let top;
+  if(now<=pts[0].t){
+    top=yOf(pts[0].el);
+  } else if(now>=pts[pts.length-1].t){
+    top=yOf(pts[pts.length-1].el);
+  } else {
+    let i=0;
+    while(i<pts.length-1 && !(now>=pts[i].t && now<=pts[i+1].t)) i++;
+    const y0=yOf(pts[i].el), y1=yOf(pts[i+1].el);
+    const span=(pts[i+1].t-pts[i].t)||1;
+    const frac=(now-pts[i].t)/span;
+    top=y0+(y1-y0)*frac;
+  }
+  walker.style.display='flex';
+  walker.style.top=top+'px';
+  if(timeEl) timeEl.textContent=nowTimeStr();
+}
+let clockTimer=null;
+function startClock(){
+  if(clockTimer) return;
+  clockTimer=setInterval(()=>{
+    const d=getActive();
+    if(!d) return;
+    if(applyAutoDone(d)){ renderAll(); }
+    else { positionWalker(); }
+  },15000);
 }
 
 function nowTimeStr(){ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
@@ -620,20 +865,11 @@ function undoDelete(){
   const d=getDay(lastDeleted.dayId);
   if(d){
     d.places.splice(lastDeleted.index,0,lastDeleted.place);
-    if(d.id===activeDayId) renderAll(); else renderTabs();
+    if(d.id===activeDayId) renderAll(); else { renderTabs(); autoSave(); }
   }
   lastDeleted=null;
   hideToast();
 }
-function togglePlaceDone(dayId,placeId){
-  const d=getDay(dayId);
-  if(!d)return;
-  const p=d.places.find(pl=>pl.id===placeId);
-  if(!p)return;
-  p.done=!p.done;
-  renderAll();
-}
-
 // ══════════════════════════════════════════════
 // Toast
 // ══════════════════════════════════════════════
@@ -728,18 +964,9 @@ function renderAll(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  if(!(typeof _SAVED_STATE!=='undefined' && _SAVED_STATE)){
-    try{
-      const saved=localStorage.getItem('jeju_planner_v2');
-      if(saved){
-        const s=JSON.parse(saved);
-        days=s.days||days; activeDayId=s.activeDayId||days[0].id;
-        nextId=s.nextId||100; nextDayId=s.nextDayId||days.length+1;
-      }
-    }catch(e){}
-  }
   if(!getActive()) activeDayId=days[0].id;
   renderAll();
+  startClock();
 });
 </script>
 </body>
