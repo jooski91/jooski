@@ -156,9 +156,43 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .chips.app .chip.edit{background:var(--out-bg);color:var(--out);}
 .toast{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%) translateY(14px);background:var(--card3);color:#fff;font-size:12.5px;padding:10px 16px;border-radius:22px;opacity:0;pointer-events:none;transition:all .25s;z-index:100;max-width:92vw;text-align:center;line-height:1.5;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+/* lock */
+.lock{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b));}
+.lock-box{width:min(100%,320px);text-align:center;}
+.lock-t{font-size:16px;font-weight:700;margin-bottom:14px;}
+.lock-box input{width:100%;height:50px;border:1.5px solid var(--line);border-radius:12px;background:var(--card2);padding:0 14px;font-size:18px;text-align:center;letter-spacing:4px;}
+.lock-box input:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
+.lock-box.err input{border-color:var(--out);animation:shake .3s;}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.lk-msg{height:18px;font-size:12px;color:var(--out);margin:8px 0 6px;}
+.lock-box .btn{margin-top:2px;}
 </style>
 </head>
 <body>
+
+<div class="lock" id="lock">
+  <form class="lock-box" id="lk-form" autocomplete="off">
+    <div class="lock-t">암호를 입력하세요</div>
+    <input id="lk-in" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="암호">
+    <div class="lk-msg" id="lk-msg"></div>
+    <button class="btn primary" type="submit">확인</button>
+  </form>
+</div>
+<script>
+(function(){
+  const PIN='1130', KEY='driver_ledger_unlocked';
+  const lock=document.getElementById('lock');
+  try{ if(localStorage.getItem(KEY)==='1'){ lock.remove(); return; } }catch(e){}
+  const form=document.getElementById('lk-form'), inp=document.getElementById('lk-in'), msg=document.getElementById('lk-msg');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(inp.value.trim()===PIN){ try{localStorage.setItem(KEY,'1');}catch(err){} lock.remove(); }
+    else { form.classList.remove('err'); void form.offsetWidth; form.classList.add('err'); msg.textContent='암호가 맞지 않아요'; inp.value=''; inp.focus(); }
+  });
+  inp.addEventListener('input',function(){ msg.textContent=''; form.classList.remove('err'); });
+  setTimeout(()=>inp.focus(),50);
+})();
+</script>
 
 <main>
   <!-- 달력 -->
