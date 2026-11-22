@@ -47,7 +47,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 #m-sum .stat b,#y-sum .stat b{font-size:13.5px;margin-top:2px;}
 #m-sum .note,#y-sum .note{margin-top:8px;font-size:11px;line-height:1.5;}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.quick button{height:46px;border-radius:12px;font-size:14.5px;font-weight:700;}
+.quick button{height:54px;border-radius:12px;font-size:14.5px;font-weight:700;}
 .quick .q-in{background:rgba(93,211,158,.32);color:var(--accent);} .quick .q-out{background:rgba(255,107,107,.32);color:var(--out);}
 .quick button:active{opacity:.8;}
 .mbar .mt{text-align:center;font-size:17px;font-weight:700;}
@@ -130,6 +130,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .memo{width:100%;height:44px;border:1.5px solid var(--line);border-radius:10px;padding:0 12px;font-size:16px;background:var(--card2);margin:8px 0 10px;}
 .memo:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
 .list{margin-top:4px;}
+.add-open{background:var(--in-bg);color:var(--accent);}
 #sh-form.exp .seg button.on,#sh-form.exp .btn.primary,#sh-form.exp .chip.on{background:var(--out);color:#1a0a0a;box-shadow:none;}
 #sh-form.exp input:focus{border-color:var(--out);background:rgba(255,107,107,.06);}
 #sh-form{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
@@ -476,7 +477,8 @@ let sel=null, mode='call', expType='킥보드', selApp='', appEdit=false;
 function parseAmt(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
 function fmtAmt(el){ const n=parseAmt(el.value); el.value=n?n.toLocaleString('ko-KR'):''; }
 
-function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) setTimeout(()=>$('f-amt')&&$('f-amt').focus(),80); }
+let addOpen=false;
+function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) setTimeout(()=>$('f-amt')&&$('f-amt').focus(),80); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
 function closeDay(){ $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
 
@@ -484,6 +486,11 @@ function renderSheet(){
   const [y,m,d]=sel.split('-').map(Number);
   const dow='일월화수목금토'[new Date(y,m-1,d).getDay()];
   $('sh-title').textContent=`${m}월 ${d}일 (${dow})`;
+  if(!addOpen){
+    $('sh-form').className='';
+    $('sh-form').innerHTML='<button class="btn add-open" onclick="openAdd()">기록 추가</button>';
+    renderSheetList(); return;
+  }
   $('sh-form').className=mode==='exp'?'exp':'';
   $('sh-form').innerHTML=`
     <div class="seg">
@@ -498,6 +505,7 @@ function renderSheet(){
   if(mode==='call') renderAppSection();
   renderSheetList();
 }
+function openAdd(){ addOpen=true; renderSheet(); setTimeout(()=>$('f-amt')&&$('f-amt').focus(),50); }
 function setMode(m){ mode=m; appEdit=false; renderSheet(); setTimeout(()=>$('f-amt')&&$('f-amt').focus(),50); }
 function setType(el,t){ expType=t; el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
 
