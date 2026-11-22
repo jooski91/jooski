@@ -478,7 +478,7 @@ function parseAmt(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
 function fmtAmt(el){ const n=parseAmt(el.value); el.value=n?n.toLocaleString('ko-KR'):''; }
 
 let addOpen=false;
-function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) setTimeout(()=>$('f-amt')&&$('f-amt').focus(),80); }
+function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) setTimeout(()=>$('f-amt')&&$('f-amt').focus(),80); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
 function closeDay(){ $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
 
@@ -525,7 +525,7 @@ function renderAppSection(){
 }
 function toggleAppEdit(){ appEdit=!appEdit; renderAppSection(); if(appEdit) setTimeout(()=>$('app-new')&&$('app-new').focus(),50); }
 function pickApp(i){ const a=state.apps[i]; selApp=(selApp===a)?'':a; renderAppSection(); }
-function removeApp(i){ if(selApp===state.apps[i]) selApp=''; state.apps.splice(i,1); touch(); renderAppSection(); renderAppList(); }
+function removeApp(i){ const wasSel=(selApp===state.apps[i]); state.apps.splice(i,1); if(wasSel) selApp=state.apps[0]||''; touch(); renderAppSection(); renderAppList(); }
 function addApp(id){
   const el=$(id); if(!el)return;
   const n=(el.value||'').trim().slice(0,8);
@@ -544,7 +544,7 @@ function renderAppList(){
 
 function addEntry(){
   const amt=parseAmt($('f-amt').value);
-  if(!amt){ $('f-amt').focus(); return; }
+  if(!amt){ closeDay(); return; }
   const memo=$('f-memo').value.trim();
   const r=state.days[sel]=state.days[sel]||{calls:[],exps:[]};
   r.calls=r.calls||[]; r.exps=r.exps||[];
