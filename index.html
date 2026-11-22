@@ -26,7 +26,7 @@ input{font-family:inherit;color:inherit;}
 /* header */
 
 /* views */
-main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(10px + var(--safe-t)) 14px 24px;}
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(0px + var(--safe-t)) 14px 24px;}
 .view{display:none;} .view.on{display:block;}
 
 /* nav */
@@ -35,8 +35,8 @@ nav button{height:52px;font-size:13.5px;font-weight:600;color:var(--ink3);}
 nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
 /* month bar */
-.mbar{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:10px;}
-.mbar button{height:40px;font-size:22px;color:var(--ink2);}
+.mbar{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:6px;}
+.mbar button{height:34px;font-size:22px;color:var(--ink2);}
 .mbar,.ybar{position:relative;}
 .mbar .today-btn,.ybar .today-btn{position:absolute;right:48px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:14px;background:var(--in-bg);color:var(--accent);font-size:12px;font-weight:600;}
 #m-sum,#y-sum{padding:12px;}
@@ -93,7 +93,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .tbl .tot{font-weight:700;border-top:2px solid var(--ink3);}
 .pos{color:var(--in);} .neg{color:var(--out);}
 .ybar{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:6px;}
-.ybar button{height:40px;font-size:22px;color:var(--ink2);}
+.ybar button{height:34px;font-size:22px;color:var(--ink2);}
 .ybar .mt{text-align:center;font-size:17px;font-weight:700;}
 
 /* settings */
