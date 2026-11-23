@@ -691,16 +691,6 @@ window.addEventListener('pageshow',hideCover);
 window.addEventListener('blur',showCover);
 window.addEventListener('focus',hideCover);
 
-// 아이폰: 화면 맨 아래에서 위로 쓸어올리는 순간(앱 목록 제스처) 먼저 가려요. 손을 그냥 떼면 다시 풀어요.
-(function(){
-  let edge=false, sy=0, covered=false;
-  document.addEventListener('touchstart',e=>{ const t=e.touches[0]; edge=t.clientY>=window.innerHeight-30; sy=t.clientY; covered=false; },{passive:true,capture:true});
-  document.addEventListener('touchmove',e=>{ if(!edge||covered) return; if(sy-e.touches[0].clientY>10){ covered=true; showCover(); } },{passive:true,capture:true});
-  document.addEventListener('touchend',()=>{ if(covered){ covered=false; hideCover(); } edge=false; },{capture:true});
-  document.addEventListener('touchcancel',()=>{ edge=false; },{capture:true}); // 시스템이 제스처를 가져가면 가린 채로 둬요
-})();
-window.addEventListener('resize',()=>{ if(document.hidden) showCover(); });
-
 function openTip(){ $('tip-ov').classList.add('on'); }
 function closeTip(){ $('tip-ov').classList.remove('on'); }
 function openPw(){
