@@ -107,7 +107,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .ybar .mt{text-align:center;font-size:17px;font-weight:700;}
 
 /* settings */
-.set-title{text-align:center;font-size:17px;font-weight:700;height:34px;line-height:34px;margin-bottom:6px;}
+.set-title{text-align:left;font-size:20px;font-weight:700;height:40px;line-height:40px;margin-bottom:6px;padding-left:2px;}
 .prof{display:flex;align-items:center;gap:12px;}
 .avatar{width:52px;height:52px;border-radius:50%;background:var(--card2);color:var(--ink);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .avatar.emo{font-size:28px;}
@@ -291,6 +291,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 <main>
   <!-- 달력 -->
   <section class="view on" id="v-cal">
+    <div class="set-title">기록</div>
     <div class="mbar">
       <button onclick="moveMonth(-1)">‹</button>
       <div class="mt" id="m-title"></div>
@@ -310,6 +311,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 연간 -->
   <section class="view" id="v-year">
+    <div class="set-title">연간</div>
     <div class="ybar">
       <button onclick="moveYear(-1)">‹</button>
       <div class="mt" id="y-title"></div>
