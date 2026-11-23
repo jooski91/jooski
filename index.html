@@ -356,7 +356,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   lock.addEventListener('click',function(){ if(unlocked) hide(); }); // 풀린 상태에서 가려진 화면을 탭하면 해제
   // 앱이 다시 보이면 터치 없이 자동 해제 (이벤트가 누락돼도 되돌아오게 주기적으로 확인)
   setInterval(function(){
-    if(unlocked && lock.classList.contains('cover') && lock.style.display!=='none' && !window.__swiping && !document.hidden && document.hasFocus()) hide();
+    if(unlocked && lock.classList.contains('cover') && lock.style.display!=='none' && !window.__swiping && document.visibilityState==='visible') hide();
   },300);
   ['visibilitychange','focus','pageshow'].forEach(function(ev){ window.addEventListener(ev,function(){ if(!document.hidden) window.__swiping=false; }); });
   inp.addEventListener('input',function(){ msg.textContent=''; form.classList.remove('err'); });
@@ -766,7 +766,7 @@ window.addEventListener('focus',hideCover);
   document.addEventListener('touchstart',e=>{ const t=e.touches[0]; edge=t.clientY>=window.innerHeight-30; sy=t.clientY; covered=false; },{passive:true,capture:true});
   document.addEventListener('touchmove',e=>{ if(!edge||covered) return; if(sy-e.touches[0].clientY>10){ covered=true; window.__swiping=true; showCover(); } },{passive:true,capture:true});
   document.addEventListener('touchend',()=>{ if(covered){ covered=false; window.__swiping=false; hideCover(); } edge=false; },{capture:true});
-  document.addEventListener('touchcancel',()=>{ edge=false; },{capture:true}); // 시스템이 제스처를 가져가면 가린 채로 둬요
+  document.addEventListener('touchcancel',()=>{ edge=false; if(covered){ covered=false; setTimeout(()=>{ window.__swiping=false; },700); } },{capture:true}); // 시스템이 제스처를 가져가면 가린 채로 둬요
 })();
 window.addEventListener('resize',()=>{ if(document.hidden) showCover(); });
 
