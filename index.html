@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Ledger">
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="data:image/png;base64,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">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAABmJLR0QA/wD/AP+gvaeTAAAC4ElEQVRogd1au27UQBS99rqAKAkQFJEgJLQFUhoaOn4A8Sf5Bf4B5RtCQ5OKGhoqOiRqhJBAVNECkRKlSORzKLxeezxjb5g7k+z4Ktq1dqP1Ob733JedPXoylZStIHnTGFSW3zQArRWStgOkYOIMxhBCaXugSBv+GEQsiTMoEpfAGLKQOoTySX734bbIIp8t3kWE5WV5evxHeYoB04ZQXkz2j17v7k1BAgABEER1XIIgvhx9+HjwNhDgrmk9sLF9b3dvSstAoj5+/PxpvFShTaNZlomICR0wyYhETHXaQsYKvRAkhCAp7BhiVnt1K2FGS+uyG5TiUQiQRocF0ERRHNNOZC2kcEKPzSGMB9APHSRiFvsABPpxzylF7di1IQSp0079Wmm3y2bFQ8gdRVVwCRHVA+o0igHhXkMUBZjIhgXA+IVM9wMUG7rtkoithLpN6RGAIWBGbOaUPwxK0//Y6Si6A0L0QkMCqMmk0QvZjfSCkv4sfaadyEhZ1kfMfRHJ9CJ2ILcpxRSx2gNscegvaoHwWhaulWiPY61XEFEX4NostNBArwCEUWuxeia2RmCXpqPWgRCV2CUAszFd2bWKUCzoDm+s9FrFvUqxXBDJ9HdoWjiFIOzt0K37d16+eVUCJAFCqgUkqyUkyZL4/fnb98P3XgR0RnMi61o1jk2y2w+26oVp9QaQZWuXuvPi2a93ny7+nv03AaV7lwrAac6iIZPcA8w1Lbban/eODV5nD0UAg/h652Zj++JlITZzzlXKFS45mkN/N4RebA1shxzQDfM7u74XWobPpDRQNMRr+6Jfqxgg0AXWf8ktSuLVb2hbCZaeOQdWpWbp03HkVS3y/jufncy+/lwSRVf46vzH8eXJmQeAbG1zQ+UCkSzP13e2RITSXML5jTG2jqUd4U3EVP90MTsl4HP2tc11b+irYOnfqU/9WYn0n1ZJHP8onthKm8IIslDiIkhexCMIocRF/A+DRIF05aztlgAAAABJRU5ErkJggg==">
 <title>Ledger</title>
@@ -266,6 +267,15 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .splash .sp-name{font-size:22px;font-weight:700;letter-spacing:1.5px;color:var(--ink);animation:spIn .6s cubic-bezier(.2,.8,.2,1) .15s both;}
 @keyframes spIn{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:none;}}
 @keyframes spOut{to{opacity:0;visibility:hidden;pointer-events:none;}}
+/* install banner */
+.inst{position:fixed;left:50%;bottom:calc(16px + var(--safe-b));transform:translate(-50%,24px);width:min(92vw,400px);z-index:350;background:var(--card3);border:1px solid var(--line);border-radius:16px;padding:12px 12px 12px 14px;display:none;align-items:center;gap:10px;opacity:0;transition:opacity .3s,transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+.inst.on{display:flex;}
+.inst.show{opacity:1;transform:translate(-50%,0);}
+.inst .it{flex:1;min-width:0;font-size:12.5px;line-height:1.5;color:var(--ink);}
+.inst .it b{display:block;font-size:13.5px;margin-bottom:1px;}
+.inst .it span{color:var(--ink2);}
+.inst .ib{height:36px;padding:0 16px;border-radius:18px;background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:700;flex-shrink:0;}
+.inst .ix{width:28px;height:28px;border-radius:14px;color:var(--ink3);font-size:18px;line-height:1;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -293,6 +303,32 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     <button type="button" class="linkbtn" id="lk-forgot" style="width:100%;text-align:center;padding:18px 0 0">비밀번호를 잊었어요</button>
   </form>
 </div>
+<div class="inst" id="inst"><div class="it" id="inst-t"></div><button class="ib" id="inst-b" type="button">설치</button><button class="ix" id="inst-x" type="button" aria-label="닫기">×</button></div>
+<script>
+(function(){
+  var box=document.getElementById('inst'), txt=document.getElementById('inst-t'), btn=document.getElementById('inst-b'), x=document.getElementById('inst-x'), KEY='ledger_install_dismissed', dp=null;
+  var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
+  if(standalone) return;
+  try{ if(localStorage.getItem(KEY)==='1') return; }catch(e){}
+  var ua=navigator.userAgent||'';
+  var ios=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  function show(){ setTimeout(function(){ box.classList.add('on'); requestAnimationFrame(function(){ requestAnimationFrame(function(){ box.classList.add('show'); }); }); },2200); }
+  function close(remember){ box.classList.remove('show'); setTimeout(function(){ box.classList.remove('on'); },300); if(remember){ try{ localStorage.setItem(KEY,'1'); }catch(e){} } }
+  x.addEventListener('click',function(){ close(true); });
+  if(ios){
+    var inapp=/KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
+    txt.innerHTML=inapp?'<b>앱처럼 설치할 수 있어요</b><span>Safari로 열어서 공유 버튼 → 홈 화면에 추가를 눌러주세요</span>':'<b>앱처럼 설치할 수 있어요</b><span>아래 공유 버튼(□↑) → 홈 화면에 추가를 눌러주세요</span>';
+    btn.style.display='none';
+    show();
+  } else {
+    btn.textContent='설치';
+    txt.innerHTML='<b>앱으로 설치할 수 있어요</b><span>홈 화면에 추가해서 바로 열 수 있어요</span>';
+    window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); dp=e; show(); });
+    btn.addEventListener('click',function(){ if(!dp) return; dp.prompt(); dp.userChoice.then(function(){ dp=null; close(false); }); });
+    window.addEventListener('appinstalled',function(){ close(true); });
+  }
+})();
+</script>
 <script>
 (function(){
   const DEFAULT_PIN='1130', KEY='driver_ledger_session_ok', PKEY='driver_ledger_pin';
@@ -1070,6 +1106,7 @@ function renderAll(){ renderCal(); renderYear(); renderSettings(); }
 renderAll();
 try{ const sv=sessionStorage.getItem('driver_ledger_view'); if(sv&&sv!=='cal'&&$('v-'+sv)) go(sv); }catch(e){}
 setTimeout(()=>{ const sp=$('splash'); if(sp) sp.remove(); },1900);
+try{ if('serviceWorker' in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register('sw.js'); }catch(e){}
 </script>
 </body>
 </html>
