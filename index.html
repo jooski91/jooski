@@ -359,6 +359,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     if(unlocked && lock.classList.contains('cover') && lock.style.display!=='none' && !window.__swiping && document.visibilityState==='visible') hide();
   },300);
   ['visibilitychange','focus','pageshow'].forEach(function(ev){ window.addEventListener(ev,function(){ if(!document.hidden) window.__swiping=false; }); });
+  lock.addEventListener('touchstart',function(){ if(unlocked){ window.__swiping=false; hide(); } },{passive:true}); // 돌아와서 화면을 닿는 즉시 해제
   inp.addEventListener('input',function(){ msg.textContent=''; form.classList.remove('err'); });
 })();
 </script>
@@ -766,7 +767,7 @@ window.addEventListener('focus',hideCover);
   document.addEventListener('touchstart',e=>{ const t=e.touches[0]; edge=t.clientY>=window.innerHeight-30; sy=t.clientY; covered=false; },{passive:true,capture:true});
   document.addEventListener('touchmove',e=>{ if(!edge||covered) return; if(sy-e.touches[0].clientY>10){ covered=true; window.__swiping=true; showCover(); } },{passive:true,capture:true});
   document.addEventListener('touchend',()=>{ if(covered){ covered=false; window.__swiping=false; hideCover(); } edge=false; },{capture:true});
-  document.addEventListener('touchcancel',()=>{ edge=false; if(covered){ covered=false; setTimeout(()=>{ window.__swiping=false; },700); } },{capture:true}); // 시스템이 제스처를 가져가면 가린 채로 둬요
+  document.addEventListener('touchcancel',()=>{ edge=false; if(covered){ covered=false; } },{capture:true}); // __swiping은 유지: 앱 전환 화면에서는 돌아올 때까지(포커스/터치) 계속 가려요 // 시스템이 제스처를 가져가면 가린 채로 둬요
 })();
 window.addEventListener('resize',()=>{ if(document.hidden) showCover(); });
 
