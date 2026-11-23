@@ -207,7 +207,9 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .item.app{grid-template-columns:1fr 68px;}
 .item.app .del{height:38px;font-size:13.5px;border-radius:10px;}
 .item .tx{display:block;font-size:11px;color:var(--out);font-weight:600;margin-top:1px;text-align:right;}
-.rsv-prev{font-size:12px;color:var(--out);text-align:right;margin:6px 2px 0;min-height:16px;font-variant-numeric:tabular-nums;}
+.rsv-prev{font-size:12px;color:var(--out);text-align:right;margin:6px 2px 0;font-variant-numeric:tabular-nums;}
+.rsv-prev:empty{display:none;}
+#sh-form:has(.rsv-prev:not(:empty)) .btn-row{margin-top:6px;}
 .item .amt{font-weight:700;font-variant-numeric:tabular-nums;font-size:14.5px;}
 .del{height:32px;border-radius:8px;background:var(--card3);font-size:12px;font-weight:600;color:rgba(235,235,245,.88);}
 .empty-l{font-size:12.5px;color:var(--ink3);padding:14px 0;text-align:center;}
@@ -218,8 +220,8 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 #app-sec .addrow{margin-bottom:12px;}
 .addrow input{flex:1;min-width:0;height:44px;border:1.5px solid var(--line);border-radius:10px;padding:0 12px;font-size:16px;background:var(--card2);}
 .addrow input:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
-.app-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);font-weight:600;margin:12px 0 6px;}
-.chips.app{margin:0 0 4px;}
+.app-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);font-weight:600;margin:10px 0 6px;}
+.chips.app{margin:10px 0;}
 .chips.app .chip{font-size:13px;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chips.app .chip.on{background:var(--accent);color:var(--on-accent);}
 .chips.app .chip.edit{background:var(--out-bg);color:var(--out);}
@@ -919,13 +921,13 @@ function setType(el,t){ expType=t; el.parentNode.querySelectorAll('.chip').forEa
 function renderAppSection(){
   const box=$('app-sec'); if(!box)return;
   const apps=state.apps;
-  let h=`<div class="app-h"><span>앱 선택</span><button class="mini" onclick="toggleAppEdit()">${appEdit?'완료':'편집'}</button></div>`;
+  let h='';
   if(apps.length){
     h+='<div class="chips app">'+apps.map((a,i)=>appEdit
       ?`<button class="chip edit" onclick="removeApp(${i})">${esc(a)} ×</button>`
       :`<button class="chip ${a===selApp?'on':''}" onclick="pickApp(${i})">${esc(a)}</button>`).join('')+'</div>';
   } else {
-    h+='<div class="empty-l" style="padding:8px 0">편집을 눌러 앱을 추가하면 어떤 콜인지 기록할 수 있어요</div>';
+    h+='<div class="empty-l" style="padding:8px 0">설정에서 앱을 추가하면 어떤 콜인지 기록할 수 있어요</div>';
   }
   if(appEdit) h+='<div class="addrow"><input id="app-new" maxlength="8" placeholder="앱 이름" onkeydown="if(event.key===\'Enter\')addApp(\'app-new\')"><button class="mini wide" onclick="addApp(\'app-new\')">추가</button></div>';
   box.innerHTML=h;
