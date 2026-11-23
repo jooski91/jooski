@@ -30,7 +30,8 @@ input{font-family:inherit;color:inherit;}
 main{flex:1;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding:calc(0px + var(--safe-t)) 14px 24px;}
 .view{display:none;} .view.on{display:block;}
 /* 기록 탭: 화면에 딱 맞추고 남는 높이는 달력이 채움 */
-#v-cal.on{display:flex;flex-direction:column;height:calc(100dvh - 54px - var(--safe-b) - var(--safe-t) - 24px);min-height:470px;}
+#v-cal.on{display:flex;flex-direction:column;height:calc(100dvh - 54px - var(--safe-b) - var(--safe-t) - 24px);}
+main:has(#v-cal.on){overflow:hidden;}
 #v-cal>*{flex-shrink:0;}
 #v-cal>.cal{flex:1 1 0;min-height:0;display:flex;flex-direction:column;}
 #v-cal .cal-g{flex:1;min-height:0;grid-auto-rows:minmax(0,1fr);}
@@ -336,7 +337,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   <!-- 달력 -->
   <section class="view on" id="v-cal">
     <div class="set-title"><span class="tp"></span><span>기록</span></div>
-    <div class="card" id="m-sum" style="margin:0 0 12px"></div>
     <div class="mbar">
       <button onclick="moveMonth(-1)">‹</button>
       <div class="mt" id="m-title"></div>
@@ -351,6 +351,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <button class="q-in" onclick="quickAdd('call')">수익</button>
       <button class="q-out" onclick="quickAdd('exp')">지출</button>
     </div>
+    <div class="card" id="m-sum"></div>
   </section>
 
   <!-- 연간 -->
