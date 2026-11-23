@@ -115,8 +115,11 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .avatar{width:52px;height:52px;border-radius:50%;background:var(--card2);color:var(--ink);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .avatar.emo{font-size:28px;}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.tp{display:flex;align-items:center;gap:8px;min-width:0;}
-.tp .tn{font-size:12px;font-weight:600;color:var(--ink2);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;}
+.tp{display:flex;align-items:center;gap:8px;min-width:0;flex:1;margin-right:10px;}
+.set-title>span:last-child{margin-left:auto;}
+.tp .tt{display:flex;align-items:baseline;gap:6px;min-width:0;flex:1;}
+.tp .tn{font-size:13px;font-weight:600;color:var(--ink);max-width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.1;}
+.tp .ts{font-size:10.5px;font-weight:500;color:var(--ink3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.1;}
 .avatar.sm{width:28px;height:28px;font-size:14px;}
 .avatar.sm.emo{font-size:16px;}
 .avatar.big{width:84px;height:84px;margin:4px auto 14px;}
@@ -302,7 +305,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 <main>
   <!-- 달력 -->
   <section class="view on" id="v-cal">
-    <div class="set-title"><span>기록</span><span class="tp"></span></div>
+    <div class="set-title"><span class="tp"></span><span>기록</span></div>
     <div class="mbar">
       <button onclick="moveMonth(-1)">‹</button>
       <div class="mt" id="m-title"></div>
@@ -322,7 +325,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 연간 -->
   <section class="view" id="v-year">
-    <div class="set-title"><span>연간</span><span class="tp"></span></div>
+    <div class="set-title"><span class="tp"></span><span>연간</span></div>
     <div class="ybar">
       <button onclick="moveYear(-1)">‹</button>
       <div class="mt" id="y-title"></div>
@@ -338,7 +341,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 설정 -->
   <section class="view" id="v-set">
-    <div class="set-title"><span>설정</span><span class="tp"></span></div>
+    <div class="set-title"><span>설정</span></div>
     <div class="card" style="margin-top:0">
       <div class="prof">
         <div class="avatar" id="s-avatar"></div>
@@ -755,9 +758,15 @@ function renderSettings(){
   { const nk=state.settings.nick||'', nm=$('s-nickname');
     document.querySelectorAll('.tp').forEach(el=>{
       el.innerHTML=''; const av=state.settings.avatar;
-      if(!nk&&!av) return;
-      if(nk){ const n=document.createElement('span'); n.className='tn'; n.textContent=nk; el.appendChild(n); }
+      const st=state.settings.status||'';
+      if(!nk&&!av&&!st) return;
       const a=document.createElement('div'); a.className='avatar sm'; setAvatar(a,av); el.appendChild(a);
+      if(nk||st){
+        const t=document.createElement('div'); t.className='tt';
+        if(nk){ const n=document.createElement('span'); n.className='tn'; n.textContent=nk; t.appendChild(n); }
+        if(st){ const x=document.createElement('span'); x.className='ts'; x.textContent=st; t.appendChild(x); }
+        el.appendChild(t);
+      }
     });
     setAvatar($('s-avatar'),state.settings.avatar); $('s-status').textContent=state.settings.status||'';
     nm.textContent=nk||'닉네임을 설정해 주세요'; nm.classList.toggle('none',!nk); }
