@@ -58,6 +58,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .mbar,.ybar{position:relative;}
 .mbar .today-btn,.ybar .today-btn{position:absolute;right:48px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:14px;background:var(--in-bg);color:var(--accent);font-size:12px;font-weight:600;}
 #m-sum,#y-sum{padding:12px;}
+#v-cal #m-sum{margin-top:0;margin-bottom:10px;}
 #m-sum h2,#y-sum h2{margin-bottom:8px;}
 #m-sum .grid2,#y-sum .grid2{grid-template-columns:repeat(3,1fr);gap:6px;}
 #m-sum .stat,#y-sum .stat{padding:7px 9px;border-radius:9px;}
@@ -383,6 +384,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <button onclick="moveMonth(1)">›</button>
       <button class="today-btn" id="m-today" onclick="goToday()" style="display:none">오늘</button>
     </div>
+    <div class="card" id="m-sum"></div>
     <div class="cal">
       <div class="cal-h"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
       <div class="cal-g" id="cal-g"></div>
@@ -391,7 +393,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <button class="q-in" onclick="quickAdd('call')">수익</button>
       <button class="q-out" onclick="quickAdd('exp')">지출</button>
     </div>
-    <div class="card" id="m-sum"></div>
   </section>
 
   <!-- 연간 -->
@@ -684,7 +685,6 @@ function renderCal(){
 
   const s=monthStats(cy,cm), rsv=monthReserve(cy,cm), cum=cumTax(cy,cm).tax;
   $('m-sum').innerHTML=`
-    <h2>${cm}월 결산</h2>
     <div class="grid2">
       <div class="stat"><small>총 수익</small><b>${won(s.inc)}원</b></div>
       <div class="stat"><small>총 지출</small><b class="neg">${mwon(s.exp)}원</b></div>
