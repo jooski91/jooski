@@ -267,15 +267,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .splash .sp-name{font-size:22px;font-weight:700;letter-spacing:1.5px;color:var(--ink);animation:spIn .6s cubic-bezier(.2,.8,.2,1) .15s both;}
 @keyframes spIn{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:none;}}
 @keyframes spOut{to{opacity:0;visibility:hidden;pointer-events:none;}}
-/* install banner */
-.inst{position:fixed;left:50%;bottom:calc(16px + var(--safe-b));transform:translate(-50%,24px);width:min(92vw,400px);z-index:350;background:var(--card3);border:1px solid var(--line);border-radius:16px;padding:12px 12px 12px 14px;display:none;align-items:center;gap:10px;opacity:0;transition:opacity .3s,transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.5);}
-.inst.on{display:flex;}
-.inst.show{opacity:1;transform:translate(-50%,0);}
-.inst .it{flex:1;min-width:0;font-size:12.5px;line-height:1.5;color:var(--ink);}
-.inst .it b{display:block;font-size:13.5px;margin-bottom:1px;}
-.inst .it span{color:var(--ink2);}
-.inst .ib{height:36px;padding:0 16px;border-radius:18px;background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:700;flex-shrink:0;}
-.inst .ix{width:28px;height:28px;border-radius:14px;color:var(--ink3);font-size:18px;line-height:1;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -303,32 +294,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     <button type="button" class="linkbtn" id="lk-forgot" style="width:100%;text-align:center;padding:18px 0 0">비밀번호를 잊었어요</button>
   </form>
 </div>
-<div class="inst" id="inst"><div class="it" id="inst-t"></div><button class="ib" id="inst-b" type="button">설치</button><button class="ix" id="inst-x" type="button" aria-label="닫기">×</button></div>
-<script>
-(function(){
-  var box=document.getElementById('inst'), txt=document.getElementById('inst-t'), btn=document.getElementById('inst-b'), x=document.getElementById('inst-x'), KEY='ledger_install_dismissed', dp=null;
-  var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
-  if(standalone) return;
-  try{ if(localStorage.getItem(KEY)==='1') return; }catch(e){}
-  var ua=navigator.userAgent||'';
-  var ios=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  function show(){ setTimeout(function(){ box.classList.add('on'); requestAnimationFrame(function(){ requestAnimationFrame(function(){ box.classList.add('show'); }); }); },2200); }
-  function close(remember){ box.classList.remove('show'); setTimeout(function(){ box.classList.remove('on'); },300); if(remember){ try{ localStorage.setItem(KEY,'1'); }catch(e){} } }
-  x.addEventListener('click',function(){ close(true); });
-  if(ios){
-    var inapp=/KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
-    txt.innerHTML=inapp?'<b>앱처럼 설치할 수 있어요</b><span>Safari로 열어서 공유 버튼 → 홈 화면에 추가를 눌러주세요</span>':'<b>앱처럼 설치할 수 있어요</b><span>아래 공유 버튼(□↑) → 홈 화면에 추가를 눌러주세요</span>';
-    btn.style.display='none';
-    show();
-  } else {
-    btn.textContent='설치';
-    txt.innerHTML='<b>앱으로 설치할 수 있어요</b><span>홈 화면에 추가해서 바로 열 수 있어요</span>';
-    window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); dp=e; show(); });
-    btn.addEventListener('click',function(){ if(!dp) return; dp.prompt(); dp.userChoice.then(function(){ dp=null; close(false); }); });
-    window.addEventListener('appinstalled',function(){ close(true); });
-  }
-})();
-</script>
 <script>
 (function(){
   const DEFAULT_PIN='1130', KEY='driver_ledger_session_ok', PKEY='driver_ledger_pin';
