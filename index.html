@@ -35,11 +35,11 @@ nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);bord
 nav button{height:52px;font-size:13.5px;font-weight:600;color:var(--ink3);}
 nav button#lock-btn{color:var(--ink3);opacity:.7;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}
 nav button#lock-btn.hold{color:var(--accent);opacity:1;}
-.lk-hint{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%);min-width:170px;overflow:hidden;background:var(--card3);color:#fff;font-size:13.5px;font-weight:700;padding:12px 22px;border-radius:24px;box-shadow:inset 0 0 0 1px var(--line);opacity:0;pointer-events:none;z-index:400;text-align:center;transition:opacity .15s;}
-.lk-hint.on{opacity:1;}
-.lk-hint::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(93,211,158,.6);transition:width 0s;}
-.lk-hint.fill::before{width:100%;transition:width .5s linear;}
-.lk-hint span{position:relative;z-index:1;}
+.hold-hint{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%);min-width:170px;overflow:hidden;background:var(--card3);color:#fff;font-size:13.5px;font-weight:700;padding:12px 22px;border-radius:24px;box-shadow:inset 0 0 0 1px var(--line);opacity:0;pointer-events:none;z-index:400;text-align:center;transition:opacity .15s;}
+.hold-hint.on{opacity:1;}
+.hold-hint::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(93,211,158,.6);transition:width 0s;}
+.hold-hint.fill::before{width:100%;transition:width .5s linear;}
+.hold-hint span{position:relative;z-index:1;}
 nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
 /* month bar */
@@ -493,7 +493,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 </div>
 <div class="spin" id="spin"><i></i></div>
 <div class="toast" id="toast"></div>
-<div class="lk-hint" id="lk-hint"><span>길게 누르면 잠김</span></div>
+<div class="hold-hint" id="hold-hint"><span>길게 누르면 잠김</span></div>
 
 <script>
 // ───────── 순수 계산 함수 ─────────
@@ -739,7 +739,7 @@ function changePin(){
 
 // ───────── 잠금 버튼: 길게 눌러야 잠겨요 (실수로 누르는 것 방지) ─────────
 (function(){
-  const b=$('lock-btn'), hint=$('lk-hint'); let t=null, ht=null, fired=false;
+  const b=$('lock-btn'), hint=$('hold-hint'); let t=null, ht=null, fired=false;
   const HOLD=500;
   function start(e){ fired=false; b.classList.add('hold'); clearTimeout(t); clearTimeout(ht); hint.classList.remove('fill'); hint.classList.add('on'); void hint.offsetWidth; hint.classList.add('fill'); t=setTimeout(()=>{ fired=true; b.classList.remove('hold'); hint.classList.remove('on','fill'); if(navigator.vibrate) try{navigator.vibrate(30);}catch(_){} window.appLock.lockNow(); },HOLD); }
   function cancel(){ clearTimeout(t); b.classList.remove('hold'); hint.classList.remove('fill'); clearTimeout(ht); ht=setTimeout(()=>hint.classList.remove('on'),900); }
