@@ -613,7 +613,7 @@ function focusAmt(){
   go(); setTimeout(go,120);
 }
 let addOpen=false;
-function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) focusAmt(); }
+function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(addOpen) focusAmt(); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
 function closeDay(){ $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
 
