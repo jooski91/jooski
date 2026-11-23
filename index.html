@@ -651,7 +651,7 @@ function renderYear(){
 
 // 월별 실수령(막대) + 누적(꺾은선) 복합 차트, 금액은 만원 단위로 표시
 function drawYearChart(rows){
-  const W=360,H=210,pl=6,pr=6,top=36,bot=20, ph=H-top-bot, cw=(W-pl-pr)/12, bw=cw*0.58;
+  const W=360,H=168,pl=6,pr=6,top=36,bot=20, ph=H-top-bot, cw=(W-pl-pr)/12, bw=cw*0.58;
   let last=0; rows.forEach(x=>{ if(x.s.n>0||x.s.inc>0||x.s.exp>0) last=x.m; });
   let c=0; const cums=rows.map(x=>(c+=x.take));
   const vals=rows.map(x=>x.take).concat(cums.slice(0,last));
