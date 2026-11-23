@@ -995,8 +995,8 @@ function addEntry(keep){
   const r=state.days[sel]=state.days[sel]||{calls:[],exps:[]};
   r.calls=r.calls||[]; r.exps=r.exps||[];
   const id=uid();
-  if(mode==='call') r.calls.push({id,amt,memo,app:selApp});
-  else r.exps.push({id,type:expType,amt,memo});
+  if(mode==='call') r.calls.push({id,amt,memo,app:selApp,ts:Date.now()});
+  else r.exps.push({id,type:expType,amt,memo,ts:Date.now()});
   touch();
   const label=mode==='call'?(selApp||'콜'):expType;
   if(keep){ draftIds.push(id); $('f-amt').value=''; previewReserve(); renderSheetList(); renderAll(); toast(`${label} ${won(amt)}원 추가했어요`); focusAmt(); return; }
@@ -1026,13 +1026,20 @@ function saveMemo(){
   if(x){ x.memo=v; touch(); }
   renderSheetList();
 }
+function tsLabel(ts){
+  if(!ts) return '';
+  const d=new Date(ts), h=d.getHours();
+  const t=`${h<12?'오전':'오후'} ${h%12||12}:${pad(d.getMinutes())}`;
+  const same=keyOf(d.getFullYear(),d.getMonth()+1,d.getDate())===sel;
+  return same?t:`${d.getMonth()+1}/${d.getDate()} ${t}`;
+}
 function renderSheetList(){
   const t=dayTotals(sel), r=state.days[sel]||{calls:[],exps:[]};
   const [sy,sm]=sel.split('-').map(Number), rate=monthRate(sy,sm);
   const dayRsv=(r.calls||[]).reduce((a,x)=>a+callReserve(x.amt,sy,sm),0);
   $('sh-sum').textContent=`수익 ${won(t.inc)}원 · 지출 ${mwon(t.exp)}원 · 순수익 ${won(t.net)}원`+(t.n?` · 세금적립 약 ${won(dayRsv)}원`:'');
-  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.app?esc(x.app):'콜'}</small></div>${memoCell('call',x)}<div><div class="amt pos">+${won(x.amt)}</div><span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
-  const exps=(r.exps||[]).map(x=>`<div class="item"><div class="l"><b>지출</b><small>${esc(x.type)}</small></div>${memoCell('exp',x)}<div class="amt neg">-${won(x.amt)}</div><button class="del" onclick="delEntry('exp','${x.id}')">삭제</button></div>`).join('');
+  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.ts?tsLabel(x.ts)+' · ':''}${x.app?esc(x.app):'콜'}</small></div>${memoCell('call',x)}<div><div class="amt pos">+${won(x.amt)}</div><span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
+  const exps=(r.exps||[]).map(x=>`<div class="item"><div class="l"><b>지출</b><small>${x.ts?tsLabel(x.ts)+' · ':''}${esc(x.type)}</small></div>${memoCell('exp',x)}<div class="amt neg">-${won(x.amt)}</div><button class="del" onclick="delEntry('exp','${x.id}')">삭제</button></div>`).join('');
   $('sh-list').innerHTML=(calls||exps)?`${calls?`<h4>콜 ${r.calls.length}건</h4>${calls}`:''}${exps?`<h4 style="margin-top:12px">지출 ${r.exps.length}건</h4>${exps}`:''}`:'<div class="empty-l">아직 기록이 없어요</div>';
 }
 
