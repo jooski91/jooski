@@ -162,7 +162,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 /* sheet */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;}
 .ov.on{opacity:1;pointer-events:auto;}
-.sheet{position:fixed;left:50%;top:50%;width:min(92vw,420px);max-height:85dvh;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;transform:translate(-50%,-47%) scale(.96);opacity:0;pointer-events:none;transition:transform .2s,opacity .2s;z-index:60;padding:18px 16px;}
+.sheet{position:fixed;left:50%;top:calc(var(--vvt,0px) + var(--vvh,100%) / 2);width:min(92vw,420px);max-height:calc(var(--vvh,100dvh) * .92);overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;transform:translate(-50%,-47%) scale(.96);opacity:0;pointer-events:none;transition:transform .2s,opacity .2s,top .15s;z-index:60;padding:18px 16px;}
 .sheet.on{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto;}
 .grab{display:none;}
 .sh-top{display:flex;align-items:center;margin-bottom:4px;}
@@ -179,10 +179,24 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 #sh-form.exp .seg button.on,#sh-form.exp .btn.primary,#sh-form.exp .chip.on{background:var(--out);color:#1a0a0a;box-shadow:none;}
 #sh-form.exp input:focus{border-color:var(--out);background:rgba(255,107,107,.06);}
 #sh-form{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+#sh-form .seg button{height:34px;border-radius:9px;font-size:13px;}
+#sh-form .seg button.on{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+#sh-form.exp .seg button.on{background:var(--card2);color:var(--out);box-shadow:inset 0 0 0 1.5px var(--out);}
+#sh-form .chips.app .chip.on{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+#sh-form.exp .chip.on{background:var(--card2);color:var(--out);box-shadow:inset 0 0 0 1.5px var(--out);}
 .list h4{font-size:12px;color:var(--ink3);font-weight:600;margin-bottom:4px;}
 .item{display:grid;grid-template-columns:auto minmax(0,1fr) auto 52px;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);}
 .item .l b{font-size:14px;display:block;} .item .l small{font-size:11.5px;color:var(--ink2);}
 .item .memo-c{font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.item .memo-c.tap{cursor:pointer;}
+.memo-add{justify-self:start;height:26px;padding:0 9px;border-radius:8px;background:none;box-shadow:inset 0 0 0 1px var(--line);font-size:11.5px;font-weight:600;color:var(--ink3);}
+.memo-in{width:100%;min-width:0;height:34px;border:1.5px solid var(--accent);border-radius:8px;padding:0 8px;font-size:16px;background:rgba(93,211,158,.06);}
+.memo-in:focus{outline:none;}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+#f-amt.err{border-color:var(--out);animation:shake .3s;} #f-amt.err::placeholder{color:var(--out);}
+.btn-row .btn{margin-top:0;}
+#sh-form .btn.add-more{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+#sh-form.exp .btn.add-more{color:var(--out);box-shadow:inset 0 0 0 1.5px var(--out);}
 .item.app{grid-template-columns:1fr 68px;}
 .item.app .del{height:38px;font-size:13.5px;border-radius:10px;}
 .item .tx{display:block;font-size:11px;color:var(--out);font-weight:600;margin-top:1px;text-align:right;}
@@ -844,9 +858,30 @@ function focusAmt(){
   go(); setTimeout(go,120);
 }
 let addOpen=false;
-function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(addOpen) focusAmt(); }
+// 키패드가 올라오면 보이는 화면 크기에 맞춰 입력 시트를 위로 옮기고, 입력칸이 가려지지 않게 스크롤
+(function(){
+  const vv=window.visualViewport; if(!vv) return;
+  const root=document.documentElement.style;
+  function upd(){
+    root.setProperty('--vvh',vv.height+'px'); root.setProperty('--vvt',vv.offsetTop+'px');
+    const sh=$('sheet'), a=document.activeElement;
+    if(sh&&sh.classList.contains('on')&&a&&sh.contains(a)&&/^(INPUT|TEXTAREA)$/.test(a.tagName)) setTimeout(()=>{ try{ a.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){} },60);
+  }
+  vv.addEventListener('resize',upd); vv.addEventListener('scroll',upd); upd();
+})();
+function openDay(k,md){ draftIds=[]; sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(addOpen) focusAmt(); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
-function closeDay(){ $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
+// '추가'로 넣은 기록은 '저장'을 눌러야 남고, 그냥 닫으면 버려요
+let draftIds=[];
+function discardDrafts(){
+  const ids=draftIds; draftIds=[];
+  if(!ids.length||!sel) return;
+  const r=state.days[sel]; if(!r) return;
+  r.calls=(r.calls||[]).filter(x=>!ids.includes(x.id)); r.exps=(r.exps||[]).filter(x=>!ids.includes(x.id));
+  if(!r.calls.length&&!r.exps.length) delete state.days[sel];
+  touch(); renderAll();
+}
+function closeDay(){ discardDrafts(); $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
 
 function renderSheet(){
   const [y,m,d]=sel.split('-').map(Number);
@@ -866,8 +901,7 @@ function renderSheet(){
     ${mode==='exp'?`<div class="chips">${TYPES.map(t=>`<button class="chip ${t===expType?'on':''}" onclick="setType(this,'${t}')">${t}</button>`).join('')}</div>`:'<div id="app-sec"></div>'}
     <div class="frow"><input id="f-amt" inputmode="numeric" placeholder="금액 직접 입력" oninput="fmtAmt(this);previewReserve()"><span class="unit">원</span></div>
     ${mode==='call'?'<div class="rsv-prev" id="rsv-prev"></div>':''}
-    <input id="f-memo" class="memo" placeholder="${mode==='call'?'메모 (출발지, 도착지 등 선택)':'메모 (선택)'}">
-    <button class="btn primary" onclick="addEntry()">추가</button>`;
+    <div class="btn-row"><button class="btn add-more" onclick="addEntry(true)">추가</button><button class="btn primary" onclick="addEntry()">저장</button></div>`;
   if(mode==='call') renderAppSection();
   renderSheetList();
 }
@@ -908,18 +942,27 @@ function renderAppList(){
     :'<div class="empty-l">등록된 앱이 없어요</div>';
 }
 
-function addEntry(){
+function addEntry(keep){
   const amt=parseAmt($('f-amt').value);
-  if(!amt){ closeDay(); return; }
-  const memo=$('f-memo').value.trim();
+  if(!amt){
+    if(keep){
+      const fa=$('f-amt'); fa.classList.add('err'); fa.placeholder='금액을 입력하세요';
+      setTimeout(()=>{ fa.classList.remove('err'); fa.placeholder='금액 직접 입력'; },1500);
+      toast('금액을 입력하세요'); focusAmt();
+    } else { draftIds=[]; closeDay(); }
+    return;
+  }
+  const memo='';
   const r=state.days[sel]=state.days[sel]||{calls:[],exps:[]};
   r.calls=r.calls||[]; r.exps=r.exps||[];
-  if(mode==='call') r.calls.push({id:uid(),amt,memo,app:selApp});
-  else r.exps.push({id:uid(),type:expType,amt,memo});
+  const id=uid();
+  if(mode==='call') r.calls.push({id,amt,memo,app:selApp});
+  else r.exps.push({id,type:expType,amt,memo});
   touch();
   const label=mode==='call'?(selApp||'콜'):expType;
-  closeDay(); renderAll();
-  toast(`${label} ${won(amt)}원 추가했어요`);
+  if(keep){ draftIds.push(id); $('f-amt').value=''; previewReserve(); renderSheetList(); renderAll(); toast(`${label} ${won(amt)}원 추가했어요`); focusAmt(); return; }
+  draftIds=[]; closeDay(); renderAll();
+  toast(`${label} ${won(amt)}원 저장했어요`);
 }
 function delEntry(kind,id){
   const r=state.days[sel]; if(!r)return;
@@ -927,13 +970,30 @@ function delEntry(kind,id){
   if(!(r.calls||[]).length && !(r.exps||[]).length) delete state.days[sel];
   touch(); renderSheetList(); renderAll();
 }
+// 기록 목록에서 메모 추가/수정 (탭 → 입력칸 → 엔터 또는 다른 곳 터치하면 저장)
+let memoEdit=null;
+function memoCell(kind,x){
+  if(memoEdit&&memoEdit.kind===kind&&memoEdit.id===x.id)
+    return `<input id="memo-in" class="memo-in" maxlength=60 placeholder="메모 (출발지, 도착지 등)" value="${esc(x.memo)}" onkeydown="if(event.key==='Enter')this.blur()" onblur="saveMemo()">`;
+  if(x.memo) return `<div class="memo-c tap" onclick="editMemo('${kind}','${x.id}')">${esc(x.memo)}</div>`;
+  return `<button class="memo-add" onclick="editMemo('${kind}','${x.id}')">+ 메모</button>`;
+}
+function editMemo(kind,id){ memoEdit={kind,id}; renderSheetList(); const i=$('memo-in'); if(i){ try{ i.focus(); }catch(e){} } }
+function saveMemo(){
+  if(!memoEdit||!sel){ memoEdit=null; return; }
+  const {kind,id}=memoEdit; memoEdit=null;
+  const i=$('memo-in'), v=i?i.value.trim():'';
+  const r=state.days[sel]||{}, arr=(kind==='call'?r.calls:r.exps)||[], x=arr.find(e=>e.id===id);
+  if(x){ x.memo=v; touch(); }
+  renderSheetList();
+}
 function renderSheetList(){
   const t=dayTotals(sel), r=state.days[sel]||{calls:[],exps:[]};
   const [sy,sm]=sel.split('-').map(Number), rate=monthRate(sy,sm);
   const dayRsv=(r.calls||[]).reduce((a,x)=>a+callReserve(x.amt,sy,sm),0);
   $('sh-sum').textContent=`수익 ${won(t.inc)}원 · 지출 ${mwon(t.exp)}원 · 순수익 ${won(t.net)}원`+(t.n?` · 세금적립 약 ${won(dayRsv)}원`:'');
-  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.app?esc(x.app):'콜'}</small></div><div class="memo-c">${x.memo?esc(x.memo):''}</div><div><div class="amt pos">+${won(x.amt)}</div><span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
-  const exps=(r.exps||[]).map(x=>`<div class="item"><div class="l"><b>지출</b><small>${esc(x.type)}</small></div><div class="memo-c">${x.memo?esc(x.memo):''}</div><div class="amt neg">-${won(x.amt)}</div><button class="del" onclick="delEntry('exp','${x.id}')">삭제</button></div>`).join('');
+  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.app?esc(x.app):'콜'}</small></div>${memoCell('call',x)}<div><div class="amt pos">+${won(x.amt)}</div><span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
+  const exps=(r.exps||[]).map(x=>`<div class="item"><div class="l"><b>지출</b><small>${esc(x.type)}</small></div>${memoCell('exp',x)}<div class="amt neg">-${won(x.amt)}</div><button class="del" onclick="delEntry('exp','${x.id}')">삭제</button></div>`).join('');
   $('sh-list').innerHTML=(calls||exps)?`${calls?`<h4>콜 ${r.calls.length}건</h4>${calls}`:''}${exps?`<h4 style="margin-top:12px">지출 ${r.exps.length}건</h4>${exps}`:''}`:'<div class="empty-l">아직 기록이 없어요</div>';
 }
 
