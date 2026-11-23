@@ -80,6 +80,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .stat b{display:block;font-size:16px;margin-top:3px;font-variant-numeric:tabular-nums;}
 .stat.tax{background:var(--out-bg);} .stat.tax b{color:var(--out);}
 .stat.net{background:var(--in-bg);} .stat.net b{color:var(--in);}
+.note:empty{display:none;}
 .note{font-size:11.5px;color:var(--ink3);line-height:1.6;margin-top:10px;}
 
 /* annual */
@@ -107,6 +108,20 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
 /* settings */
 .set-title{text-align:center;font-size:17px;font-weight:700;height:34px;line-height:34px;margin-bottom:6px;}
+.prof{display:flex;align-items:center;gap:12px;}
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--card2);color:var(--ink);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+.avatar.emo{font-size:28px;}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.avatar.big{width:84px;height:84px;margin:4px auto 14px;}
+.avatar.big.emo{font-size:44px;}
+.emo-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0;}
+.emo-grid button{height:44px;border-radius:10px;background:var(--card2);font-size:22px;}
+.emo-grid button:active{background:var(--in-bg);}
+.prof .pn{flex:1;min-width:0;}
+.prof .pn b{display:block;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prof .pn b.none{color:var(--ink3);font-weight:600;}
+.prof .pn small:empty{display:none;}
+.prof .pn small{display:block;font-size:11.5px;color:var(--ink2);margin-top:2px;}
 .srow{padding:12px 0;border-bottom:1px solid var(--line);}
 .srow:last-child{border-bottom:none;}
 .srow label{display:block;font-size:13.5px;font-weight:600;margin-bottom:3px;}
@@ -167,7 +182,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .chips.app .chip{font-size:13px;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chips.app .chip.on{background:var(--accent);color:var(--on-accent);}
 .chips.app .chip.edit{background:var(--out-bg);color:var(--out);}
-.toast{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%) translateY(14px);background:var(--card3);color:#fff;font-size:12.5px;padding:10px 16px;border-radius:22px;opacity:0;pointer-events:none;transition:all .25s;z-index:100;max-width:92vw;text-align:center;line-height:1.5;}
+.toast{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%) translateY(14px);background:var(--card3);color:#fff;font-size:12.5px;padding:10px 16px;border-radius:22px;opacity:0;pointer-events:none;transition:all .25s;z-index:400;max-width:92vw;text-align:center;line-height:1.5;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 .linkbtn{display:block;font-size:12.5px;font-weight:600;color:var(--accent);padding:2px 0 10px;}
 .tip-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -190,6 +205,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .lock-secret{display:none;font-size:22px;font-weight:700;letter-spacing:1px;color:var(--ink3);}
 .lock.cover .lock-box{display:none;}
 .lock.cover .lock-secret{display:block;}
+.lk-hint{display:none;text-align:right;font-size:12px;color:var(--ink3);margin:8px 2px 0;}
 .lk-msg{height:18px;font-size:12px;color:var(--out);margin:8px 0 6px;}
 .lock-box .btn{margin-top:2px;}
 </style>
@@ -199,10 +215,12 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 <div class="lock" id="lock">
   <div class="lock-secret">Secret mode</div>
   <form class="lock-box" id="lk-form" autocomplete="off">
-    <div class="lock-t">암호를 입력하세요</div>
-    <input id="lk-in" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="암호">
+    <div class="lock-t">비밀번호를 입력하세요</div>
+    <input id="lk-in" type="password" inputmode="numeric" autocomplete="off" maxlength="12">
+    <div class="lk-hint" id="lk-hint">초기화 PIN 12345</div>
     <div class="lk-msg" id="lk-msg"></div>
-    <button class="btn primary" type="submit">확인</button>
+    <button class="btn primary" type="submit" id="lk-ok">확인</button>
+    <button type="button" class="linkbtn" id="lk-forgot" style="width:100%;text-align:center;padding:14px 0 0">비밀번호를 잊었어요</button>
   </form>
 </div>
 <script>
@@ -217,19 +235,30 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   }
   function storedPin(){ try{ return localStorage.getItem(PKEY); }catch(e){ return null; } }
   function verify(v){ const s=storedPin(); return s? hs(v)===s : v===DEFAULT_PIN; }
+  const RECOVERY_PIN='12345'; // 초기화 핀번호(고정)
+  function verifyRec(v){ return v===RECOVERY_PIN; }
   try{ localStorage.removeItem('driver_ledger_unlocked'); }catch(e){} // 예전 '영구 저장' 방식 제거
   const lock=document.getElementById('lock');
   const form=document.getElementById('lk-form'), inp=document.getElementById('lk-in'), msg=document.getElementById('lk-msg');
+  const lkTitle=lock.querySelector('.lock-t'), lkForgot=document.getElementById('lk-forgot');
+  let lkMode='pin'; // pin: 비밀번호 입력 / rec: 초기화 핀번호 입력 / new: 새 비밀번호 입력
+  function setLkMode(m){
+    lkMode=m; inp.value=''; msg.textContent=''; form.classList.remove('err');
+    lkTitle.textContent=m==='pin'?'비밀번호를 입력하세요':m==='rec'?'초기화 핀번호를 입력하세요':'새 비밀번호를 입력하세요 (4~12자리)';
+    lkForgot.textContent=m==='pin'?'비밀번호를 잊었어요':'돌아가기';
+    document.getElementById('lk-hint').style.display=m==='rec'?'block':'none';
+    lkForgot.style.display=m==='new'?'none':'block';
+  }
   let unlocked=false;
   try{ unlocked=sessionStorage.getItem(KEY)==='1'; }catch(e){}
   function show(cover){ lock.classList.toggle('cover',!!cover&&unlocked); lock.style.display='flex'; }
   function hide(){ lock.style.display='none'; inp.blur(); }
   window.appLock={
-    show:function(){ show(true); inp.blur(); },      // 백그라운드: 'Secret mode' 화면으로 가림 (아직 안 풀었으면 암호 화면)
+    show:function(){ show(true); inp.blur(); },      // 백그라운드: 'Secret mode' 화면으로 가림 (아직 안 풀었으면 비밀번호 화면)
     restore:function(){ if(unlocked) hide(); else { show(false); } }, // 돌아왔을 때: 이미 풀었으면 바로 해제
     lockNow:function(){ // 수동 잠금
       unlocked=false; try{ sessionStorage.removeItem(KEY); }catch(e){}
-      inp.value=''; msg.textContent=''; show(false); setTimeout(()=>inp.focus(),50);
+      setLkMode('pin'); show(false); setTimeout(()=>inp.focus(),50);
     },
     verify:verify,
     setPin:function(v){ try{ localStorage.setItem(PKEY,hs(v)); return true; }catch(e){ return false; } }
@@ -237,8 +266,22 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   if(unlocked) hide(); else { show(false); setTimeout(()=>inp.focus(),50); }
   form.addEventListener('submit',function(e){
     e.preventDefault();
-    if(verify(inp.value.trim())){ unlocked=true; try{sessionStorage.setItem(KEY,'1');}catch(err){} inp.value=''; msg.textContent=''; hide(); }
-    else { form.classList.remove('err'); void form.offsetWidth; form.classList.add('err'); msg.textContent='암호가 맞지 않아요'; inp.value=''; inp.focus(); }
+    const v=inp.value.trim();
+    function fail(t){ form.classList.remove('err'); void form.offsetWidth; form.classList.add('err'); msg.textContent=t; inp.value=''; inp.focus(); }
+    function done(){ unlocked=true; try{sessionStorage.setItem(KEY,'1');}catch(err){} setLkMode('pin'); hide(); }
+    if(lkMode==='pin'){ if(verify(v)) done(); else fail('비밀번호가 맞지 않아요'); }
+    else if(lkMode==='rec'){ if(verifyRec(v)){ setLkMode('new'); inp.focus(); } else fail('초기화 핀번호가 맞지 않아요'); }
+    else {
+      if(v.length<4||v.length>12){ fail('새 비밀번호는 4~12자리로 해주세요'); return; }
+      if(!window.appLock.setPin(v)){ fail('저장에 실패했어요'); return; }
+      done();
+    }
+  });
+  lkForgot.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(lkMode==='pin'){
+      setLkMode('rec'); inp.focus();
+    } else setLkMode('pin');
   });
   lock.addEventListener('click',function(){ if(unlocked) hide(); }); // 풀린 상태에서 가려진 화면을 탭하면 해제
   inp.addEventListener('input',function(){ msg.textContent=''; form.classList.remove('err'); });
@@ -284,6 +327,13 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   <section class="view" id="v-set">
     <div class="set-title">설정</div>
     <div class="card" style="margin-top:0">
+      <div class="prof">
+        <div class="avatar" id="s-avatar"></div>
+        <div class="pn"><b id="s-nickname"></b><small id="s-status"></small></div>
+        <button class="mini" onclick="openNick()">편집</button>
+      </div>
+    </div>
+    <div class="card">
       <h2>세금 계산 방식</h2>
       <div class="seg" id="s-mode"></div>
       <p class="note" id="s-mode-note"></p>
@@ -334,23 +384,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <p class="note" style="margin-top:14px"><b>사이트에 반영하기</b><br>입력한 내용은 이 폰의 브라우저에 자동으로 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸기 전에는 위의 백업 파일을 꼭 받아두세요.</p>
     </div>
     <div class="card">
-      <button class="btn sec" id="pw-toggle" onclick="togglePw()" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px"><span>암호 변경</span><span id="pw-arrow">▾</span></button>
-      <div id="pw-box" style="display:none;margin-top:6px">
-        <div class="srow">
-          <label>현재 암호</label>
-          <div class="frow"><input id="pw-old" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-        </div>
-        <div class="srow">
-          <label>새 암호 (4~12자리)</label>
-          <div class="frow"><input id="pw-new" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-        </div>
-        <div class="srow">
-          <label>새 암호 확인</label>
-          <div class="frow"><input id="pw-new2" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-        </div>
-        <button class="btn primary" onclick="changePin()">암호 바꾸기</button>
-        <p class="note">암호를 잊으면 풀 방법이 없어요. 백업 파일을 미리 받아두세요. (브라우저 데이터를 지우면 암호가 1130으로 돌아가지만 기록도 같이 지워지니 백업 파일로 복원해야 해요.)</p>
-      </div>
+      <button class="btn sec" id="pw-toggle" onclick="openPw()">비밀번호 변경</button>
     </div>
     <div class="card">
       <button class="btn danger" onclick="resetAll()">모든 데이터 초기화</button>
@@ -391,6 +425,45 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     <button class="btn primary" onclick="closeTip()">닫기</button>
   </div>
 </div>
+<div class="tip-ov" id="pw-ov" onclick="if(event.target===this)closePw()">
+  <form class="tip" id="pw-form" autocomplete="off" onsubmit="event.preventDefault();changePin()">
+    <div class="sh-top"><h3>비밀번호 변경</h3><button type="button" class="sh-close" onclick="closePw()" aria-label="닫기">✕</button></div>
+    <div class="srow">
+      <label>현재 비밀번호</label>
+      <div class="frow"><input id="pw-old" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+    </div>
+    <div class="srow">
+      <label>새 비밀번호 (4~12자리)</label>
+      <div class="frow"><input id="pw-new" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+    </div>
+    <div class="srow">
+      <label>새 비밀번호 확인</label>
+      <div class="frow"><input id="pw-new2" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+    </div>
+    <button class="btn primary" type="submit">변경</button>
+  </form>
+</div>
+<div class="tip-ov" id="nick-ov" onclick="if(event.target===this)closeNick()">
+  <form class="tip" autocomplete="off" onsubmit="event.preventDefault();saveNick()">
+    <div class="sh-top"><h3>프로필 편집</h3><button type="button" class="sh-close" onclick="closeNick()" aria-label="닫기">✕</button></div>
+    <div class="avatar big" id="nick-av"></div>
+    <div class="seg">
+      <button type="button" onclick="$('av-file').click()">사진 선택</button>
+      <button type="button" onclick="clearAv()">사진 지우기</button>
+    </div>
+    <input type="file" id="av-file" accept="image/*" style="display:none" onchange="pickPhoto(this)">
+    <div class="emo-grid" id="emo-grid"></div>
+    <div class="srow" style="border-bottom:none;padding-top:4px">
+      <label>닉네임</label>
+      <div class="frow"><input id="nick-in" maxlength="12" autocomplete="off" style="text-align:left"></div>
+    </div>
+    <div class="srow" style="border-bottom:none;padding-top:0">
+      <label>상태메시지</label>
+      <div class="frow"><input id="status-in" maxlength="30" autocomplete="off" style="text-align:left"></div>
+    </div>
+    <button class="btn primary" type="submit">저장</button>
+  </form>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -408,7 +481,7 @@ function calcTax(taxable){
 // ───────── 상태 ─────────
 const LS='driver_ledger_v1';
 const TYPES=['킥보드','버스','지하철','기차','카쉐어','기타'];
-const DEF={days:{},settings:{twoJob:false,deduction:null,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
+const DEF={days:{},settings:{nick:'',avatar:null,status:'',twoJob:false,deduction:null,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
 function migrateSettings(o){ // 예전 '간편/상세' 설정을 '전업/투잡'으로 옮겨요
   const s=Object.assign({},DEF.settings,o||{});
   if(o&&o.twoJob===undefined){
@@ -602,18 +675,20 @@ window.addEventListener('focus',hideCover);
 
 function openTip(){ $('tip-ov').classList.add('on'); }
 function closeTip(){ $('tip-ov').classList.remove('on'); }
-function togglePw(open){
-  const b=$('pw-box'), show=(typeof open==='boolean')?open:b.style.display==='none';
-  b.style.display=show?'block':'none'; $('pw-arrow').textContent=show?'▴':'▾';
+function openPw(){
+  ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).value='');
+  $('pw-ov').classList.add('on');
+  setTimeout(()=>$('pw-old').focus(),50);
 }
+function closePw(){ $('pw-ov').classList.remove('on'); ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).blur()); }
 function changePin(){
   const o=$('pw-old').value.trim(), n=$('pw-new').value.trim(), n2=$('pw-new2').value.trim();
-  if(!window.appLock.verify(o)){ toast('현재 암호가 맞지 않아요'); return; }
-  if(n.length<4||n.length>12){ toast('새 암호는 4~12자리로 해주세요'); return; }
-  if(n!==n2){ toast('새 암호가 서로 달라요'); return; }
+  if(!window.appLock.verify(o)){ toast('현재 비밀번호가 맞지 않아요'); return; }
+  if(n.length<4||n.length>12){ toast('새 비밀번호는 4~12자리로 해주세요'); return; }
+  if(n!==n2){ toast('새 비밀번호가 서로 달라요'); return; }
   if(!window.appLock.setPin(n)){ toast('저장에 실패했어요'); return; }
   ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).value='');
-  togglePw(false); toast('암호를 바꿨어요');
+  closePw(); toast('비밀번호를 바꿨어요');
 }
 
 // ───────── 잠금 버튼: 길게 눌러야 잠겨요 (실수로 누르는 것 방지) ─────────
@@ -633,9 +708,12 @@ function changePin(){
 function renderSettings(){
   const two=!!state.settings.twoJob;
   $('s-mode').innerHTML=`<button class="${!two?'on':''}" onclick="setFlag('twoJob',false)">전업</button><button class="${two?'on':''}" onclick="setFlag('twoJob',true)">투잡</button>`;
-  $('s-mode-note').textContent=two?'본업 소득에 더해서 계산해요. (공제 0원)':'대리운전 소득만 있다고 보고 계산해요. (기본공제 150만원)';
+  $('s-mode-note').textContent=two?'본업 소득에 더해서 계산해요. (공제 0원)':'';
   $('two-box').style.display=two?'block':'none';
   const ed=state.settings.deduction;
+  { const nk=state.settings.nick||'', nm=$('s-nickname');
+    setAvatar($('s-avatar'),state.settings.avatar); $('s-status').textContent=state.settings.status||'';
+    nm.textContent=nk||'닉네임을 설정해 주세요'; nm.classList.toggle('none',!nk); }
   $('s-ded').value=ed==null?'':ed.toLocaleString('ko-KR');
   $('s-ded').placeholder=(two?'0':'1,500,000')+' (자동)';
   $('s-other').value=state.settings.otherBase?state.settings.otherBase.toLocaleString('ko-KR'):'';
@@ -643,6 +721,35 @@ function renderSettings(){
   seg('s-exp','expCost'); seg('s-wh','withheld'); seg('s-priv','privacy');
   renderAppList();
 }
+const EMOJIS=['😀','😎','🚗','🌙','⭐','🔥','🍀','🐶','🐱','🦊','🐻','🎧'];
+let avDraft=null;
+function setAvatar(el,av){
+  el.innerHTML=''; el.classList.toggle('emo',!!av&&av.t==='emoji');
+  if(av&&av.t==='img'){ const im=document.createElement('img'); im.src=av.v; im.alt=''; el.appendChild(im); }
+  else if(av&&av.t==='emoji') el.textContent=av.v;
+}
+function pickEmoji(i){ avDraft={t:'emoji',v:EMOJIS[i]}; setAvatar($('nick-av'),avDraft); }
+function clearAv(){ avDraft=null; setAvatar($('nick-av'),null); }
+function pickPhoto(inp){
+  const f=inp.files&&inp.files[0]; if(!f) return;
+  const url=URL.createObjectURL(f), im=new Image();
+  im.onload=()=>{
+    const S=160, c=document.createElement('canvas'); c.width=c.height=S;
+    const m=Math.min(im.width,im.height), sx=(im.width-m)/2, sy=(im.height-m)/2;
+    c.getContext('2d').drawImage(im,sx,sy,m,m,0,0,S,S);
+    avDraft={t:'img',v:c.toDataURL('image/jpeg',0.85)}; setAvatar($('nick-av'),avDraft);
+    URL.revokeObjectURL(url); inp.value='';
+  };
+  im.onerror=()=>{ URL.revokeObjectURL(url); inp.value=''; toast('이미지를 불러오지 못했어요'); };
+  im.src=url;
+}
+function openNick(){
+  avDraft=state.settings.avatar||null; setAvatar($('nick-av'),avDraft);
+  $('emo-grid').innerHTML=EMOJIS.map((e,i)=>`<button type="button" onclick="pickEmoji(${i})">${e}</button>`).join('');
+  $('nick-in').value=state.settings.nick||''; $('status-in').value=state.settings.status||''; $('nick-ov').classList.add('on'); setTimeout(()=>$('nick-in').focus(),50);
+}
+function closeNick(){ $('nick-ov').classList.remove('on'); $('nick-in').blur(); }
+function saveNick(){ state.settings.nick=$('nick-in').value.trim().slice(0,12); state.settings.avatar=avDraft; state.settings.status=$('status-in').value.trim().slice(0,30); touch(); closeNick(); renderSettings(); toast('프로필을 저장했어요'); }
 function setFlag(k,v){ state.settings[k]=v; touch(); renderAll(); }
 function setDeduction(el){ state.settings.deduction=el.value.trim()===''?null:parseAmt(el.value); touch(); renderAll(); }
 function toggleAdv(){ const b=$('adv-box'), show=b.style.display==='none'; b.style.display=show?'block':'none'; $('adv-arrow').textContent=show?'▴':'▾'; }
@@ -759,7 +866,8 @@ function renderSheetList(){
 // ───────── 백업 / 복원 (폰 안에서 처리) ─────────
 function backupFile(){
   const d=new Date();
-  const name=`driver-ledger-backup-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
+  const nick=(state.settings.nick||'').replace(/[\\/:*?"<>|\s]+/g,'_');
+  const name=`driver-ledger-backup${nick?'-'+nick:''}-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
   const blob=new Blob([JSON.stringify(state)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download=name;
