@@ -278,44 +278,44 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <div id="detail-box" style="display:none;margin-top:6px">
         <div class="srow">
           <label>연간 공제 합계</label>
-          <p>순수익에서 먼저 빼주는 금액이에요. 모르면 150만원 그대로 두세요. 본업이 있으면 0원이 안전해요.</p>
+          <p>순수익에서 먼저 빼는 금액이에요. 본업이 없으면 150만원, 있으면 0원으로 두세요.</p>
           <div class="frow"><input id="s-ded" inputmode="numeric" oninput="fmtAmt(this)" onchange="setDeduction(this)"><span class="unit">원</span></div>
         </div>
         <div class="srow">
           <label>본업 과세표준</label>
-          <p>직장 소득이 있을 때만 연간 과세표준을 입력하세요. 없으면 0원이에요.</p>
+          <p>직장이 있을 때만 입력하세요. 연봉이 아니라 연말정산의 과세표준이에요. 없으면 0원.</p>
           <div class="frow"><input id="s-other" inputmode="numeric" oninput="fmtAmt(this)" onchange="setOther(this)"><span class="unit">원</span></div>
         </div>
         <div class="srow">
           <label>지출을 경비로 반영</label>
-          <p>켜면 교통비 등 지출을 뺀 순수익 기준으로 계산해요.</p>
+          <p>교통비 등 지출을 뺀 순수익으로 계산해요.</p>
           <div class="seg" id="s-exp"></div>
         </div>
         <div class="srow">
           <label>3.3% 원천징수 이미 떼고 받음</label>
-          <p>켜면 이미 낸 세금으로 보고 적립 권장액에서 빼요.</p>
+          <p>이미 낸 세금으로 보고 적립액에서 빼요.</p>
           <div class="seg" id="s-wh"></div>
         </div>
       </div>
     </div>
     <div class="card">
       <h2>시크릿 모드</h2>
-      <p class="note" style="margin:0 0 8px">켜면 앱을 나가거나 다른 앱으로 전환할 때 'Secret mode' 화면으로 가려요.</p>
+      <p class="note" style="margin:0 0 8px">앱을 나가거나 다른 앱으로 전환할 때 'Secret mode' 화면으로 가려요.</p>
       <div class="seg" id="s-priv"></div>
     </div>
     <div class="card">
       <h2>콜 앱 관리</h2>
       <div id="s-apps"></div>
-      <div class="addrow"><input id="s-app-new" maxlength="8" placeholder="앱 이름 추가 (예: 쏘카대리)" onkeydown="if(event.key==='Enter')addApp('s-app-new')"><button class="mini wide" onclick="addApp('s-app-new')">추가</button></div>
+      <div class="addrow"><input id="s-app-new" maxlength="8" placeholder="앱 이름 추가" onkeydown="if(event.key==='Enter')addApp('s-app-new')"><button class="mini wide" onclick="addApp('s-app-new')">추가</button></div>
     </div>
     <div class="card">
       <h2>백업 (폰 안에서 가능)</h2>
-      <p class="note" style="margin:0 0 10px">백업 파일은 폰의 다운로드 폴더에 저장돼요. 폰을 바꾸거나 브라우저 데이터를 지우기 전에 한 번 받아두고, 나중에 아래 버튼으로 불러오면 그대로 복원돼요.</p>
+      <p class="note" style="margin:0 0 10px">폰을 바꾸거나 브라우저 데이터를 지우기 전에 한 번 받아두고, 나중에 아래 버튼으로 불러오면 그대로 복원돼요.</p>
       <button class="btn primary" onclick="backupFile()">백업 파일 내려받기</button>
       <div style="height:8px"></div>
       <button class="btn sec" onclick="document.getElementById('restore-in').click()">백업 파일 불러오기</button>
       <input type="file" id="restore-in" accept=".json,application/json" style="display:none" onchange="restoreFile(this)">
-      <p class="note" style="margin-top:14px"><b>사이트에 반영하기 (선택)</b><br>입력한 내용은 이 폰의 브라우저에 자동으로 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸기 전에는 위의 백업 파일을 꼭 받아두세요.</p>
+      <p class="note" style="margin-top:14px"><b>사이트에 반영하기</b><br>입력한 내용은 이 폰의 브라우저에 자동으로 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸기 전에는 위의 백업 파일을 꼭 받아두세요.</p>
     </div>
     <div class="card">
       <button class="btn sec" id="pw-toggle" onclick="togglePw()" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px"><span>암호 변경</span><span id="pw-arrow">▾</span></button>
@@ -586,7 +586,7 @@ function changePin(){
 function renderSettings(){
   const det=!!state.settings.detail;
   $('s-mode').innerHTML=`<button class="${!det?'on':''}" onclick="setFlag('detail',false)">간편 계산</button><button class="${det?'on':''}" onclick="setFlag('detail',true)">상세 설정</button>`;
-  $('s-mode-note').textContent=det?'아래 값으로 직접 계산해요. 모르는 항목은 그대로 두세요.':'일반적인 경우를 가정해서 자동으로 계산해요. 본인 기본공제 150만원을 적용하고, 본업 소득은 없는 것으로 보고, 지출은 경비로 빼요. 본업이 있다면 세금이 실제보다 적게 나올 수 있으니 상세 설정을 쓰세요. 본업이 없으면 이대로 쓰면 돼요.';
+  $('s-mode-note').textContent=det?'아래 값으로 직접 계산해요.':'본업이 없다고 보고 자동으로 계산해요. (기본공제 150만원, 지출은 경비로 처리) 본업이 있으면 상세 설정을 쓰세요.';
   $('detail-box').style.display=det?'block':'none';
   $('s-ded').value=(state.settings.deduction||0).toLocaleString('ko-KR');
   $('s-other').value=(state.settings.otherBase||0).toLocaleString('ko-KR');
@@ -655,7 +655,7 @@ function renderAppSection(){
   } else {
     h+='<div class="empty-l" style="padding:8px 0">편집을 눌러 앱을 추가하면 어떤 콜인지 기록할 수 있어요</div>';
   }
-  if(appEdit) h+='<div class="addrow"><input id="app-new" maxlength="8" placeholder="앱 이름 (예: 쏘카대리)" onkeydown="if(event.key===\'Enter\')addApp(\'app-new\')"><button class="mini wide" onclick="addApp(\'app-new\')">추가</button></div>';
+  if(appEdit) h+='<div class="addrow"><input id="app-new" maxlength="8" placeholder="앱 이름" onkeydown="if(event.key===\'Enter\')addApp(\'app-new\')"><button class="mini wide" onclick="addApp(\'app-new\')">추가</button></div>';
   box.innerHTML=h;
 }
 function toggleAppEdit(){ appEdit=!appEdit; renderAppSection(); if(appEdit) setTimeout(()=>$('app-new')&&$('app-new').focus(),50); }
