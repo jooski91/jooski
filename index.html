@@ -173,6 +173,9 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .lock-box input:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
 .lock-box.err input{border-color:var(--out);animation:shake .3s;}
 @keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.lock-secret{display:none;font-size:22px;font-weight:700;letter-spacing:1px;color:var(--ink3);}
+.lock.cover .lock-box{display:none;}
+.lock.cover .lock-secret{display:block;}
 .lk-msg{height:18px;font-size:12px;color:var(--out);margin:8px 0 6px;}
 .lock-box .btn{margin-top:2px;}
 </style>
@@ -180,6 +183,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 <body>
 
 <div class="lock" id="lock">
+  <div class="lock-secret">Secret mode</div>
   <form class="lock-box" id="lk-form" autocomplete="off">
     <div class="lock-t">암호를 입력하세요</div>
     <input id="lk-in" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="암호">
@@ -204,19 +208,19 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   const form=document.getElementById('lk-form'), inp=document.getElementById('lk-in'), msg=document.getElementById('lk-msg');
   let unlocked=false;
   try{ unlocked=sessionStorage.getItem(KEY)==='1'; }catch(e){}
-  function show(){ lock.style.display='flex'; }
+  function show(cover){ lock.classList.toggle('cover',!!cover&&unlocked); lock.style.display='flex'; }
   function hide(){ lock.style.display='none'; inp.blur(); }
   window.appLock={
-    show:function(){ show(); inp.blur(); },          // 백그라운드: 암호 화면으로 가림
-    restore:function(){ if(unlocked) hide(); else { show(); } }, // 돌아왔을 때: 이미 풀었으면 바로 해제
+    show:function(){ show(true); inp.blur(); },      // 백그라운드: 'Secret mode' 화면으로 가림 (아직 안 풀었으면 암호 화면)
+    restore:function(){ if(unlocked) hide(); else { show(false); } }, // 돌아왔을 때: 이미 풀었으면 바로 해제
     lockNow:function(){ // 수동 잠금
       unlocked=false; try{ sessionStorage.removeItem(KEY); }catch(e){}
-      inp.value=''; msg.textContent=''; show(); setTimeout(()=>inp.focus(),50);
+      inp.value=''; msg.textContent=''; show(false); setTimeout(()=>inp.focus(),50);
     },
     verify:verify,
     setPin:function(v){ try{ localStorage.setItem(PKEY,hs(v)); return true; }catch(e){ return false; } }
   };
-  if(unlocked) hide(); else { show(); setTimeout(()=>inp.focus(),50); }
+  if(unlocked) hide(); else { show(false); setTimeout(()=>inp.focus(),50); }
   form.addEventListener('submit',function(e){
     e.preventDefault();
     if(verify(inp.value.trim())){ unlocked=true; try{sessionStorage.setItem(KEY,'1');}catch(err){} inp.value=''; msg.textContent=''; hide(); }
@@ -293,25 +297,8 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     </div>
     <div class="card">
       <h2>화면 가리기</h2>
-      <p class="note" style="margin:0 0 8px">켜면 앱을 나가거나 다른 앱으로 전환할 때 암호 입력 화면으로 가려요. 다시 돌아오면 암호를 또 입력하지 않아도 돼요. 앱을 완전히 끄고 다시 켜면 암호를 입력해야 해요.</p>
+      <p class="note" style="margin:0 0 8px">켜면 앱을 나가거나 다른 앱으로 전환할 때 'Secret mode' 화면으로 가려요. 다시 돌아오면 암호를 또 입력하지 않아도 돼요. 앱을 완전히 끄고 다시 켜면 암호를 입력해야 해요.</p>
       <div class="seg" id="s-priv"></div>
-    </div>
-    <div class="card">
-      <h2>암호 변경</h2>
-      <div class="srow">
-        <label>현재 암호</label>
-        <div class="frow"><input id="pw-old" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-      </div>
-      <div class="srow">
-        <label>새 암호 (4~12자리)</label>
-        <div class="frow"><input id="pw-new" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-      </div>
-      <div class="srow">
-        <label>새 암호 확인</label>
-        <div class="frow"><input id="pw-new2" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-      </div>
-      <button class="btn primary" onclick="changePin()">암호 바꾸기</button>
-      <p class="note">암호를 잊으면 풀 방법이 없어요. 백업 파일을 미리 받아두세요. (브라우저 데이터를 지우면 암호가 1130으로 돌아가지만 기록도 같이 지워지니 백업 파일로 복원해야 해요.)</p>
     </div>
     <div class="card">
       <h2>콜 앱 관리</h2>
@@ -331,16 +318,35 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <p class="note" style="margin-top:0">입력한 내용은 이 폰의 브라우저에 자동으로 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸기 전에는 위의 백업 파일을 꼭 받아두세요.</p>
     </div>
     <div class="card">
+      <button class="btn sec" id="pw-toggle" onclick="togglePw()" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px"><span>암호 변경</span><span id="pw-arrow">▾</span></button>
+      <div id="pw-box" style="display:none;margin-top:6px">
+        <div class="srow">
+          <label>현재 암호</label>
+          <div class="frow"><input id="pw-old" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+        </div>
+        <div class="srow">
+          <label>새 암호 (4~12자리)</label>
+          <div class="frow"><input id="pw-new" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+        </div>
+        <div class="srow">
+          <label>새 암호 확인</label>
+          <div class="frow"><input id="pw-new2" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+        </div>
+        <button class="btn primary" onclick="changePin()">암호 바꾸기</button>
+        <p class="note">암호를 잊으면 풀 방법이 없어요. 백업 파일을 미리 받아두세요. (브라우저 데이터를 지우면 암호가 1130으로 돌아가지만 기록도 같이 지워지니 백업 파일로 복원해야 해요.)</p>
+      </div>
+    </div>
+    <div class="card">
       <button class="btn danger" onclick="resetAll()">모든 데이터 초기화</button>
     </div>
   </section>
 </main>
 
 <nav>
-  <button class="on" data-v="cal" onclick="go('cal')">달력</button>
+  <button class="on" data-v="cal" onclick="go('cal')">기록</button>
   <button data-v="year" onclick="go('year')">연간</button>
   <button data-v="set" onclick="go('set')">설정</button>
-  <button data-v="lock" onclick="appLock.lockNow()">🔒 잠금</button>
+  <button data-v="lock" onclick="appLock.lockNow()">잠금</button>
 </nav>
 
 <div class="ov" id="ov" onclick="closeDay()"></div>
@@ -549,6 +555,10 @@ window.addEventListener('pageshow',hideCover);
 window.addEventListener('blur',showCover);
 window.addEventListener('focus',hideCover);
 
+function togglePw(open){
+  const b=$('pw-box'), show=(typeof open==='boolean')?open:b.style.display==='none';
+  b.style.display=show?'block':'none'; $('pw-arrow').textContent=show?'▴':'▾';
+}
 function changePin(){
   const o=$('pw-old').value.trim(), n=$('pw-new').value.trim(), n2=$('pw-new2').value.trim();
   if(!window.appLock.verify(o)){ toast('현재 암호가 맞지 않아요'); return; }
@@ -556,7 +566,7 @@ function changePin(){
   if(n!==n2){ toast('새 암호가 서로 달라요'); return; }
   if(!window.appLock.setPin(n)){ toast('저장에 실패했어요'); return; }
   ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).value='');
-  toast('암호를 바꿨어요');
+  togglePw(false); toast('암호를 바꿨어요');
 }
 
 // ───────── 설정 ─────────
