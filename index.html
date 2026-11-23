@@ -344,7 +344,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     </div>
     <div class="card" id="y-sum" style="margin-top:0"></div>
     <div class="card"><div class="ch-row"><h2 id="y-chart-title">월별 순수익 (세금 전)</h2>
-        <button class="sw" id="y-mode" role="switch" aria-checked="false" onclick="setChartMode(state.settings.chartMode==='after'?'before':'after')"><span class="sw-l">세후</span><span class="sw-t"><i></i></span></button></div>
+        <button class="sw" id="y-mode" role="switch" aria-checked="false" onclick="setChartMode(state.settings.chartMode==='after'?'before':'after')"><span class="sw-l">세전</span><span class="sw-t"><i></i></span></button></div>
       <div class="ylegend"><span><i class="lb"></i><span id="y-lg">월 실수령</span></span><span><i class="ll"></i>누적</span><span class="u">단위: 만원</span></div>
       <div id="y-chart"></div><p class="note" id="y-chart-note" style="margin-top:6px"></p></div>
     <div class="card"><h2>월별 내역</h2><div class="tbl" id="y-tbl"></div></div>
@@ -668,7 +668,7 @@ function drawYearChart(rows){
   const lab=mode==='before'?'순수익':'실수령';
   $('y-chart-title').textContent=mode==='before'?'월별 순수익 (세금 전)':'월별 실수령 (세금 뺀 금액)';
   $('y-lg').textContent='월 '+lab;
-  $('y-mode').classList.toggle('on',mode==='after'); $('y-mode').setAttribute('aria-checked',mode==='after');
+  $('y-mode').classList.toggle('on',mode==='after'); $('y-mode').querySelector('.sw-l').textContent=mode==='after'?'세후':'세전'; $('y-mode').setAttribute('aria-checked',mode==='after');
   const W=360,H=168,pl=6,pr=6,top=36,bot=20, ph=H-top-bot, cw=(W-pl-pr)/12, bw=cw*0.58;
   let last=0; rows.forEach(x=>{ if(x.s.n>0||x.s.inc>0||x.s.exp>0) last=x.m; });
   let c=0; const cums=rows.map(x=>(c+=tk(x)));
