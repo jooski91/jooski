@@ -110,11 +110,15 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 #v-cal .set-title,#v-year .set-title{margin-bottom:0;}
 #v-cal .mbar,#v-year .ybar{margin-bottom:4px;}
 #v-cal .mbar button,#v-year .ybar button{height:28px;}
-.set-title{text-align:left;font-size:16px;font-weight:700;height:30px;line-height:30px;margin-bottom:4px;padding-left:2px;}
+.set-title{display:flex;align-items:center;justify-content:space-between;text-align:left;font-size:16px;font-weight:700;height:30px;line-height:30px;margin-bottom:4px;padding-left:2px;}
 .prof{display:flex;align-items:center;gap:12px;}
 .avatar{width:52px;height:52px;border-radius:50%;background:var(--card2);color:var(--ink);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .avatar.emo{font-size:28px;}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.tp{display:flex;align-items:center;gap:8px;min-width:0;}
+.tp .tn{font-size:12px;font-weight:600;color:var(--ink2);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;}
+.avatar.sm{width:28px;height:28px;font-size:14px;}
+.avatar.sm.emo{font-size:16px;}
 .avatar.big{width:84px;height:84px;margin:4px auto 14px;}
 .avatar.big.emo{font-size:44px;}
 .emo-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0;}
@@ -298,7 +302,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 <main>
   <!-- 달력 -->
   <section class="view on" id="v-cal">
-    <div class="set-title">기록</div>
+    <div class="set-title"><span>기록</span><span class="tp"></span></div>
     <div class="mbar">
       <button onclick="moveMonth(-1)">‹</button>
       <div class="mt" id="m-title"></div>
@@ -318,7 +322,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 연간 -->
   <section class="view" id="v-year">
-    <div class="set-title">연간</div>
+    <div class="set-title"><span>연간</span><span class="tp"></span></div>
     <div class="ybar">
       <button onclick="moveYear(-1)">‹</button>
       <div class="mt" id="y-title"></div>
@@ -334,7 +338,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 설정 -->
   <section class="view" id="v-set">
-    <div class="set-title">설정</div>
+    <div class="set-title"><span>설정</span><span class="tp"></span></div>
     <div class="card" style="margin-top:0">
       <div class="prof">
         <div class="avatar" id="s-avatar"></div>
@@ -575,6 +579,7 @@ function previewReserve(){
 const now=new Date();
 let cy=now.getFullYear(), cm=now.getMonth()+1, ay=now.getFullYear();
 function go(v){
+  try{ sessionStorage.setItem('driver_ledger_view',v); }catch(e){}
   document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
   $('v-'+v).classList.add('on');
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
@@ -748,6 +753,12 @@ function renderSettings(){
   $('two-box').style.display=two?'block':'none';
   const ed=state.settings.deduction;
   { const nk=state.settings.nick||'', nm=$('s-nickname');
+    document.querySelectorAll('.tp').forEach(el=>{
+      el.innerHTML=''; const av=state.settings.avatar;
+      if(!nk&&!av) return;
+      if(nk){ const n=document.createElement('span'); n.className='tn'; n.textContent=nk; el.appendChild(n); }
+      const a=document.createElement('div'); a.className='avatar sm'; setAvatar(a,av); el.appendChild(a);
+    });
     setAvatar($('s-avatar'),state.settings.avatar); $('s-status').textContent=state.settings.status||'';
     nm.textContent=nk||'닉네임을 설정해 주세요'; nm.classList.toggle('none',!nk); }
   $('s-ded').value=ed==null?'':ed.toLocaleString('ko-KR');
@@ -932,6 +943,7 @@ function toast(msg){ const t=$('toast'); t.textContent=msg; t.style.whiteSpace='
 
 function renderAll(){ renderCal(); renderYear(); renderSettings(); }
 renderAll();
+try{ const sv=sessionStorage.getItem('driver_ledger_view'); if(sv&&sv!=='cal'&&$('v-'+sv)) go(sv); }catch(e){}
 </script>
 </body>
 </html>
