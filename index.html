@@ -106,6 +106,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .ybar .mt{text-align:center;font-size:17px;font-weight:700;}
 
 /* settings */
+.set-title{text-align:center;font-size:17px;font-weight:700;height:34px;line-height:34px;margin-bottom:6px;}
 .srow{padding:12px 0;border-bottom:1px solid var(--line);}
 .srow:last-child{border-bottom:none;}
 .srow label{display:block;font-size:13.5px;font-weight:600;margin-bottom:3px;}
@@ -168,6 +169,16 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .chips.app .chip.edit{background:var(--out-bg);color:var(--out);}
 .toast{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%) translateY(14px);background:var(--card3);color:#fff;font-size:12.5px;padding:10px 16px;border-radius:22px;opacity:0;pointer-events:none;transition:all .25s;z-index:100;max-width:92vw;text-align:center;line-height:1.5;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.linkbtn{display:block;font-size:12.5px;font-weight:600;color:var(--accent);padding:2px 0 10px;}
+.tip-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+.tip-ov.on{opacity:1;pointer-events:auto;}
+.tip{width:min(100%,420px);max-height:80dvh;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 16px;}
+.tip h3{font-size:16px;font-weight:700;margin-bottom:10px;}
+.tip h4{font-size:13px;font-weight:700;color:var(--accent);margin:14px 0 6px;}
+.tip p,.tip li{font-size:13px;line-height:1.65;color:var(--ink);}
+.tip ol{padding-left:20px;}
+.tip .sub{color:var(--ink2);font-size:12px;}
+.tip .btn{margin-top:16px;}
 /* lock */
 .lock{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b));}
 .lock-box{width:min(100%,320px);text-align:center;}
@@ -271,20 +282,25 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
   <!-- 설정 -->
   <section class="view" id="v-set">
+    <div class="set-title">설정</div>
     <div class="card" style="margin-top:0">
       <h2>세금 계산 방식</h2>
       <div class="seg" id="s-mode"></div>
       <p class="note" id="s-mode-note"></p>
-      <div id="detail-box" style="display:none;margin-top:6px">
-        <div class="srow">
-          <label>연간 공제 합계</label>
-          <p>순수익에서 먼저 빼는 금액이에요. 본업이 없으면 150만원, 있으면 0원으로 두세요.</p>
-          <div class="frow"><input id="s-ded" inputmode="numeric" oninput="fmtAmt(this)" onchange="setDeduction(this)"><span class="unit">원</span></div>
-        </div>
+      <div id="two-box" style="display:none;margin-top:6px">
         <div class="srow">
           <label>본업 과세표준</label>
-          <p>직장이 있을 때만 입력하세요. 연봉이 아니라 연말정산의 과세표준이에요. 없으면 0원.</p>
+          <p>직장이 있을 때 입력하세요. 연봉이 아니라 연말정산의 과세표준이에요.</p>
+          <button class="linkbtn" onclick="openTip()">확인 방법 ›</button>
           <div class="frow"><input id="s-other" inputmode="numeric" oninput="fmtAmt(this)" onchange="setOther(this)"><span class="unit">원</span></div>
+        </div>
+      </div>
+      <button class="btn sec" id="adv-toggle" onclick="toggleAdv()" style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-top:10px"><span>세부 설정</span><span id="adv-arrow">▾</span></button>
+      <div id="adv-box" style="display:none;margin-top:6px">
+        <div class="srow">
+          <label>연간 공제 합계</label>
+          <p>순수익에서 먼저 빼는 금액이에요. 비워두면 자동이에요. (전업 150만원, 투잡 0원)</p>
+          <div class="frow"><input id="s-ded" inputmode="numeric" oninput="fmtAmt(this)" onchange="setDeduction(this)"><span class="unit">원</span></div>
         </div>
         <div class="srow">
           <label>지출을 경비로 반영</label>
@@ -357,6 +373,24 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   <div class="list" id="sh-list"></div>
   <div id="sh-form"></div>
 </div>
+<div class="tip-ov" id="tip-ov" onclick="if(event.target===this)closeTip()">
+  <div class="tip">
+    <h3>본업 과세표준 확인 방법</h3>
+    <p>회사에서 연말정산 후 받는 <b>근로소득 원천징수영수증</b>의 "종합소득 과세표준" 금액이에요. 월급명세서에는 없어요.</p>
+    <h4>홈택스 (PC)</h4>
+    <ol>
+      <li>홈택스에 접속해서 간편인증으로 로그인</li>
+      <li>My홈택스 → 소득·연말정산 → 지급명세서·원천징수영수증 내역</li>
+      <li>귀속연도 선택 후 보기</li>
+      <li>"종합소득 과세표준" 금액을 입력</li>
+    </ol>
+    <h4>손택스 (앱)</h4>
+    <p>로그인 후 조회/발급 → 지급명세서에서 근로소득 원천징수영수증을 선택해요.</p>
+    <h4>참고</h4>
+    <p class="sub">올해 분은 내년 4~5월부터 조회돼요. 지금은 작년(가장 최근 연도) 금액을 쓰면 돼요.<br>메뉴 이름은 바뀔 수 있어요. 안 보이면 검색창에 "원천징수영수증"을 입력하세요.<br>조회가 안 되면 회사 인사팀에 영수증을 요청하세요.</p>
+    <button class="btn primary" onclick="closeTip()">닫기</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -374,14 +408,22 @@ function calcTax(taxable){
 // ───────── 상태 ─────────
 const LS='driver_ledger_v1';
 const TYPES=['킥보드','버스','지하철','기차','카쉐어','기타'];
-const DEF={days:{},settings:{detail:false,deduction:1500000,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
+const DEF={days:{},settings:{twoJob:false,deduction:null,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
+function migrateSettings(o){ // 예전 '간편/상세' 설정을 '전업/투잡'으로 옮겨요
+  const s=Object.assign({},DEF.settings,o||{});
+  if(o&&o.twoJob===undefined){
+    s.twoJob=!!(o.detail&&o.otherBase>0);
+    if(!o.detail||s.deduction===1500000) s.deduction=null;
+  }
+  delete s.detail; return s;
+}
 let state=JSON.parse(JSON.stringify(DEF));
 (function load(){
   let loc=null;
   try{loc=JSON.parse(localStorage.getItem(LS));}catch(e){}
   if(loc&&typeof loc==='object') state=loc;
   state.days=state.days||{};
-  state.settings=Object.assign({},DEF.settings,state.settings||{});
+  state.settings=migrateSettings(state.settings);
   state.apps=Array.isArray(state.apps)?state.apps:DEF.apps.slice();
 })();
 
@@ -413,8 +455,11 @@ function monthStats(y,m){
   for(const k in state.days){ if(k.startsWith(pre)){ const t=dayTotals(k); inc+=t.inc; exp+=t.exp; n+=t.n; } }
   return {inc,exp,net:inc-exp,n};
 }
-// 간편 계산이면 평균 조건(본인 기본공제 150만원, 본업 없음, 지출 경비 반영)으로 계산
-function effSettings(){ const s=state.settings; return s.detail?s:{deduction:1500000,otherBase:0,expCost:true,withheld:false}; }
+// 전업: 본업 없음 + 기본공제 150만원 / 투잡: 본업 과세표준 위에 얹고 공제 0원 (세부 설정에서 직접 바꾸면 그 값 사용)
+function effSettings(){
+  const s=state.settings, two=!!s.twoJob;
+  return {deduction:s.deduction==null?(two?0:1500000):s.deduction, otherBase:two?(s.otherBase||0):0, expCost:s.expCost!==false, withheld:!!s.withheld};
+}
 // 1월~m월 누적 기준 예상 세금(지방세 포함, 원천징수 차감)
 function cumTax(y,m){
   let inc=0,exp=0;
@@ -484,7 +529,7 @@ function renderCal(){
       <div class="stat tax"><small>세금적립</small><b>${won(rsv)}원</b></div>
       <div class="stat net"><small>세금 뺀 실수령</small><b>${won(s.net-rsv)}원</b></div>
     </div>
-    <p class="note">${cm}월까지 누적 예상 세금 ${won(cum)}원 (종합·지방소득세 추정치${state.settings.detail?'':', 간편 계산'})</p>`;
+    <p class="note">${cm}월까지 누적 예상 세금 ${won(cum)}원 (종합·지방소득세 추정치${state.settings.twoJob?', 투잡 기준':', 전업 기준'})</p>`;
 }
 
 // ───────── 연간 ─────────
@@ -504,7 +549,7 @@ function renderYear(){
       <div class="stat tax"><small>세금적립</small><b>${won(c.tax)}원</b></div>
       <div class="stat net"><small>세금 뺀 실수령</small><b>${won(net-c.tax)}원</b></div>
     </div>
-    <p class="note">과세표준(추정) ${won(c.taxable)}원 기준 (종합·지방소득세 추정치${state.settings.detail?'':', 간편 계산'})</p>`;
+    <p class="note">과세표준(추정) ${won(c.taxable)}원 기준 (종합·지방소득세 추정치${state.settings.twoJob?', 투잡 기준':', 전업 기준'})</p>`;
   rows.forEach(x=>x.take=x.s.net-x.r);
   const mx=Math.max(1,...rows.map(x=>Math.max(0,x.take)));
   drawYearChart(rows);
@@ -555,6 +600,8 @@ window.addEventListener('pageshow',hideCover);
 window.addEventListener('blur',showCover);
 window.addEventListener('focus',hideCover);
 
+function openTip(){ $('tip-ov').classList.add('on'); }
+function closeTip(){ $('tip-ov').classList.remove('on'); }
 function togglePw(open){
   const b=$('pw-box'), show=(typeof open==='boolean')?open:b.style.display==='none';
   b.style.display=show?'block':'none'; $('pw-arrow').textContent=show?'▴':'▾';
@@ -584,18 +631,21 @@ function changePin(){
 
 // ───────── 설정 ─────────
 function renderSettings(){
-  const det=!!state.settings.detail;
-  $('s-mode').innerHTML=`<button class="${!det?'on':''}" onclick="setFlag('detail',false)">간편 계산</button><button class="${det?'on':''}" onclick="setFlag('detail',true)">상세 설정</button>`;
-  $('s-mode-note').textContent=det?'아래 값으로 직접 계산해요.':'본업이 없다고 보고 자동으로 계산해요. (기본공제 150만원, 지출은 경비로 처리) 본업이 있으면 상세 설정을 쓰세요.';
-  $('detail-box').style.display=det?'block':'none';
-  $('s-ded').value=(state.settings.deduction||0).toLocaleString('ko-KR');
-  $('s-other').value=(state.settings.otherBase||0).toLocaleString('ko-KR');
+  const two=!!state.settings.twoJob;
+  $('s-mode').innerHTML=`<button class="${!two?'on':''}" onclick="setFlag('twoJob',false)">전업</button><button class="${two?'on':''}" onclick="setFlag('twoJob',true)">투잡</button>`;
+  $('s-mode-note').textContent=two?'본업 소득에 더해서 계산해요. (공제 0원)':'대리운전 소득만 있다고 보고 계산해요. (기본공제 150만원)';
+  $('two-box').style.display=two?'block':'none';
+  const ed=state.settings.deduction;
+  $('s-ded').value=ed==null?'':ed.toLocaleString('ko-KR');
+  $('s-ded').placeholder=(two?'0':'1,500,000')+' (자동)';
+  $('s-other').value=state.settings.otherBase?state.settings.otherBase.toLocaleString('ko-KR'):'';
   const seg=(id,key)=>{ $(id).innerHTML=`<button class="${state.settings[key]?'on':''}" onclick="setFlag('${key}',true)">켜기</button><button class="${!state.settings[key]?'on':''}" onclick="setFlag('${key}',false)">끄기</button>`; };
   seg('s-exp','expCost'); seg('s-wh','withheld'); seg('s-priv','privacy');
   renderAppList();
 }
 function setFlag(k,v){ state.settings[k]=v; touch(); renderAll(); }
-function setDeduction(el){ state.settings.deduction=parseAmt(el.value); touch(); renderAll(); }
+function setDeduction(el){ state.settings.deduction=el.value.trim()===''?null:parseAmt(el.value); touch(); renderAll(); }
+function toggleAdv(){ const b=$('adv-box'), show=b.style.display==='none'; b.style.display=show?'block':'none'; $('adv-arrow').textContent=show?'▴':'▾'; }
 function setOther(el){ state.settings.otherBase=parseAmt(el.value); touch(); renderAll(); }
 function resetAll(){
   if(!confirm('모든 수익·지출 기록을 지울까요? 되돌릴 수 없어요.'))return;
@@ -725,7 +775,7 @@ function restoreFile(inp){
       const o=JSON.parse(r.result);
       if(!o||typeof o.days!=='object'||Array.isArray(o.days)) throw new Error('bad');
       if(!confirm('현재 기록을 이 백업 내용으로 바꿀까요?')){ inp.value=''; return; }
-      state={days:o.days,settings:Object.assign({},DEF.settings,o.settings||{}),apps:Array.isArray(o.apps)?o.apps:DEF.apps.slice(),updatedAt:0};
+      state={days:o.days,settings:migrateSettings(o.settings),apps:Array.isArray(o.apps)?o.apps:DEF.apps.slice(),updatedAt:0};
       touch(); renderAll(); toast('백업을 불러왔어요');
     }catch(e){ toast('올바른 백업 파일이 아니에요'); }
     inp.value='';
