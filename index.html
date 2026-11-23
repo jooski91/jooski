@@ -137,6 +137,11 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .srow label{display:block;font-size:13.5px;font-weight:600;margin-bottom:3px;}
 .srow p{font-size:11.5px;color:var(--ink2);line-height:1.5;margin-bottom:8px;}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ch-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;} .ch-row h2{margin:0;}
+.sw{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;padding:2px 0 2px 6px;background:none;font-size:10.5px;font-weight:600;color:var(--ink3);}
+.sw-t{position:relative;width:26px;height:15px;border-radius:8px;background:var(--card3);transition:background .18s;}
+.sw-t i{position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--ink2);transition:transform .18s,background .18s;}
+.sw.on .sw-t{background:var(--accent);} .sw.on .sw-t i{transform:translateX(11px);background:var(--on-accent);} .sw.on .sw-l{color:var(--accent);}
 .seg button{height:42px;border-radius:10px;background:var(--card2);font-size:13.5px;font-weight:600;color:var(--ink2);}
 .seg button.on{background:var(--accent);color:var(--on-accent);}
 .frow{display:flex;align-items:center;gap:8px;}
@@ -333,8 +338,9 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <button class="today-btn" id="y-today" onclick="goThisYear()" style="display:none">올해</button>
     </div>
     <div class="card" id="y-sum" style="margin-top:0"></div>
-    <div class="card"><h2>월별 실수령 (세금 뺀 금액)</h2>
-      <div class="ylegend"><span><i class="lb"></i>월 실수령</span><span><i class="ll"></i>누적</span><span class="u">단위: 만원</span></div>
+    <div class="card"><div class="ch-row"><h2 id="y-chart-title">월별 순수익 (세금 전)</h2>
+        <button class="sw" id="y-mode" role="switch" aria-checked="false" onclick="setChartMode(state.settings.chartMode==='after'?'before':'after')"><span class="sw-l">세후</span><span class="sw-t"><i></i></span></button></div>
+      <div class="ylegend"><span><i class="lb"></i><span id="y-lg">월 실수령</span></span><span><i class="ll"></i>누적</span><span class="u">단위: 만원</span></div>
       <div id="y-chart"></div><p class="note" id="y-chart-note" style="margin-top:6px"></p></div>
     <div class="card"><h2>월별 내역</h2><div class="tbl" id="y-tbl"></div></div>
   </section>
@@ -498,7 +504,7 @@ function calcTax(taxable){
 // ───────── 상태 ─────────
 const LS='driver_ledger_v1';
 const TYPES=['킥보드','버스','지하철','기차','카쉐어','기타'];
-const DEF={days:{},settings:{nick:'',avatar:null,status:'',twoJob:false,deduction:null,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
+const DEF={days:{},settings:{chartMode:'before',nick:'',avatar:null,status:'',twoJob:false,deduction:null,otherBase:0,expCost:true,withheld:false,privacy:true},apps:['카카오대리','티맵대리','콜마너','로지'],updatedAt:0};
 function migrateSettings(o){ // 예전 '간편/상세' 설정을 '전업/투잡'으로 옮겨요
   const s=Object.assign({},DEF.settings,o||{});
   if(o&&o.twoJob===undefined){
@@ -650,18 +656,24 @@ function renderYear(){
 }
 
 // 월별 실수령(막대) + 누적(꺾은선) 복합 차트, 금액은 만원 단위로 표시
+function setChartMode(m){ state.settings.chartMode=m; touch(); renderYear(); }
 function drawYearChart(rows){
+  const mode=state.settings.chartMode==='after'?'after':'before', tk=x=>mode==='before'?x.s.net:x.take;
+  const lab=mode==='before'?'순수익':'실수령';
+  $('y-chart-title').textContent=mode==='before'?'월별 순수익 (세금 전)':'월별 실수령 (세금 뺀 금액)';
+  $('y-lg').textContent='월 '+lab;
+  $('y-mode').classList.toggle('on',mode==='after'); $('y-mode').setAttribute('aria-checked',mode==='after');
   const W=360,H=168,pl=6,pr=6,top=36,bot=20, ph=H-top-bot, cw=(W-pl-pr)/12, bw=cw*0.58;
   let last=0; rows.forEach(x=>{ if(x.s.n>0||x.s.inc>0||x.s.exp>0) last=x.m; });
-  let c=0; const cums=rows.map(x=>(c+=x.take));
-  const vals=rows.map(x=>x.take).concat(cums.slice(0,last));
+  let c=0; const cums=rows.map(x=>(c+=tk(x)));
+  const vals=rows.map(tk).concat(cums.slice(0,last));
   let hi=Math.max(0,...vals), lo=Math.min(0,...vals); if(hi===lo) hi=1;
   const Y=v=>top+(hi-v)/(hi-lo)*ph, X=i=>pl+cw*(i+.5);
   const f=v=>{ const a=Math.abs(v)/1e4, t=a>=10?Math.round(a):Math.round(a*10)/10; return (v<0?'-':'')+t.toLocaleString('ko-KR'); };
   let g=`<line x1="${pl}" x2="${W-pr}" y1="${Y(0)}" y2="${Y(0)}" style="stroke:var(--line)" stroke-width="1"/>`;
   const lblY=[];
   rows.forEach((x,i)=>{
-    const v=x.take, cx=X(i), y0=Y(0);
+    const v=tk(x), cx=X(i), y0=Y(0);
     if(Math.abs(v)<1){ g+=`<rect x="${cx-bw/2}" y="${y0-1}" width="${bw}" height="2" style="fill:var(--line)"/>`; lblY[i]=null; }
     else if(v>0){ const y=Y(v); g+=`<rect x="${cx-bw/2}" y="${y}" width="${bw}" height="${Math.max(2,y0-y)}" rx="2" style="fill:var(--in)"/>`;
       g+=`<text x="${cx}" y="${y-3}" text-anchor="middle" font-size="8.5" style="fill:var(--ink2)">${f(v)}</text>`; lblY[i]=y-3; }
@@ -679,7 +691,7 @@ function drawYearChart(rows){
     });
   }
   $('y-chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="월별 실수령 막대와 누적 꺾은선 그래프">${g}</svg>`;
-  $('y-chart-note').textContent=last>0?`${last}월까지 누적 실수령 ${won(cums[last-1])}원`:'아직 기록이 없어요.';
+  $('y-chart-note').textContent=last>0?`${last}월까지 누적 ${lab} ${won(cums[last-1])}원`:'아직 기록이 없어요.';
 }
 
 // ───────── 백그라운드 화면 가리기 ─────────
@@ -690,6 +702,16 @@ window.addEventListener('pagehide',showCover);
 window.addEventListener('pageshow',hideCover);
 window.addEventListener('blur',showCover);
 window.addEventListener('focus',hideCover);
+
+// 아이폰: 화면 맨 아래에서 위로 쓸어올리는 순간(앱 목록 제스처) 먼저 가려요. 손을 그냥 떼면 다시 풀어요.
+(function(){
+  let edge=false, sy=0, covered=false;
+  document.addEventListener('touchstart',e=>{ const t=e.touches[0]; edge=t.clientY>=window.innerHeight-30; sy=t.clientY; covered=false; },{passive:true,capture:true});
+  document.addEventListener('touchmove',e=>{ if(!edge||covered) return; if(sy-e.touches[0].clientY>10){ covered=true; showCover(); } },{passive:true,capture:true});
+  document.addEventListener('touchend',()=>{ if(covered){ covered=false; hideCover(); } edge=false; },{capture:true});
+  document.addEventListener('touchcancel',()=>{ edge=false; },{capture:true}); // 시스템이 제스처를 가져가면 가린 채로 둬요
+})();
+window.addEventListener('resize',()=>{ if(document.hidden) showCover(); });
 
 function openTip(){ $('tip-ov').classList.add('on'); }
 function closeTip(){ $('tip-ov').classList.remove('on'); }
