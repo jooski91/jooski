@@ -607,8 +607,13 @@ let sel=null, mode='call', expType='킥보드', selApp='', appEdit=false;
 function parseAmt(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
 function fmtAmt(el){ const n=parseAmt(el.value); el.value=n?n.toLocaleString('ko-KR'):''; }
 
+// 금액 입력칸에 바로 커서: 버튼을 누른 그 순간에 바로 focus해야 아이폰에서도 키보드가 올라와요
+function focusAmt(){
+  const go=()=>{ const a=$('f-amt'); if(a){ try{ a.focus({preventScroll:true}); }catch(e){ a.focus(); } } };
+  go(); setTimeout(go,120);
+}
 let addOpen=false;
-function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) setTimeout(()=>$('f-amt')&&$('f-amt').focus(),80); }
+function openDay(k,md){ sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(md) focusAmt(); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
 function closeDay(){ $('ov').classList.remove('on'); $('sheet').classList.remove('on'); sel=null; }
 
@@ -635,8 +640,8 @@ function renderSheet(){
   if(mode==='call') renderAppSection();
   renderSheetList();
 }
-function openAdd(){ addOpen=true; renderSheet(); setTimeout(()=>$('f-amt')&&$('f-amt').focus(),50); }
-function setMode(m){ mode=m; appEdit=false; renderSheet(); setTimeout(()=>$('f-amt')&&$('f-amt').focus(),50); }
+function openAdd(){ addOpen=true; renderSheet(); focusAmt(); }
+function setMode(m){ mode=m; appEdit=false; renderSheet(); focusAmt(); }
 function setType(el,t){ expType=t; el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
 
 function renderAppSection(){
