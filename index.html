@@ -1014,7 +1014,7 @@ function setFlag(k,v){ state.settings[k]=v; touch(); renderAll(); }
 function setDeduction(el){ state.settings.deduction=el.value.trim()===''?null:parseAmt(el.value); touch(); renderAll(); }
 function toggleAdv(){ const b=$('adv-box'), show=b.style.display==='none'; b.style.display=show?'block':'none'; $('adv-arrow').textContent=show?'▴':'▾'; }
 function setOther(el){ state.settings.otherBase=parseAmt(el.value); touch(); renderAll(); }
-window.__applyNick=function(n){ state.settings.nick=String(n).slice(0,12); touch(); renderAll(); };
+window.__applyNick=function(n){ state.settings.nick=String(n).slice(0,12); if(!state.settings.avatar) state.settings.avatar={t:'emoji',v:EMOJIS[Math.floor(Math.random()*EMOJIS.length)]}; touch(); renderAll(); };   // 가입 시 프로필 이모티콘 랜덤 기본값
 function saveAcctEmail(){
   const v=$('acct-email').value.trim();
   if(!window.appAuth.validEmail(v)){ toast('이메일 주소를 확인해 주세요'); return; }
