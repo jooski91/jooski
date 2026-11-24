@@ -403,7 +403,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     const a=acct();
     try{ localStorage.setItem(RK,remember?'1':'0'); }catch(e){}
     try{ sessionStorage.setItem(SK,'1'); }catch(e){}
-    try{ localStorage.removeItem(KK); }catch(e){}
+    try{ if(a) localStorage.setItem(KK,token(a)); }catch(e){}   // 로그아웃 전까지 로그인 유지
     savePw('');
     pending=null; hide();
   }
@@ -476,8 +476,8 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   $('au-back').addEventListener('click',function(){ pending=null; setMode('login'); });
   const a0=acct();
   let ok=false;
-  try{ localStorage.removeItem(KK); localStorage.removeItem(PK); }catch(e){}
-if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'; }catch(e){} }
+  try{ localStorage.removeItem(PK); }catch(e){}
+if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'||localStorage.getItem(KK)===token(a0); }catch(e){} }
   if(ok){ try{ sessionStorage.setItem(SK,'1'); }catch(e){} hide(); } else show('login');
 })();
 </script>
