@@ -32,6 +32,9 @@ input{font-family:inherit;color:inherit;}
 /* views */
 main{flex:1;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding:calc(0px + var(--safe-t)) 14px 24px;}
 .view{display:none;} .view.on{display:block;}
+.view.sl-l{animation:slL .22s ease-out;} .view.sl-r{animation:slR .22s ease-out;}
+@keyframes slL{from{transform:translateX(28px);opacity:.3}to{transform:none;opacity:1}}
+@keyframes slR{from{transform:translateX(-28px);opacity:.3}to{transform:none;opacity:1}}
 /* 기록 탭: 화면에 딱 맞추고 남는 높이는 달력이 채움 */
 #v-cal.on{display:flex;flex-direction:column;box-sizing:border-box;height:calc(100dvh - 54px - var(--safe-b) - var(--safe-t) - 8px);}
 main:has(#v-cal.on){overflow-y:auto;padding-bottom:8px;}
@@ -43,13 +46,6 @@ main:has(#v-cal.on){overflow-y:auto;padding-bottom:8px;}
 /* nav */
 nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);padding-bottom:var(--safe-b);flex-shrink:0;}
 nav button{height:52px;font-size:13.5px;font-weight:600;color:var(--ink3);}
-nav button#lock-btn{color:var(--ink3);opacity:.7;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}
-nav button#lock-btn.hold{color:var(--accent);opacity:1;}
-.hold-hint{position:fixed;left:50%;bottom:calc(70px + var(--safe-b));transform:translateX(-50%);min-width:170px;overflow:hidden;background:var(--card3);color:#fff;font-size:13.5px;font-weight:700;padding:12px 22px;border-radius:24px;box-shadow:inset 0 0 0 1px var(--line);opacity:0;pointer-events:none;z-index:400;text-align:center;transition:opacity .15s;}
-.hold-hint.on{opacity:1;}
-.hold-hint::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(93,211,158,.6);transition:width 0s;}
-.hold-hint.fill::before{width:100%;transition:width .5s linear;}
-.hold-hint span{position:relative;z-index:1;}
 nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 
 /* month bar */
@@ -70,8 +66,8 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .quick button{height:54px;border-radius:12px;font-size:14.5px;font-weight:700;}
 .quick .q-in{background:rgba(93,211,158,.32);color:var(--accent);} .quick .q-out{background:rgba(255,107,107,.32);color:var(--out);}
 .quick button:active{opacity:.8;}
-.chev{width:26px;height:26px;display:block;margin:0 auto;fill:none;stroke:var(--ink2);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
-.mbar .mt{text-align:center;font-size:23px;font-weight:700;}
+.chev{width:25px;height:25px;display:block;margin:0 auto;fill:none;stroke:var(--ink2);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.mbar .mt{text-align:center;font-size:22px;font-weight:700;}
 
 /* calendar */
 .cal{background:var(--card);border-radius:14px;padding:8px 6px 10px;border:1px solid var(--line);}
@@ -122,7 +118,30 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .pos{color:var(--in);} .neg{color:var(--out);}
 .ybar{display:grid;grid-template-columns:56px 1fr 56px;align-items:center;margin-bottom:6px;}
 .ybar button{height:34px;font-size:30px;color:var(--ink2);}
-.ybar .mt{text-align:center;font-size:23px;font-weight:700;}
+.ybar .mt{text-align:center;font-size:22px;font-weight:700;}
+
+
+/* 내역 */
+#v-list .set-title{margin-bottom:0;}
+#v-list .mbar{margin-bottom:4px;}
+#v-list .mbar button{height:40px;}
+.h-sum{display:grid;grid-template-columns:1fr 1fr;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 0;margin-bottom:8px;}
+.h-sum div{text-align:center;} .h-sum div+div{border-left:1px solid var(--line);}
+.h-sum small{display:block;font-size:11px;color:var(--ink2);}
+.h-sum b{display:block;font-size:17px;margin-top:3px;font-variant-numeric:tabular-nums;}
+.h-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;}
+.h-tabs button{height:34px;border-radius:9px;background:var(--card2);font-size:13px;font-weight:600;color:var(--ink2);}
+.h-tabs button.on{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+.h-day{display:flex;justify-content:space-between;align-items:baseline;padding:16px 4px 6px;font-size:12.5px;color:var(--ink2);font-weight:600;}
+.h-day span:last-child{font-size:11.5px;font-weight:500;color:var(--ink3);font-variant-numeric:tabular-nums;}
+.h-grp{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.h-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);}
+.h-row:last-child{border-bottom:none;}
+.h-row:active{background:var(--card2);}
+.h-row .n{font-size:14.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.h-row .s{font-size:11.5px;color:var(--ink3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.h-row .a{font-size:15.5px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;}
+.h-row .a small{display:block;font-size:11px;font-weight:500;color:var(--ink3);margin-top:3px;}
 
 /* settings */
 #v-cal .set-title,#v-year .set-title{margin-bottom:0;}
@@ -250,29 +269,49 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .tip ol{padding-left:20px;}
 .tip .sub{color:var(--ink2);font-size:12px;}
 .tip .btn{margin-top:16px;}
-/* lock */
-.lock{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b));}
-.lock-box{width:min(100%,320px);text-align:center;}
-.lock-logo{display:block;width:84px;height:84px;margin:0 auto 14px;border-radius:20px;box-shadow:0 0 0 1px rgba(255,255,255,.06);}
-.lock-name{font-size:20px;font-weight:700;letter-spacing:1.5px;color:var(--ink);margin-bottom:48px;}
-.lock-t{font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:12px;}
-.lock-box input{width:100%;height:52px;border:1.5px solid var(--line);border-radius:14px;background:var(--card2);padding:0 14px;font-size:18px;text-align:center;letter-spacing:4px;}
-.lock-box input:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
-.lock-box.err input{border-color:var(--out);animation:shake .3s;}
+/* login */
+.auth{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b));overflow-y:auto;}
+.auth-box{width:min(100%,320px);text-align:center;margin:auto;}
+.au-logo{display:block;width:84px;height:84px;margin:0 auto 14px;border-radius:20px;box-shadow:0 0 0 1px rgba(255,255,255,.06);}
+.au-name{font-size:20px;font-weight:700;letter-spacing:1.5px;color:var(--ink);margin-bottom:32px;}
+.au-t{font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:14px;line-height:1.5;}
+.auth-box input[type=text],.auth-box input[type=password]{display:block;width:100%;height:50px;border:1.5px solid var(--line);border-radius:14px;background:var(--card2);padding:0 14px;font-size:16px;margin-bottom:10px;}
+.auth-box input:focus{outline:none;border-color:var(--accent);background:rgba(93,211,158,.06);}
+.au-keep{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 0;font-size:13px;color:var(--ink2);cursor:pointer;-webkit-user-select:none;user-select:none;}
+.au-keep input{width:18px;height:18px;margin:0;accent-color:var(--accent);flex-shrink:0;}
+.au-msg{min-height:18px;font-size:12px;line-height:18px;color:var(--out);margin:8px 0 0;}
+.auth-box .btn{height:50px;border-radius:14px;margin-top:6px;}
+.auth-box.err{animation:shake .3s;}
 @keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
-.lock-secret{display:none;font-size:22px;font-weight:700;letter-spacing:1px;color:var(--ink3);}
-.lock.cover .lock-box{display:none;}
-.lock.cover .lock-secret{display:block;}
-.lk-hint{display:none;text-align:right;font-size:12px;color:var(--ink3);margin:8px 2px 0;}
-#lk-forgot{font-size:11px;font-weight:500;color:var(--ink3);}
-.lk-msg{height:0;font-size:12px;line-height:14px;color:var(--out);margin:5px 0 0;}
-.lock-box .btn{height:50px;border-radius:14px;margin-top:20px;}
+.auth-box .btn:disabled{opacity:.6;}
+.au-ver{position:fixed;left:0;right:0;bottom:calc(18px + var(--safe-b));text-align:center;font-size:11.5px;color:var(--ink3);letter-spacing:.3px;pointer-events:none;}
+@media (max-height:600px){.au-ver{display:none;}}
+.au-links{display:flex;align-items:center;justify-content:center;gap:14px;padding-top:18px;}
+.au-links button{font-size:12.5px;font-weight:500;color:var(--ink3);padding:4px 2px;}
+.au-links i{width:1px;height:11px;background:var(--line);}
 /* splash */
 .splash{position:fixed;inset:0;padding-bottom:18vh;z-index:1000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spOut .55s ease 1.15s forwards;}
 .splash .sp-logo{width:112px;height:112px;border-radius:26px;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 12px 40px rgba(93,211,158,.15);animation:spIn .6s cubic-bezier(.2,.8,.2,1) both;}
 .splash .sp-name{font-size:22px;font-weight:700;letter-spacing:1.5px;color:var(--ink);animation:spIn .6s cubic-bezier(.2,.8,.2,1) .15s both;}
 @keyframes spIn{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:none;}}
 @keyframes spOut{to{opacity:0;visibility:hidden;pointer-events:none;}}
+
+/* 날짜 선택 창 */
+.mbar .mt,.ybar .mt{cursor:pointer;-webkit-user-select:none;user-select:none;}
+.mbar .mt::after,.ybar .mt::after{content:"";display:inline-block;margin-left:7px;vertical-align:3px;border:5px solid transparent;border-top-color:var(--ink3);border-bottom:0;}
+.mbar .mt:active,.ybar .mt:active{opacity:.6;}
+.pk{padding:16px 14px;}
+.pk-top{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:10px;}
+.pk-top button{height:40px;}
+.pk-top .chev{width:22px;height:22px;}
+.pk-top b{text-align:center;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;}
+.pk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pk-grid button{height:46px;border-radius:10px;background:var(--card2);font-size:15px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+.pk-grid button.now{box-shadow:inset 0 0 0 1.5px var(--ink3);}
+.pk-grid button.on{background:var(--accent);color:var(--on-accent);box-shadow:none;}
+.pk-grid button:active{opacity:.8;}
+.pk-foot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.pk-foot .btn{height:42px;font-size:13.5px;}
 </style>
 </head>
 <body>
@@ -287,90 +326,158 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 </defs><rect width="1024" height="1024" fill="url(#spbg)"/><g fill="none" stroke="url(#spmint)" stroke-linecap="round" stroke-linejoin="round"><circle cx="512" cy="512" r="282" stroke-width="72"/><path d="M262 540 H410 M614 540 H762 M512 640 V794" stroke-width="64"/></g><circle cx="512" cy="540" r="112" fill="url(#spmint)"/></svg><div class="sp-name">Ledger</div></div>
 <script>try{ const n=performance.getEntriesByType('navigation')[0]; if(n&&n.type==='reload'){ const sp=document.getElementById('splash'); if(sp) sp.remove(); } }catch(e){}</script>
 
-<div class="lock" id="lock">
-  <div class="lock-secret">Secret mode</div>
-  <form class="lock-box" id="lk-form" autocomplete="off">
-    <svg class="lock-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs>
-<linearGradient id="lkbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2521"/><stop offset="1" stop-color="#060908"/></linearGradient>
-<linearGradient id="lkmint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9af5cb"/><stop offset="1" stop-color="#3fb482"/></linearGradient>
-</defs><rect width="1024" height="1024" fill="url(#lkbg)"/><g fill="none" stroke="url(#lkmint)" stroke-linecap="round" stroke-linejoin="round"><circle cx="512" cy="512" r="282" stroke-width="72"/><path d="M262 540 H410 M614 540 H762 M512 640 V794" stroke-width="64"/></g><circle cx="512" cy="540" r="112" fill="url(#lkmint)"/></svg>
-    <div class="lock-name">Ledger</div>
-    <div class="lock-t">비밀번호를 입력하세요</div>
-    <input id="lk-in" type="password" inputmode="numeric" autocomplete="off" maxlength="12">
-    <div class="lk-hint" id="lk-hint">초기화 PIN 12345</div>
-    <div class="lk-msg" id="lk-msg"></div>
-    <button class="btn primary" type="submit" id="lk-ok">확인</button>
-    <button type="button" class="linkbtn" id="lk-forgot" style="width:100%;text-align:center;padding:18px 0 0">비밀번호를 잊었어요</button>
+
+<div class="auth" id="auth">
+  <form class="auth-box" id="au-form" autocomplete="on">
+    <svg class="au-logo" aria-hidden="true"><use href="#brand-sym"/></svg>
+    <div class="au-name">Ledger</div>
+    <div class="au-t" id="au-t"></div>
+    <input id="au-id" name="username" type="text" inputmode="email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="60" placeholder="이메일 (아이디)">
+    <input id="au-nick" name="nickname" type="text" autocomplete="nickname" maxlength="12" placeholder="닉네임">
+    <input id="au-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="인증번호 6자리">
+    <input id="au-pw" name="password" type="password" autocomplete="current-password" maxlength="20" placeholder="비밀번호">
+    <input id="au-pw2" name="password2" type="password" autocomplete="new-password" maxlength="20" placeholder="비밀번호 확인">
+    <label class="au-keep" id="au-keep-w"><input type="checkbox" id="au-keep" checked><span>아이디 비밀번호 기억하기</span></label>
+    <div class="au-msg" id="au-msg"></div>
+    <button class="btn primary" type="submit" id="au-ok"></button>
+    <div class="au-links"><button type="button" id="au-join">회원가입</button><i id="au-dot"></i><button type="button" id="au-find">비밀번호 찾기</button><button type="button" id="au-back">로그인으로 돌아가기</button></div>
   </form>
+  <div class="au-ver">Ledger v1.0</div>
 </div>
 <script>
 (function(){
-  const DEFAULT_PIN='1130', KEY='driver_ledger_session_ok', PKEY='driver_ledger_pin';
-  function hs(str){ // 가벼운 해시(평문 저장 방지용)
+  const AK='driver_ledger_acct', SK='driver_ledger_auth', KK='driver_ledger_keep', RK='driver_ledger_rem', PK='driver_ledger_pw';
+  // EmailJS (비밀번호 찾기 인증번호 메일) — Public Key는 공개용이에요
+  const EJ={service:'service_yldu1pj', template:'template_9z1jc7o', key:'LzofxevzIoiGsqigX'};
+  function hs(str){
     let h1=0xdeadbeef,h2=0x41c6ce57; str='dl|'+str;
     for(let i=0;i<str.length;i++){ const c=str.charCodeAt(i); h1=Math.imul(h1^c,2654435761); h2=Math.imul(h2^c,1597334677); }
     h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
     h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
     return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);
   }
-  function storedPin(){ try{ return localStorage.getItem(PKEY); }catch(e){ return null; } }
-  function verify(v){ const s=storedPin(); return s? hs(v)===s : v===DEFAULT_PIN; }
-  const RECOVERY_PIN='12345'; // 초기화 핀번호(고정)
-  function verifyRec(v){ return v===RECOVERY_PIN; }
-  try{ localStorage.removeItem('driver_ledger_unlocked'); }catch(e){} // 예전 '영구 저장' 방식 제거
-  const lock=document.getElementById('lock');
-  const form=document.getElementById('lk-form'), inp=document.getElementById('lk-in'), msg=document.getElementById('lk-msg');
-  const lkTitle=lock.querySelector('.lock-t'), lkForgot=document.getElementById('lk-forgot');
-  let lkMode='pin'; // pin: 비밀번호 입력 / rec: 초기화 핀번호 입력 / new: 새 비밀번호 입력
-  function setLkMode(m){
-    lkMode=m; inp.value=''; msg.textContent=''; form.classList.remove('err');
-    lkTitle.textContent=m==='pin'?'비밀번호를 입력하세요':m==='rec'?'초기화 핀번호를 입력하세요':'새 비밀번호를 입력하세요 (4~12자리)';
-    lkForgot.textContent=m==='pin'?'비밀번호를 잊었어요':'돌아가기';
-    document.getElementById('lk-hint').style.display=m==='rec'?'block':'none';
-    lkForgot.style.display=m==='new'?'none':'block';
-  }
-  let unlocked=false;
-  try{ unlocked=sessionStorage.getItem(KEY)==='1'; }catch(e){}
-  function show(cover){ lock.classList.toggle('cover',!!cover&&unlocked); lock.style.display='flex'; }
-  function hide(){ lock.style.display='none'; inp.blur(); }
-  window.appLock={
-    show:function(){ show(true); inp.blur(); },      // 백그라운드: 'Secret mode' 화면으로 가림 (아직 안 풀었으면 비밀번호 화면)
-    restore:function(){ if(unlocked) hide(); else { show(false); } }, // 돌아왔을 때: 이미 풀었으면 바로 해제
-    lockNow:function(){ // 수동 잠금
-      unlocked=false; try{ sessionStorage.removeItem(KEY); }catch(e){}
-      setLkMode('pin'); show(false); setTimeout(()=>inp.focus(),50);
-    },
-    verify:verify,
-    setPin:function(v){ try{ localStorage.setItem(PKEY,hs(v)); return true; }catch(e){ return false; } }
+  const $=id=>document.getElementById(id);
+  const box=$('au-form'), auth=$('auth'), idI=$('au-id'), nickI=$('au-nick'), codeI=$('au-code'), pwI=$('au-pw'), pw2I=$('au-pw2'), msg=$('au-msg'), keep=$('au-keep');
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function remOn(){ try{ return localStorage.getItem(RK)!=='0'; }catch(e){ return true; } }
+  function acct(){ try{ const a=JSON.parse(localStorage.getItem(AK)); return a&&a.id&&a.h?a:null; }catch(e){ return null; } }
+  function saveAcct(a){ try{ localStorage.setItem(AK,JSON.stringify(a)); return true; }catch(e){ return false; } }
+  function salt(a){ return String(a.salt||a.id).toLowerCase(); }   // 아이디를 바꿔도 비밀번호 확인값이 유지되도록 처음 값을 따로 보관
+  function pwHash(sl,pw){ return hs('p|'+String(sl).toLowerCase()+'|'+pw); }
+  function token(a){ return hs('k|'+salt(a)+'|'+a.h); }
+  function savePw(pw){ try{ if(pw) localStorage.setItem(PK,btoa(unescape(encodeURIComponent(pw)))); else localStorage.removeItem(PK); }catch(e){} }
+  function loadPw(){ try{ const v=localStorage.getItem(PK); return v?decodeURIComponent(escape(atob(v))):''; }catch(e){ return ''; } }
+  function mask(e){ const i=e.indexOf('@'); return e.slice(0,Math.min(2,i))+'***'+e.slice(i); }
+  // 예전 계정: 이메일이 따로 있으면 그 이메일을 아이디로, 예전 아이디는 닉네임 후보로
+  (function migrate(){
+    const a=acct(); if(!a||!a.email||!EMAIL_RE.test(a.email)||a.id.toLowerCase()===a.email.toLowerCase()) return;
+    a.salt=salt(a); a.legacyNick=a.id; a.id=a.email; saveAcct(a);
+  })();
+  let mode='login', pending=null, lastSend=0; // pending: {code, exp, tries}
+  const SHOW={
+    login: {t:'', f:['id','pw'], keep:1, ok:'로그인', links:'main'},
+    signup:{t:'이메일이 아이디가 돼요. 비밀번호를 잊으면 이 이메일로 인증번호를 보내드려요.', f:['id','nick','pw','pw2'], ok:'회원가입', links:'back'},
+    find:  {t:'가입한 이메일(아이디)로 인증번호를 보내드려요.', f:['id'], ok:'인증번호 받기', links:'back'},
+    code:  {t:'', f:['code'], ok:'확인', links:'back'},
+    reset: {t:'새 비밀번호를 만들어 주세요.', f:['pw','pw2'], ok:'비밀번호 변경', links:'none'}
   };
-  if(unlocked) hide(); else { show(false); setTimeout(()=>inp.focus(),50); }
-  form.addEventListener('submit',function(e){
+  const FIELD={id:idI,nick:nickI,code:codeI,pw:pwI,pw2:pw2I};
+  function setMode(m,title){
+    mode=m; msg.textContent=''; const c=SHOW[m];
+    $('au-t').textContent=title||c.t; $('au-t').style.display=(title||c.t)?'block':'none';
+    for(const k in FIELD) FIELD[k].style.display=c.f.includes(k)?'block':'none';
+    $('au-keep-w').style.display=c.keep?'flex':'none'; keep.checked=remOn();
+    $('au-ok').textContent=c.ok;
+    const main=c.links==='main';
+    $('au-find').style.display=main?'inline-block':'none'; $('au-dot').style.display=main?'block':'none'; $('au-join').style.display=main?'inline-block':'none';
+    $('au-back').style.display=c.links==='back'?'inline-block':'none';
+    const np=(m==='reset'); pwI.placeholder=np?'새 비밀번호':'비밀번호'; pw2I.placeholder=np?'새 비밀번호 확인':'비밀번호 확인';
+    pwI.autocomplete=(m==='login')?'current-password':'new-password';
+    pwI.value=''; pw2I.value=''; codeI.value=''; nickI.value='';
+    if(m==='login'){ const a=acct(), on=remOn(); idI.value=(a&&on)?a.id:''; pwI.value=(a&&on)?loadPw():''; }
+    else if(m==='signup'||m==='find') idI.value='';
+  }
+  function show(m){ setMode(m); auth.style.display='flex'; setTimeout(()=>{ (mode==='login'&&idI.value&&!pwI.value?pwI:FIELD[SHOW[mode].f[0]]).focus(); },50); }
+  function hide(){ auth.style.display='none'; document.activeElement&&document.activeElement.blur&&document.activeElement.blur(); }
+  function enter(remember,pw){
+    const a=acct();
+    try{ localStorage.setItem(RK,remember?'1':'0'); }catch(e){}
+    try{ sessionStorage.setItem(SK,'1'); }catch(e){}
+    try{ if(remember&&a) localStorage.setItem(KK,token(a)); else localStorage.removeItem(KK); }catch(e){}
+    savePw(remember?pw:'');
+    pending=null; hide();
+  }
+  window.appAuth={
+    id:function(){ const a=acct(); return a?a.id:''; },
+    validEmail:function(e){ return EMAIL_RE.test(e); },
+    setEmailId:function(e){ const a=acct(); if(!a) return false; a.salt=salt(a); a.id=e; a.email=e; return saveAcct(a); }, // 예전 계정이 이메일을 아이디로 등록
+    takeLegacyNick:function(){ const a=acct(); if(!a||!a.legacyNick) return ''; const n=a.legacyNick; delete a.legacyNick; saveAcct(a); return n; },
+    logout:function(){ try{ sessionStorage.removeItem(SK); localStorage.removeItem(KK); }catch(e){} show('login'); }
+  };
+  function fail(t){ box.classList.remove('err'); void box.offsetWidth; box.classList.add('err'); msg.textContent=t; }
+  function fmtTime(ts){ const d=new Date(ts), h=d.getHours(); return (h<12?'오전 ':'오후 ')+(h%12||12)+':'+String(d.getMinutes()).padStart(2,'0'); }
+  async function sendCode(email){
+    const buf=new Uint32Array(1); (window.crypto||window.msCrypto).getRandomValues(buf);
+    const code=String(100000+(buf[0]%900000)), exp=Date.now()+15*60*1000;
+    const res=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({service_id:EJ.service,template_id:EJ.template,user_id:EJ.key,template_params:{email:email,passcode:code,time:fmtTime(exp)}})});
+    if(!res.ok){ let t=''; try{ t=(await res.text()).slice(0,80); }catch(e){} throw new Error(t||('오류 '+res.status)); }
+    pending={code:code,exp:exp,tries:0}; lastSend=Date.now();
+  }
+  box.addEventListener('submit',async function(e){
     e.preventDefault();
-    const v=inp.value.trim();
-    function fail(t){ form.classList.remove('err'); void form.offsetWidth; form.classList.add('err'); msg.textContent=t; inp.value=''; inp.focus(); }
-    function done(){ unlocked=true; try{sessionStorage.setItem(KEY,'1');}catch(err){} setLkMode('pin'); hide(); }
-    if(lkMode==='pin'){ if(verify(v)) done(); else fail('비밀번호가 맞지 않아요'); }
-    else if(lkMode==='rec'){ if(verifyRec(v)){ setLkMode('new'); inp.focus(); } else fail('초기화 핀번호가 맞지 않아요'); }
-    else {
-      if(v.length<4||v.length>12){ fail('새 비밀번호는 4~12자리로 해주세요'); return; }
-      if(!window.appLock.setPin(v)){ fail('저장에 실패했어요'); return; }
-      done();
+    const id=idI.value.trim(), pw=pwI.value, a=acct();
+    if(mode==='signup'){
+      const nick=nickI.value.trim();
+      if(!EMAIL_RE.test(id)){ fail('이메일 형식으로 입력해 주세요'); return; }
+      if(!nick||nick.length>12){ fail('닉네임은 1~12자로 정해 주세요'); return; }
+      if(pw.length<4||pw.length>20){ fail('비밀번호는 4~20자로 만들어 주세요'); return; }
+      if(pw!==pw2I.value){ fail('비밀번호가 서로 달라요'); return; }
+      if(!saveAcct({id:id,email:id,salt:id.toLowerCase(),h:pwHash(id,pw)})){ fail('저장에 실패했어요'); return; }
+      try{ window.__applyNick&&window.__applyNick(nick); }catch(err){}
+      enter(true,pw);
+    } else if(mode==='login'){
+      if(!a){ fail('가입된 아이디가 없어요. 회원가입을 해주세요'); return; }
+      if(a.id.toLowerCase()!==id.toLowerCase()||a.h!==pwHash(salt(a),pw)){ fail('아이디 또는 비밀번호가 맞지 않아요'); pwI.value=''; return; }
+      enter(keep.checked,pw);
+    } else if(mode==='find'){
+      if(!a){ fail('가입된 아이디가 없어요. 회원가입을 해주세요'); return; }
+      if(!EMAIL_RE.test(id)){ fail('이메일 형식으로 입력해 주세요'); return; }
+      if(a.id.toLowerCase()!==id.toLowerCase()){ fail('가입한 이메일(아이디)과 달라요'); return; }
+      if(Date.now()-lastSend<30000){ fail('잠시 후 다시 눌러 주세요 (30초)'); return; }
+      const ok=$('au-ok'); ok.disabled=true; ok.textContent='보내는 중...';
+      try{ await sendCode(a.id); setMode('code', mask(a.id)+' 로 인증번호를 보냈어요. 15분 안에 입력해 주세요.'); codeI.focus(); }
+      catch(err){ ok.disabled=false; ok.textContent='인증번호 받기'; fail('메일을 보내지 못했어요 ('+(err&&err.message?err.message:'네트워크')+')'); return; }
+      ok.disabled=false;
+    } else if(mode==='code'){
+      if(!pending||Date.now()>pending.exp){ fail('인증번호가 만료됐어요. 다시 받아 주세요'); return; }
+      if(codeI.value.trim()!==pending.code){ pending.tries++; codeI.value=''; if(pending.tries>=5){ pending=null; setMode('find'); fail('여러 번 틀렸어요. 인증번호를 다시 받아 주세요'); } else fail('인증번호가 맞지 않아요 ('+pending.tries+'/5)'); return; }
+      setMode('reset'); pwI.focus();
+    } else if(mode==='reset'){
+      if(!a||!pending){ setMode('login'); return; }
+      if(pw.length<4||pw.length>20){ fail('비밀번호는 4~20자로 만들어 주세요'); return; }
+      if(pw!==pw2I.value){ fail('비밀번호가 서로 달라요'); return; }
+      a.salt=salt(a); a.h=pwHash(a.salt,pw); if(!saveAcct(a)){ fail('저장에 실패했어요'); return; }
+      enter(remOn(),pw);
     }
   });
-  lkForgot.addEventListener('click',function(e){
-    e.stopPropagation();
-    if(lkMode==='pin'){
-      setLkMode('rec'); inp.focus();
-    } else setLkMode('pin');
+  $('au-join').addEventListener('click',function(){
+    if(acct()&&!confirm('새로 가입하면 지금 아이디는 사라지고 새 아이디로 바뀌어요. 수익·지출 기록은 지워지지 않아요. 계속할까요?')) return;
+    setMode('signup'); idI.focus();
   });
-  lock.addEventListener('click',function(){ if(unlocked) hide(); }); // 풀린 상태에서 가려진 화면을 탭하면 해제
-  // 앱이 다시 보이면 터치 없이 자동 해제 (이벤트가 누락돼도 되돌아오게 주기적으로 확인)
-  setInterval(function(){
-    if(unlocked && lock.classList.contains('cover') && lock.style.display!=='none' && !window.__swiping && document.visibilityState==='visible') hide();
-  },300);
-  ['visibilitychange','focus','pageshow'].forEach(function(ev){ window.addEventListener(ev,function(){ if(!document.hidden) window.__swiping=false; }); });
-  lock.addEventListener('touchstart',function(){ if(unlocked){ window.__swiping=false; hide(); } },{passive:true}); // 돌아와서 화면을 닿는 즉시 해제
-  inp.addEventListener('input',function(){ msg.textContent=''; form.classList.remove('err'); });
+  $('au-find').addEventListener('click',function(){
+    const a=acct();
+    if(a&&!EMAIL_RE.test(a.id)){ // 이메일을 등록하지 않은 예전 계정
+      if(!confirm('이 계정은 이메일 아이디가 아니라서 인증번호를 보낼 수 없어요. 이메일로 새로 가입할까요? 수익·지출 기록은 지워지지 않아요.')) return;
+      setMode('signup'); idI.focus(); return;
+    }
+    setMode('find'); idI.focus();
+  });
+  $('au-back').addEventListener('click',function(){ pending=null; setMode('login'); });
+  const a0=acct();
+  let ok=false;
+  if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'||localStorage.getItem(KK)===token(a0); }catch(e){} }
+  if(ok){ try{ sessionStorage.setItem(SK,'1'); }catch(e){} hide(); } else show('login');
 })();
 </script>
 
@@ -380,7 +487,7 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     <div class="set-title"><span class="brand"><svg class="b-logo" aria-hidden="true"><use href="#brand-sym"/></svg><b>Ledger</b></span><span class="tp"></span></div>
     <div class="mbar">
       <button onclick="moveMonth(-1)" aria-label="이전 달"><svg class="chev" viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg></button>
-      <div class="mt" id="m-title"></div>
+      <div class="mt" id="m-title" role="button" tabindex="0" aria-label="날짜 선택" onclick="openPicker('cal')"></div>
       <button onclick="moveMonth(1)" aria-label="다음 달"><svg class="chev" viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
       <button class="today-btn" id="m-today" onclick="goToday()" style="display:none">오늘</button>
     </div>
@@ -395,12 +502,26 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     </div>
   </section>
 
+  <!-- 내역 -->
+  <section class="view" id="v-list">
+    <div class="set-title"><span class="brand"><svg class="b-logo" aria-hidden="true"><use href="#brand-sym"/></svg><b>Ledger</b></span><span class="tp"></span></div>
+    <div class="mbar">
+      <button onclick="moveHist(-1)" aria-label="이전 달"><svg class="chev" viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg></button>
+      <div class="mt" id="h-title" role="button" tabindex="0" aria-label="날짜 선택" onclick="openPicker('list')"></div>
+      <button onclick="moveHist(1)" aria-label="다음 달"><svg class="chev" viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
+      <button class="today-btn" id="h-today" onclick="goHistToday()" style="display:none">오늘</button>
+    </div>
+    <div class="h-sum" id="h-sum"></div>
+    <div class="h-tabs" id="h-tabs"></div>
+    <div class="h-list" id="h-list"></div>
+  </section>
+
   <!-- 연간 -->
   <section class="view" id="v-year">
     <div class="set-title"><span class="brand"><svg class="b-logo" aria-hidden="true"><use href="#brand-sym"/></svg><b>Ledger</b></span><span class="tp"></span></div>
     <div class="ybar">
       <button onclick="moveYear(-1)" aria-label="이전 해"><svg class="chev" viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg></button>
-      <div class="mt" id="y-title"></div>
+      <div class="mt" id="y-title" role="button" tabindex="0" aria-label="날짜 선택" onclick="openPicker('year')"></div>
       <button onclick="moveYear(1)" aria-label="다음 해"><svg class="chev" viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
       <button class="today-btn" id="y-today" onclick="goThisYear()" style="display:none">올해</button>
     </div>
@@ -454,11 +575,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       </div>
     </div>
     <div class="card">
-      <h2>시크릿 모드</h2>
-      <p class="note" style="margin:0 0 8px">앱을 나가거나 다른 앱으로 전환할 때 'Secret mode' 화면으로 가려요.</p>
-      <div class="seg" id="s-priv"></div>
-    </div>
-    <div class="card">
       <h2>콜 앱 관리</h2>
       <div id="s-apps"></div>
       <div class="addrow"><input id="s-app-new" maxlength="8" placeholder="앱 이름 추가" onkeydown="if(event.key==='Enter')addApp('s-app-new')"><button class="mini wide" onclick="addApp('s-app-new')">추가</button></div>
@@ -473,19 +589,21 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
       <p class="note" style="margin-top:14px"><b>사이트에 반영하기</b><br>입력한 내용은 이 폰의 브라우저에 자동으로 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸기 전에는 위의 백업 파일을 꼭 받아두세요.</p>
     </div>
     <div class="card">
-      <button class="btn sec" id="pw-toggle" onclick="openPw()">비밀번호 변경</button>
+      <button class="btn danger" onclick="resetAll()">모든 데이터 초기화</button>
     </div>
     <div class="card">
-      <button class="btn danger" onclick="resetAll()">모든 데이터 초기화</button>
+      <p class="note" id="acct-note" style="margin:0"></p>
+      <div class="addrow" id="acct-reg" style="margin:10px 0 12px;display:none"><input id="acct-email" type="text" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="60" placeholder="이메일 등록 (로그인 아이디가 돼요)" onkeydown="if(event.key==='Enter')saveAcctEmail()"><button class="mini wide" onclick="saveAcctEmail()">저장</button></div>
+      <button class="btn sec" onclick="window.appAuth.logout()">로그아웃</button>
     </div>
   </section>
 </main>
 
 <nav>
   <button class="on" data-v="cal" onclick="go('cal')">기록</button>
+  <button data-v="list" onclick="go('list')">내역</button>
   <button data-v="year" onclick="go('year')">연간</button>
   <button data-v="set" onclick="go('set')">설정</button>
-  <button data-v="lock" id="lock-btn">잠금</button>
 </nav>
 
 <div class="ov" id="ov" onclick="closeDay()"></div>
@@ -495,6 +613,17 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
   <div class="sh-sum" id="sh-sum"></div>
   <div class="list" id="sh-list"></div>
   <div id="sh-form"></div>
+</div>
+<div class="tip-ov" id="pk-ov" onclick="if(event.target===this)closePicker()">
+  <div class="tip pk">
+    <div class="pk-top">
+      <button type="button" onclick="pkMove(-1)" aria-label="이전"><svg class="chev" viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg></button>
+      <b id="pk-title"></b>
+      <button type="button" onclick="pkMove(1)" aria-label="다음"><svg class="chev" viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
+    </div>
+    <div class="pk-grid" id="pk-grid"></div>
+    <div class="pk-foot"><button type="button" class="btn sec" id="pk-today" onclick="pkToday()"></button><button type="button" class="btn sec" onclick="closePicker()">닫기</button></div>
+  </div>
 </div>
 <div class="tip-ov" id="tip-ov" onclick="if(event.target===this)closeTip()">
   <div class="tip">
@@ -513,24 +642,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
     <p class="sub">올해 분은 내년 4~5월부터 조회돼요. 지금은 작년(가장 최근 연도) 금액을 쓰면 돼요.<br>메뉴 이름은 바뀔 수 있어요. 안 보이면 검색창에 "원천징수영수증"을 입력하세요.<br>조회가 안 되면 회사 인사팀에 영수증을 요청하세요.</p>
     <button class="btn primary" onclick="closeTip()">닫기</button>
   </div>
-</div>
-<div class="tip-ov" id="pw-ov" onclick="if(event.target===this)closePw()">
-  <form class="tip" id="pw-form" autocomplete="off" onsubmit="event.preventDefault();changePin()">
-    <div class="sh-top"><h3>비밀번호 변경</h3><button type="button" class="sh-close" onclick="closePw()" aria-label="닫기">✕</button></div>
-    <div class="srow">
-      <label>현재 비밀번호</label>
-      <div class="frow"><input id="pw-old" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-    </div>
-    <div class="srow">
-      <label>새 비밀번호 (4~12자리)</label>
-      <div class="frow"><input id="pw-new" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-    </div>
-    <div class="srow">
-      <label>새 비밀번호 확인</label>
-      <div class="frow"><input id="pw-new2" type="password" inputmode="numeric" autocomplete="off" maxlength="12"></div>
-    </div>
-    <button class="btn primary" type="submit">변경</button>
-  </form>
 </div>
 <div class="tip-ov" id="nick-ov" onclick="if(event.target===this)closeNick()">
   <form class="tip" autocomplete="off" onsubmit="event.preventDefault();saveNick()">
@@ -555,7 +666,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 </div>
 <div class="spin" id="spin"><i></i></div>
 <div class="toast" id="toast"></div>
-<div class="hold-hint" id="hold-hint"><span>길게 누르면 잠김</span></div>
 
 <script>
 // ───────── 순수 계산 함수 ─────────
@@ -605,6 +715,7 @@ function compact(n){
 const sum=arr=>(arr||[]).reduce((s,x)=>s+(x.amt||0),0);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
 
+try{ ['driver_ledger_pin','driver_ledger_remember','driver_ledger_unlocked'].forEach(k=>localStorage.removeItem(k)); sessionStorage.removeItem('driver_ledger_session_ok'); }catch(e){}
 function persist(){ try{ localStorage.setItem(LS,JSON.stringify(state)); }catch(e){} }
 function touch(){ state.updatedAt=Date.now(); persist(); }
 
@@ -655,10 +766,12 @@ function previewReserve(){
 // ───────── 화면 전환 ─────────
 const now=new Date();
 let cy=now.getFullYear(), cm=now.getMonth()+1, ay=now.getFullYear();
-function go(v){
+const TABS=['cal','list','year','set'];
+function go(v,dir){
   try{ sessionStorage.setItem('driver_ledger_view',v); }catch(e){}
-  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on','sl-l','sl-r'));
   $('v-'+v).classList.add('on');
+  if(dir) $('v-'+v).classList.add(dir>0?'sl-l':'sl-r');
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   document.querySelector('main').scrollTop=0;
   renderAll();
@@ -667,6 +780,42 @@ function moveMonth(d){ cm+=d; if(cm<1){cm=12;cy--;} if(cm>12){cm=1;cy++;} render
 function moveYear(d){ ay+=d; renderYear(); }
 function goToday(){ const d=new Date(); cy=d.getFullYear(); cm=d.getMonth()+1; renderCal(); }
 function goThisYear(){ ay=new Date().getFullYear(); renderYear(); }
+
+
+// ───────── 내역 (은행 입출금 내역처럼) ─────────
+let hy=now.getFullYear(), hm=now.getMonth()+1, hf='all';
+function moveHist(d){ hm+=d; if(hm<1){hm=12;hy--;} if(hm>12){hm=1;hy++;} renderList(); }
+function goHistToday(){ const d=new Date(); hy=d.getFullYear(); hm=d.getMonth()+1; renderList(); }
+function setHistFilter(f){ hf=f; renderList(); }
+function timeOf(ts){ if(!ts) return ''; const d=new Date(ts), h=d.getHours(); return `${h<12?'오전':'오후'} ${h%12||12}:${pad(d.getMinutes())}`; }
+function renderList(){
+  { const d=new Date(); $('h-today').style.display=(hy!==d.getFullYear()||hm!==d.getMonth()+1)?'':'none'; }
+  $('h-title').textContent=`${hy}년 ${hm}월`;
+  const ms=monthStats(hy,hm);
+  $('h-sum').innerHTML=`<div><small>수익</small><b class="pos">+${won(ms.inc)}</b></div><div><small>지출</small><b class="neg">${ms.exp>0?'-'+won(ms.exp):'0'}</b></div>`;
+  $('h-tabs').innerHTML=[['all','전체'],['in','수익'],['out','지출']].map(([k,l])=>`<button class="${hf===k?'on':''}" onclick="setHistFilter('${k}')">${l}</button>`).join('');
+  const pre=`${hy}-${pad(hm)}-`, days=Object.keys(state.days).filter(k=>k.startsWith(pre)).sort().reverse();
+  const dow=['일','월','화','수','목','금','토'];
+  let h='';
+  for(const k of days){
+    const r=state.days[k]||{}, rows=[];
+    if(hf!=='out') (r.calls||[]).forEach((x,i)=>rows.push({kind:'in',x,i}));
+    if(hf!=='in') (r.exps||[]).forEach((x,i)=>rows.push({kind:'out',x,i}));
+    if(!rows.length) continue;
+    rows.sort((a,b)=>((b.x.ts||0)-(a.x.ts||0))||(b.i-a.i));
+    const d=Number(k.slice(8)), wd=dow[new Date(hy,hm-1,d).getDay()];
+    const inc=rows.filter(o=>o.kind==='in').reduce((a,o)=>a+o.x.amt,0), exp=rows.filter(o=>o.kind==='out').reduce((a,o)=>a+o.x.amt,0);
+    const net=hf==='in'?inc:hf==='out'?-exp:inc-exp;
+    h+=`<div class="h-day"><span>${hm}월 ${d}일 (${wd})</span><span>${net>0?'+':''}${won(net)}원</span></div><div class="h-grp">`;
+    for(const o of rows){
+      const isIn=o.kind==='in', x=o.x, name=isIn?(x.app||'콜'):x.type;
+      const sub=[timeOf(x.ts),x.memo?esc(x.memo):''].filter(Boolean).join(' · ');
+      h+=`<button class="h-row" onclick="openDay('${k}','${isIn?'call':'exp'}')"><div style="min-width:0"><div class="n">${esc(name)}</div><div class="s">${sub||'&nbsp;'}</div></div><div class="a ${isIn?'pos':'neg'}">${isIn?'+':'-'}${won(x.amt)}<small>${isIn?'수익':'지출'}</small></div></button>`;
+    }
+    h+='</div>';
+  }
+  $('h-list').innerHTML=h||'<div class="empty-l" style="padding:40px 0">이 달 내역이 없어요</div>';
+}
 
 // ───────── 달력 ─────────
 function renderCal(){
@@ -761,55 +910,8 @@ function drawYearChart(rows){
   $('y-chart-note').textContent=last>0?`${last}월까지 누적 ${lab} ${won(cums[last-1])}원`:'아직 기록이 없어요.';
 }
 
-// ───────── 백그라운드 화면 가리기 ─────────
-function showCover(){ if(state&&state.settings&&state.settings.privacy!==false&&window.appLock) window.appLock.show(); }
-function hideCover(){ if(window.appLock) window.appLock.restore(); }
-document.addEventListener('visibilitychange',()=>{ document.hidden?showCover():hideCover(); });
-window.addEventListener('pagehide',showCover);
-window.addEventListener('pageshow',hideCover);
-window.addEventListener('blur',showCover);
-window.addEventListener('focus',hideCover);
-
-// 아이폰: 화면 맨 아래에서 위로 쓸어올리는 순간(앱 목록 제스처) 먼저 가려요. 손을 그냥 떼면 다시 풀어요.
-(function(){
-  let edge=false, sy=0, covered=false;
-  document.addEventListener('touchstart',e=>{ const t=e.touches[0]; edge=t.clientY>=window.innerHeight-30; sy=t.clientY; covered=false; },{passive:true,capture:true});
-  document.addEventListener('touchmove',e=>{ if(!edge||covered) return; if(sy-e.touches[0].clientY>10){ covered=true; window.__swiping=true; showCover(); } },{passive:true,capture:true});
-  document.addEventListener('touchend',()=>{ if(covered){ covered=false; window.__swiping=false; hideCover(); } edge=false; },{capture:true});
-  document.addEventListener('touchcancel',()=>{ edge=false; if(covered){ covered=false; } },{capture:true}); // __swiping은 유지: 앱 전환 화면에서는 돌아올 때까지(포커스/터치) 계속 가려요 // 시스템이 제스처를 가져가면 가린 채로 둬요
-})();
-window.addEventListener('resize',()=>{ if(document.hidden) showCover(); });
-
 function openTip(){ $('tip-ov').classList.add('on'); }
 function closeTip(){ $('tip-ov').classList.remove('on'); }
-function openPw(){
-  ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).value='');
-  $('pw-ov').classList.add('on');
-  setTimeout(()=>$('pw-old').focus(),50);
-}
-function closePw(){ $('pw-ov').classList.remove('on'); ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).blur()); }
-function changePin(){
-  const o=$('pw-old').value.trim(), n=$('pw-new').value.trim(), n2=$('pw-new2').value.trim();
-  if(!window.appLock.verify(o)){ toast('현재 비밀번호가 맞지 않아요'); return; }
-  if(n.length<4||n.length>12){ toast('새 비밀번호는 4~12자리로 해주세요'); return; }
-  if(n!==n2){ toast('새 비밀번호가 서로 달라요'); return; }
-  if(!window.appLock.setPin(n)){ toast('저장에 실패했어요'); return; }
-  ['pw-old','pw-new','pw-new2'].forEach(id=>$(id).value='');
-  closePw(); toast('비밀번호를 바꿨어요');
-}
-
-// ───────── 잠금 버튼: 길게 눌러야 잠겨요 (실수로 누르는 것 방지) ─────────
-(function(){
-  const b=$('lock-btn'), hint=$('hold-hint'); let t=null, ht=null, fired=false;
-  const HOLD=500;
-  function start(e){ fired=false; b.classList.add('hold'); clearTimeout(t); clearTimeout(ht); hint.classList.remove('fill'); hint.classList.add('on'); void hint.offsetWidth; hint.classList.add('fill'); t=setTimeout(()=>{ fired=true; b.classList.remove('hold'); hint.classList.remove('on','fill'); if(navigator.vibrate) try{navigator.vibrate(30);}catch(_){} window.appLock.lockNow(); },HOLD); }
-  function cancel(){ clearTimeout(t); b.classList.remove('hold'); hint.classList.remove('fill'); clearTimeout(ht); ht=setTimeout(()=>hint.classList.remove('on'),900); }
-  b.addEventListener('pointerdown',start);
-  b.addEventListener('pointerup',cancel);
-  b.addEventListener('pointerleave',cancel);
-  b.addEventListener('pointercancel',cancel);
-  b.addEventListener('contextmenu',e=>e.preventDefault());
-})();
 
 // ───────── 당겨서 새로고침 ─────────
 (function(){
@@ -825,6 +927,26 @@ function changePin(){
     y0=null; dy=0;
   });
   m.addEventListener('touchcancel',()=>{ y0=null; dy=0; });
+})();
+
+// 좌우로 밀어서 탭 넘기기 (기록 ↔ 연간 ↔ 설정)
+(function(){
+  const m=document.querySelector('main'); let x0=null,y0=null,t0=0;
+  function cur(){ const i=TABS.findIndex(t=>$('v-'+t).classList.contains('on')); return i<0?0:i; }
+  m.addEventListener('touchstart',e=>{
+    const t=e.touches[0];
+    if(e.touches.length!==1||t.clientX<24||t.clientX>window.innerWidth-24||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||$('sheet').classList.contains('on')){ x0=null; return; }
+    x0=t.clientX; y0=t.clientY; t0=Date.now();
+  },{passive:true});
+  m.addEventListener('touchend',e=>{
+    if(x0==null) return;
+    const t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0; x0=null;
+    if(Date.now()-t0>700||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.8) return;
+    const i=cur(), n=i+(dx<0?1:-1);
+    if(n<0||n>=TABS.length) return;
+    go(TABS[n],dx<0?1:-1);
+  },{passive:true});
+  m.addEventListener('touchcancel',()=>{ x0=null; },{passive:true});
 })();
 
 // ───────── 설정 ─────────
@@ -853,7 +975,9 @@ function renderSettings(){
   $('s-ded').placeholder=(two?'0':'1,500,000')+' (자동)';
   $('s-other').value=state.settings.otherBase?state.settings.otherBase.toLocaleString('ko-KR'):'';
   const seg=(id,key)=>{ $(id).innerHTML=`<button class="${state.settings[key]?'on':''}" onclick="setFlag('${key}',true)">켜기</button><button class="${!state.settings[key]?'on':''}" onclick="setFlag('${key}',false)">끄기</button>`; };
-  seg('s-exp','expCost'); seg('s-wh','withheld'); seg('s-priv','privacy');
+  $('acct-note').textContent='로그인 아이디(이메일)  '+window.appAuth.id();
+  $('acct-reg').style.display=window.appAuth.validEmail(window.appAuth.id())?'none':'flex';
+  seg('s-exp','expCost'); seg('s-wh','withheld');
   renderAppList();
 }
 const EMOJIS=['😀','😎','🚗','🌙','⭐','🔥','🍀','🐶','🐱','🦊','🐻','🎧'];
@@ -889,6 +1013,12 @@ function setFlag(k,v){ state.settings[k]=v; touch(); renderAll(); }
 function setDeduction(el){ state.settings.deduction=el.value.trim()===''?null:parseAmt(el.value); touch(); renderAll(); }
 function toggleAdv(){ const b=$('adv-box'), show=b.style.display==='none'; b.style.display=show?'block':'none'; $('adv-arrow').textContent=show?'▴':'▾'; }
 function setOther(el){ state.settings.otherBase=parseAmt(el.value); touch(); renderAll(); }
+window.__applyNick=function(n){ state.settings.nick=String(n).slice(0,12); touch(); renderAll(); };
+function saveAcctEmail(){
+  const v=$('acct-email').value.trim();
+  if(!window.appAuth.validEmail(v)){ toast('이메일 주소를 확인해 주세요'); return; }
+  if(window.appAuth.setEmailId(v)){ $('acct-email').blur(); renderSettings(); toast('이메일을 로그인 아이디로 등록했어요'); } else toast('저장에 실패했어요');
+}
 function resetAll(){
   if(!confirm('모든 수익·지출 기록을 지울까요? 되돌릴 수 없어요.'))return;
   state=JSON.parse(JSON.stringify(DEF)); touch(); renderAll(); toast('초기화했어요');
@@ -1079,10 +1209,48 @@ function restoreFile(inp){
   r.readAsText(f);
 }
 
+// ───────── 날짜 선택 창 (월/연도 한번에 이동) ─────────
+let pk={t:'cal',y:0,base:0};
+function openPicker(t){
+  pk.t=t;
+  if(t==='cal') pk.y=cy; else if(t==='list') pk.y=hy; else pk.base=Math.floor(ay/12)*12;
+  $('pk-ov').classList.add('on'); pkRender();
+}
+function closePicker(){ $('pk-ov').classList.remove('on'); }
+function pkRender(){
+  const d=new Date(), g=$('pk-grid'); let h='';
+  if(pk.t==='year'){
+    $('pk-title').textContent=`${pk.base} – ${pk.base+11}`;
+    for(let y=pk.base;y<pk.base+12;y++) h+=`<button class="${y===ay?'on':(y===d.getFullYear()?'now':'')}" onclick="pkPick(${y})">${y}년</button>`;
+    $('pk-today').textContent='올해';
+  } else {
+    const selY=pk.t==='cal'?cy:hy, selM=pk.t==='cal'?cm:hm;
+    $('pk-title').textContent=`${pk.y}년`;
+    for(let m=1;m<=12;m++){
+      const on=(pk.y===selY&&m===selM), now=(pk.y===d.getFullYear()&&m===d.getMonth()+1);
+      h+=`<button class="${on?'on':(now?'now':'')}" onclick="pkPick(${m})">${m}월</button>`;
+    }
+    $('pk-today').textContent='이번 달';
+  }
+  g.innerHTML=h;
+}
+function pkMove(d){ if(pk.t==='year') pk.base+=d*12; else pk.y+=d; pkRender(); }
+function pkPick(v){
+  if(pk.t==='cal'){ cy=pk.y; cm=v; renderCal(); }
+  else if(pk.t==='list'){ hy=pk.y; hm=v; renderList(); }
+  else { ay=v; renderYear(); }
+  closePicker();
+}
+function pkToday(){
+  if(pk.t==='cal') goToday(); else if(pk.t==='list') goHistToday(); else goThisYear();
+  closePicker();
+}
+
 let tt=null;
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.style.whiteSpace='pre-line'; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),3500); }
 
-function renderAll(){ renderCal(); renderYear(); renderSettings(); }
+function renderAll(){ renderCal(); renderList(); renderYear(); renderSettings(); }
+{ const ln=window.appAuth.takeLegacyNick(); if(ln&&!state.settings.nick){ state.settings.nick=ln.slice(0,12); touch(); } }
 renderAll();
 try{ const sv=sessionStorage.getItem('driver_ledger_view'); if(sv&&sv!=='cal'&&$('v-'+sv)) go(sv); }catch(e){}
 setTimeout(()=>{ const sp=$('splash'); if(sp) sp.remove(); },1900);
