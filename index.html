@@ -540,7 +540,7 @@ if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'||localStorage.getItem(KK)===tok
     <div class="card" style="margin-top:0">
       <div class="prof">
         <div class="avatar" id="s-avatar"></div>
-        <div class="pn"><b id="s-nickname"></b><small id="s-status"></small></div>
+        <div class="pn"><b id="s-nickname"></b><small id="s-status"></small><small id="s-id"></small></div>
         <button class="mini" onclick="openNick()">편집</button>
       </div>
     </div>
@@ -970,7 +970,7 @@ function renderSettings(){
         el.appendChild(t);
       }
     });
-    setAvatar($('s-avatar'),state.settings.avatar); $('s-status').textContent=state.settings.status||'';
+    setAvatar($('s-avatar'),state.settings.avatar); $('s-status').textContent=state.settings.status||''; $('s-id').textContent=window.appAuth.id()||'';
     nm.textContent=nk||'닉네임을 설정해 주세요'; nm.classList.toggle('none',!nk); }
   $('s-ded').value=ed==null?'':ed.toLocaleString('ko-KR');
   $('s-ded').placeholder=(two?'0':'1,500,000')+' (자동)';
