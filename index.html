@@ -979,7 +979,6 @@ function renderSettings(){
   $('s-ded').placeholder=(two?'0':'1,500,000')+' (자동)';
   $('s-other').value=state.settings.otherBase?state.settings.otherBase.toLocaleString('ko-KR'):'';
   const seg=(id,key)=>{ $(id).innerHTML=`<button class="${state.settings[key]?'on':''}" onclick="setFlag('${key}',true)">켜기</button><button class="${!state.settings[key]?'on':''}" onclick="setFlag('${key}',false)">끄기</button>`; };
-  $('acct-note').textContent='로그인 아이디(이메일)  '+window.appAuth.id();
   $('acct-reg').style.display=window.appAuth.validEmail(window.appAuth.id())?'none':'flex';
   seg('s-exp','expCost'); seg('s-wh','withheld');
   renderAppList();
