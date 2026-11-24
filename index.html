@@ -171,6 +171,9 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .prof .pn b{display:block;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .prof .pn b.none{color:var(--ink3);font-weight:600;}
 .prof .pn small:empty{display:none;}
+.pn-r{display:flex;align-items:baseline;gap:8px;min-width:0;}
+.pn-r b{flex-shrink:0;max-width:55%;}
+.prof .pn .pn-r small{margin-top:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .prof .pn small{display:block;font-size:11.5px;color:var(--ink2);margin-top:2px;}
 .srow{padding:12px 0;border-bottom:1px solid var(--line);}
 .srow:last-child{border-bottom:none;}
@@ -540,7 +543,7 @@ if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'||localStorage.getItem(KK)===tok
     <div class="card" style="margin-top:0">
       <div class="prof">
         <div class="avatar" id="s-avatar"></div>
-        <div class="pn"><b id="s-nickname"></b><small id="s-status"></small><small id="s-id"></small></div>
+        <div class="pn"><div class="pn-r"><b id="s-nickname"></b><small id="s-status"></small></div><small id="s-id"></small></div>
         <button class="mini" onclick="openNick()">편집</button>
       </div>
     </div>
