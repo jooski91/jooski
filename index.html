@@ -53,15 +53,19 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .mbar button{height:34px;font-size:30px;color:var(--ink2);}
 .mbar,.ybar{position:relative;}
 .mbar .today-btn,.ybar .today-btn{position:absolute;right:60px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:14px;background:var(--in-bg);color:var(--accent);font-size:12px;font-weight:600;}
-#m-sum,#y-sum{padding:12px;}
-#v-cal #m-sum{margin-top:0;margin-bottom:6px;padding:8px 10px;}
-#v-cal #m-sum .note{margin-top:4px;font-size:10.5px;line-height:1.3;}
-#m-sum h2,#y-sum h2{margin-bottom:8px;}
-#m-sum .grid2,#y-sum .grid2{grid-template-columns:repeat(3,1fr);gap:6px;}
-#m-sum .stat,#y-sum .stat{padding:7px 9px;border-radius:9px;}
-#m-sum .stat small,#y-sum .stat small{font-size:10.5px;}
-#m-sum .stat b,#y-sum .stat b{font-size:13.5px;margin-top:2px;}
-#m-sum .note,#y-sum .note{margin-top:8px;font-size:11px;line-height:1.5;}
+#h-sum,#y-sum{padding:12px;}
+#v-list #h-sum{margin-top:0;margin-bottom:6px;padding:8px 10px;}
+#v-list #h-sum .note{margin-top:4px;font-size:10.5px;line-height:1.3;}
+#h-sum h2,#y-sum h2{margin-bottom:8px;}
+#h-sum .grid2,#y-sum .grid2{grid-template-columns:repeat(3,1fr);gap:6px;}
+#h-sum .stat,#y-sum .stat{padding:7px 9px;border-radius:9px;}
+#h-sum .stat small,#y-sum .stat small{font-size:10.5px;}
+#h-sum .stat b,#y-sum .stat b{font-size:13.5px;margin-top:2px;}
+#h-sum .note,#y-sum .note{margin-top:8px;font-size:11px;line-height:1.5;}
+#m-sum{display:grid;grid-template-columns:repeat(3,1fr);padding:9px 0;margin:0 0 6px;}
+#m-sum div{text-align:center;min-width:0;} #m-sum div+div{border-left:1px solid var(--line);}
+#m-sum small{display:block;font-size:10.5px;color:var(--ink2);}
+#m-sum b{display:block;font-size:14px;margin-top:2px;font-variant-numeric:tabular-nums;}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
 .quick button{height:54px;border-radius:12px;font-size:14.5px;font-weight:700;}
 .quick .q-in{background:rgba(93,211,158,.32);color:var(--accent);} .quick .q-out{background:rgba(255,107,107,.32);color:var(--out);}
@@ -125,10 +129,6 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 #v-list .set-title{margin-bottom:0;}
 #v-list .mbar{margin-bottom:4px;}
 #v-list .mbar button{height:40px;}
-.h-sum{display:grid;grid-template-columns:1fr 1fr;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 0;margin-bottom:8px;}
-.h-sum div{text-align:center;} .h-sum div+div{border-left:1px solid var(--line);}
-.h-sum small{display:block;font-size:11px;color:var(--ink2);}
-.h-sum b{display:block;font-size:17px;margin-top:3px;font-variant-numeric:tabular-nums;}
 .h-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;}
 .h-tabs button{height:34px;border-radius:9px;background:var(--card2);font-size:13px;font-weight:600;color:var(--ink2);}
 .h-tabs button.on{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
@@ -231,13 +231,18 @@ nav button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);}
 .memo-in{width:100%;min-width:0;height:34px;border:1.5px solid var(--accent);border-radius:8px;padding:0 8px;font-size:16px;background:rgba(93,211,158,.06);}
 .memo-in:focus{outline:none;}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
-#f-amt.err{border-color:var(--out);animation:shake .3s;} #f-amt.err::placeholder{color:var(--out);}
+#f-amt.err,#f-fee.err,#f-cash.err{border-color:var(--out);animation:shake .3s;} #f-amt.err::placeholder{color:var(--out);}
 .btn-row .btn{margin-top:0;}
 #sh-form .btn.add-more{background:var(--card2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
 #sh-form.exp .btn.add-more{color:var(--out);box-shadow:inset 0 0 0 1.5px var(--out);}
 .item.app{grid-template-columns:1fr 68px;}
 .item.app .del{height:38px;font-size:13.5px;border-radius:10px;}
 .item .tx{display:block;font-size:11px;color:var(--out);font-weight:600;margin-top:1px;text-align:right;}
+.item .fee{display:block;font-size:11px;color:var(--ink2);margin-top:1px;text-align:right;}
+.pays{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}
+.pays button{height:34px;border-radius:9px;font-size:13px;font-weight:600;background:var(--card2);color:var(--ink2);}
+.pays button.on{color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+#cash-row{margin-top:8px;}
 .rsv-prev{font-size:12px;color:var(--out);text-align:right;margin:6px 2px 0;font-variant-numeric:tabular-nums;}
 .rsv-prev:empty{display:none;}
 #sh-form:has(.rsv-prev:not(:empty)) .btn-row{margin-top:6px;}
@@ -515,7 +520,7 @@ if(a0){ try{ ok=sessionStorage.getItem(SK)==='1'||localStorage.getItem(KK)===tok
       <button onclick="moveHist(1)" aria-label="다음 달"><svg class="chev" viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
       <button class="today-btn" id="h-today" onclick="goHistToday()" style="display:none">오늘</button>
     </div>
-    <div class="h-sum" id="h-sum"></div>
+    <div class="card" id="h-sum"></div>
     <div class="h-tabs" id="h-tabs"></div>
     <div class="h-list" id="h-list"></div>
   </section>
@@ -763,8 +768,13 @@ function monthRate(y,m){
 function callReserve(amt,y,m){ return Math.round(amt*monthRate(y,m)/10)*10; }
 function previewReserve(){
   const el=$('rsv-prev'); if(!el||!sel) return;
-  const [y,m]=sel.split('-').map(Number), amt=parseAmt($('f-amt').value);
-  el.textContent=amt? `이 콜에서 약 ${won(callReserve(amt,y,m))}원 세금으로 빼두세요 (${(monthRate(y,m)*100).toFixed(1)}%)` : '';
+  const [y,m]=sel.split('-').map(Number), gross=parseAmt($('f-amt').value);
+  const fee=$('f-fee')?parseAmt($('f-fee').value):0, amt=Math.max(0,gross-fee);
+  const head=amt&&fee?`수수료 뺀 수익 ${won(amt)}원\n`:'';
+  el.style.whiteSpace='pre-line';
+  const cash=selPay==='복합'&&$('f-cash')?parseAmt($('f-cash').value):0;
+  const split=cash&&cash<gross?`카드 ${won(gross-cash)}원 + 현금 ${won(cash)}원\n`:'';
+  el.textContent=amt? `${split}${head}이 콜에서 약 ${won(callReserve(amt,y,m))}원 세금으로 빼두세요 (${(monthRate(y,m)*100).toFixed(1)}%)` : '';
 }
 
 // ───────── 화면 전환 ─────────
@@ -795,8 +805,17 @@ function timeOf(ts){ if(!ts) return ''; const d=new Date(ts), h=d.getHours(); re
 function renderList(){
   { const d=new Date(); $('h-today').style.display=(hy!==d.getFullYear()||hm!==d.getMonth()+1)?'':'none'; }
   $('h-title').textContent=`${hy}년 ${hm}월`;
-  const ms=monthStats(hy,hm);
-  $('h-sum').innerHTML=`<div><small>수익</small><b class="pos">+${won(ms.inc)}</b></div><div><small>지출</small><b class="neg">${ms.exp>0?'-'+won(ms.exp):'0'}</b></div>`;
+  const s=monthStats(hy,hm), rsv=monthReserve(hy,hm), cum=cumTax(hy,hm).tax;
+  $('h-sum').innerHTML=`
+    <div class="grid2">
+      <div class="stat"><small>총 수익</small><b>${won(s.inc)}원</b></div>
+      <div class="stat"><small>총 지출</small><b class="neg">${mwon(s.exp)}원</b></div>
+      <div class="stat"><small>순수익</small><b class="${s.net>=0?'pos':'neg'}">${won(s.net)}원</b></div>
+      <div class="stat"><small>콜 수</small><b>${s.n}건</b></div>
+      <div class="stat tax"><small>세금적립</small><b>${won(rsv)}원</b></div>
+      <div class="stat net"><small>세금 뺀 실수령</small><b>${won(s.net-rsv)}원</b></div>
+    </div>
+    <p class="note">${hm}월까지 누적 예상 세금 ${won(cum)}원 (종합·지방소득세 추정치${state.settings.twoJob?', 투잡 기준':', 전업 기준'})</p>`;
   $('h-tabs').innerHTML=[['all','전체'],['in','수익'],['out','지출']].map(([k,l])=>`<button class="${hf===k?'on':''}" onclick="setHistFilter('${k}')">${l}</button>`).join('');
   const pre=`${hy}-${pad(hm)}-`, days=Object.keys(state.days).filter(k=>k.startsWith(pre)).sort().reverse();
   const dow=['일','월','화','수','목','금','토'];
@@ -813,7 +832,7 @@ function renderList(){
     h+=`<div class="h-day"><span>${hm}월 ${d}일 (${wd})</span><span>${net>0?'+':''}${won(net)}원</span></div><div class="h-grp">`;
     for(const o of rows){
       const isIn=o.kind==='in', x=o.x, name=isIn?(x.app||'콜'):x.type;
-      const sub=[timeOf(x.ts),x.memo?esc(x.memo):''].filter(Boolean).join(' · ');
+      const sub=[timeOf(x.ts),payText(x),x.fee?`수수료 ${won(x.fee)}원`:'',x.memo?esc(x.memo):''].filter(Boolean).join(' · ');
       h+=`<button class="h-row" onclick="openDay('${k}','${isIn?'call':'exp'}')"><div style="min-width:0"><div class="n">${esc(name)}</div><div class="s">${sub||'&nbsp;'}</div></div><div class="a ${isIn?'pos':'neg'}">${isIn?'+':'-'}${won(x.amt)}<small>${isIn?'수익':'지출'}</small></div></button>`;
     }
     h+='</div>';
@@ -836,17 +855,13 @@ function renderCal(){
   }
   $('cal-g').innerHTML=h;
 
-  const s=monthStats(cy,cm), rsv=monthReserve(cy,cm), cum=cumTax(cy,cm).tax;
+  const td=state.days[today]||{}, calls=td.calls||[];
+  const inc=calls.reduce((a,x)=>a+x.amt,0);
+  const tax=calls.reduce((a,x)=>a+callReserve(x.amt,now.getFullYear(),now.getMonth()+1),0);
   $('m-sum').innerHTML=`
-    <div class="grid2">
-      <div class="stat"><small>총 수익</small><b>${won(s.inc)}원</b></div>
-      <div class="stat"><small>총 지출</small><b class="neg">${mwon(s.exp)}원</b></div>
-      <div class="stat"><small>순수익</small><b class="${s.net>=0?'pos':'neg'}">${won(s.net)}원</b></div>
-      <div class="stat"><small>콜 수</small><b>${s.n}건</b></div>
-      <div class="stat tax"><small>세금적립</small><b>${won(rsv)}원</b></div>
-      <div class="stat net"><small>세금 뺀 실수령</small><b>${won(s.net-rsv)}원</b></div>
-    </div>
-    <p class="note">${cm}월까지 누적 예상 세금 ${won(cum)}원 (종합·지방소득세 추정치${state.settings.twoJob?', 투잡 기준':', 전업 기준'})</p>`;
+    <div><small>오늘 콜수</small><b>${calls.length}건</b></div>
+    <div><small>오늘 수익</small><b>${won(inc)}원</b></div>
+    <div><small>세금 뗀 수익</small><b class="pos">${won(inc-tax)}원</b></div>`;
 }
 
 // ───────── 연간 ─────────
@@ -1028,7 +1043,7 @@ function resetAll(){
 }
 
 // ───────── 입력 시트 ─────────
-let sel=null, mode='call', expType='킥보드', selApp='', appEdit=false;
+let sel=null, mode='call', expType='킥보드', selApp='', appEdit=false, selPay='카드';
 function parseAmt(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
 function fmtAmt(el){ const n=parseAmt(el.value); el.value=n?n.toLocaleString('ko-KR'):''; }
 
@@ -1049,7 +1064,7 @@ let addOpen=false;
   }
   vv.addEventListener('resize',upd); vv.addEventListener('scroll',upd); upd();
 })();
-function openDay(k,md){ draftIds=[]; sel=k; mode=md||'call'; appEdit=false; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(addOpen) focusAmt(); }
+function openDay(k,md){ draftIds=[]; sel=k; mode=md||'call'; appEdit=false; selPay='카드'; selApp=state.apps[0]||''; addOpen=!!md||!dayTotals(k).has; renderSheet(); $('ov').classList.add('on'); $('sheet').classList.add('on'); if(addOpen) focusAmt(); }
 function quickAdd(md){ const d=new Date(); openDay(keyOf(d.getFullYear(),d.getMonth()+1,d.getDate()),md); }
 // '추가'로 넣은 기록은 '저장'을 눌러야 남고, 그냥 닫으면 버려요
 let draftIds=[];
@@ -1080,10 +1095,24 @@ function renderSheet(){
     </div>
     ${mode==='exp'?`<div class="chips">${TYPES.map(t=>`<button class="chip ${t===expType?'on':''}" onclick="setType(this,'${t}')">${t}</button>`).join('')}</div>`:'<div id="app-sec"></div>'}
     <div class="frow"><input id="f-amt" inputmode="numeric" placeholder="금액 직접 입력" oninput="fmtAmt(this);previewReserve()"><span class="unit">원</span></div>
+    ${mode==='call'?'<div class="frow" style="margin-top:8px"><input id="f-fee" inputmode="numeric" placeholder="수수료 (없으면 비움)" oninput="fmtAmt(this);previewReserve()"><span class="unit">원</span></div>':''}
+    ${mode==='call'?`<div class="pays">${['카드','현금','복합'].map(p=>`<button type="button" class="${p===selPay?'on':''}" onclick="pickPay(this,'${p}')">${p}</button>`).join('')}</div>
+    <div class="frow" id="cash-row" style="display:${selPay==='복합'?'flex':'none'}"><input id="f-cash" inputmode="numeric" placeholder="그중 현금 금액" oninput="fmtAmt(this);previewReserve()"><span class="unit">원</span></div>`:''}
     ${mode==='call'?'<div class="rsv-prev" id="rsv-prev"></div>':''}
     <div class="btn-row"><button class="btn add-more" onclick="addEntry(true)">추가</button><button class="btn primary" onclick="addEntry()">저장</button></div>`;
   if(mode==='call') renderAppSection();
   renderSheetList();
+}
+function pickPay(btn,p){
+  selPay=p;
+  btn.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===btn));
+  $('cash-row').style.display=p==='복합'?'flex':'none';
+  if(p!=='복합') $('f-cash').value='';
+  previewReserve();
+}
+function payText(x){
+  if(!x.pay) return '';
+  return x.pay==='복합'?`카드 ${won(x.card)}원 + 현금 ${won(x.cash)}원`:x.pay;
 }
 function openAdd(){ addOpen=true; renderSheet(); focusAmt(); }
 function setMode(m){ mode=m; appEdit=false; renderSheet(); focusAmt(); }
@@ -1123,24 +1152,39 @@ function renderAppList(){
 }
 
 function addEntry(keep){
-  const amt=parseAmt($('f-amt').value);
+  let amt=parseAmt($('f-amt').value);
+  const fee=mode==='call'&&$('f-fee')?parseAmt($('f-fee').value):0;
+  if(amt&&fee>=amt){
+    const ff=$('f-fee'); ff.classList.add('err'); setTimeout(()=>ff.classList.remove('err'),1500);
+    toast('수수료는 금액보다 작아야 해요'); ff.focus(); return;
+  }
   if(!amt){
-    if(keep){
+    if(keep||fee){
       const fa=$('f-amt'); fa.classList.add('err'); fa.placeholder='금액을 입력하세요';
       setTimeout(()=>{ fa.classList.remove('err'); fa.placeholder='금액 직접 입력'; },1500);
       toast('금액을 입력하세요'); focusAmt();
     } else { draftIds=[]; closeDay(); }
     return;
   }
+  const pay=mode==='call'?selPay:'';
+  let cash=0, card=0;
+  if(pay==='복합'){
+    cash=parseAmt($('f-cash').value); card=amt-cash;
+    if(!cash||card<=0){
+      const c=$('f-cash'); c.classList.add('err'); setTimeout(()=>c.classList.remove('err'),1500);
+      toast('현금 금액은 0보다 크고 전체 금액보다 작아야 해요'); c.focus(); return;
+    }
+  }
+  amt-=fee;
   const memo='';
   const r=state.days[sel]=state.days[sel]||{calls:[],exps:[]};
   r.calls=r.calls||[]; r.exps=r.exps||[];
   const id=uid();
-  if(mode==='call') r.calls.push({id,amt,memo,app:selApp,ts:Date.now()});
+  if(mode==='call') r.calls.push({id,amt,fee,pay,...(pay==='복합'?{card,cash}:{}),memo,app:selApp,ts:Date.now()});
   else r.exps.push({id,type:expType,amt,memo,ts:Date.now()});
   touch();
   const label=mode==='call'?(selApp||'콜'):expType;
-  if(keep){ draftIds.push(id); $('f-amt').value=''; previewReserve(); renderSheetList(); renderAll(); toast(`${label} ${won(amt)}원 추가했어요`); focusAmt(); return; }
+  if(keep){ draftIds.push(id); $('f-amt').value=''; if($('f-fee')) $('f-fee').value=''; if($('f-cash')) $('f-cash').value=''; previewReserve(); renderSheetList(); renderAll(); toast(`${label} ${won(amt)}원 추가했어요`); focusAmt(); return; }
   draftIds=[]; closeDay(); renderAll();
   toast(`${label} ${won(amt)}원 저장했어요`);
 }
@@ -1179,7 +1223,7 @@ function renderSheetList(){
   const [sy,sm]=sel.split('-').map(Number), rate=monthRate(sy,sm);
   const dayRsv=(r.calls||[]).reduce((a,x)=>a+callReserve(x.amt,sy,sm),0);
   $('sh-sum').textContent=`수익 ${won(t.inc)}원 · 지출 ${mwon(t.exp)}원 · 순수익 ${won(t.net)}원`+(t.n?` · 세금적립 약 ${won(dayRsv)}원`:'');
-  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.ts?tsLabel(x.ts)+' · ':''}${x.app?esc(x.app):'콜'}</small></div>${memoCell('call',x)}<div><div class="amt pos">+${won(x.amt)}</div><span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
+  const calls=(r.calls||[]).map(x=>`<div class="item"><div class="l"><b>수익</b><small>${x.ts?tsLabel(x.ts)+' · ':''}${x.app?esc(x.app):'콜'}</small></div>${memoCell('call',x)}<div><div class="amt pos">+${won(x.amt)}</div>${x.pay?`<span class="fee">${payText(x)}</span>`:''}${x.fee?`<span class="fee">수수료 ${won(x.fee)}원</span>`:''}<span class="tx">세금적립 ${won(callReserve(x.amt,sy,sm))}원</span></div><button class="del" onclick="delEntry('call','${x.id}')">삭제</button></div>`).join('');
   const exps=(r.exps||[]).map(x=>`<div class="item"><div class="l"><b>지출</b><small>${x.ts?tsLabel(x.ts)+' · ':''}${esc(x.type)}</small></div>${memoCell('exp',x)}<div class="amt neg">-${won(x.amt)}</div><button class="del" onclick="delEntry('exp','${x.id}')">삭제</button></div>`).join('');
   $('sh-list').innerHTML=(calls||exps)?`${calls?`<h4>콜 ${r.calls.length}건</h4>${calls}`:''}${exps?`<h4 style="margin-top:12px">지출 ${r.exps.length}건</h4>${exps}`:''}`:'<div class="empty-l">아직 기록이 없어요</div>';
 }
